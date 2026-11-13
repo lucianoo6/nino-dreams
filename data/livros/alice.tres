@@ -12,7 +12,7 @@ ultima_linha = "Então ela pôs mãos à obra e, bem depressa, comeu o bolo todi
 tipo = 0
 missao = 1
 itens_necessarios = 0
-cena = ""
+cena = "res://scenes/livros/alice/Cap01_TocaDoCoelho.tscn"
 
 [sub_resource type="Resource" id="Cap_02"]
 script = ExtResource("2_cap")
