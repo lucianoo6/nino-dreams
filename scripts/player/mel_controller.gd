@@ -37,26 +37,6 @@ func _ready() -> void:
 	add_to_group("mel")
 	action_prefix = "p2_"
 	_cooldown = randf_range(distraction_cooldown.x, distraction_cooldown.y)
-	_prender_estrelinha_na_mao()
-
-
-## A Estrelinha fica presa na mão esquerda da Mel (combina com a animação "segurando lanterna").
-func _prender_estrelinha_na_mao() -> void:
-	var estrela := get_node_or_null("Estrelinha") as Node3D
-	var esqueleto: Skeleton3D = null
-	for n: Node in find_children("*", "Skeleton3D", true, false):
-		esqueleto = n as Skeleton3D
-		break
-	if estrela == null or esqueleto == null or esqueleto.find_bone("LeftHand") < 0:
-		return
-	var anexo := BoneAttachment3D.new()
-	anexo.name = "MaoDaEstrelinha"
-	anexo.bone_name = "LeftHand"
-	esqueleto.add_child(anexo)
-	estrela.reparent(anexo, false)
-	var escala: Vector3 = esqueleto.global_basis.get_scale()
-	estrela.position = Vector3(0.0, 0.12, 0.0) / escala.y
-	estrela.scale = Vector3.ONE / escala
 
 
 func _physics_process(delta: float) -> void:

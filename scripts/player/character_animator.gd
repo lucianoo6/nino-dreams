@@ -12,24 +12,25 @@ const LIB_EXTRA := &"ual"
 @export var biblioteca_extra: PackedScene
 
 @export_group("Animações")
-@export var anim_parado: StringName = &"human_000025" ## happy idle
+@export var anim_parado: StringName = &"ual/Idle"
 @export var anim_parado_pesadelo: StringName = &"human_000050" ## sad idle
 ## Parado segurando a luz acesa (Nino com a Luna).
-@export var anim_parado_luz: StringName = &"ual/Idle_Torch_Loop"
-@export var anim_andar: StringName = &"ual/Walk_Loop"
-@export var anim_andar_pesadelo: StringName = &"ual/Crouch_Fwd_Loop"
-@export var anim_correr: StringName = &"ual/Jog_Fwd_Loop"
-@export var anim_disparada: StringName = &"ual/Sprint_Loop"
+@export var anim_parado_luz: StringName = &"ual/Idle_Torch"
+@export var anim_andar: StringName = &"ual/Walk"
+@export var anim_andar_pesadelo: StringName = &"ual/Crouch_Fwd"
+@export var anim_correr: StringName = &"ual/Jog_Fwd"
+@export var anim_disparada: StringName = &"ual/Sprint"
 @export var anim_pulo_inicio: StringName = &"ual/Jump_Start"
-@export var anim_pulo_ar: StringName = &"ual/Jump_Loop"
+@export var anim_pulo_ar: StringName = &"ual/Jump" ## (Jump_Loop no .glb; o Godot tira o "_Loop")
 @export var anim_aterrissar: StringName = &"ual/Jump_Land"
 @export var anim_rodopio: StringName = &"human_000039" ## northern soul spin
-@export var anim_comemorar: StringName = &"ual/Dance_Loop"
+@export var anim_comemorar: StringName = &"ual/Dance"
 
 @export_group("Ritmo")
 @export var limiar_andar: float = 0.4
-@export var limiar_correr: float = 3.0
-@export var limiar_disparada: float = 6.0
+@export var limiar_correr: float = 2.5
+## Acima disto usa a disparada (por enquanto só com impulsos; velocidade normal máxima é 7).
+@export var limiar_disparada: float = 8.5
 ## Velocidade (m/s) em que cada animação fica no ritmo natural (já na escala do modelo).
 @export var ritmo_andar: float = 1.3
 @export var ritmo_correr: float = 3.0
@@ -40,6 +41,13 @@ const LIB_EXTRA := &"ual"
 ## Se preenchido, toca sempre esta animação (cutscenes, quarto).
 @export var modo_fixo: StringName = &""
 
+@export_group("Objeto na mão")
+## Nó (relativo a este) que o personagem carrega na mão: a lua da Luna (Nino) ou a Estrelinha (Mel).
+@export var objeto_na_mao: NodePath
+## "LeftHand" combina com Idle_Torch (Nino); "RightHand" com Idle_Lantern (Mel).
+@export var osso_mao: StringName = &"LeftHand"
+@export var deslocamento_mao: Vector3 = Vector3(0.0, 0.1, 0.0)
+
 var _player: AnimationPlayer
 var _body: DreamerController
 var _luna: MoonLamp
@@ -47,6 +55,7 @@ var _no_ar: float = 0.0
 var _aterrissando: float = 0.0
 var _estava_no_chao: bool = true
 var _comemorando: bool = false
+var _avisadas: Dictionary = {}
 
 
 func _ready() -> void:
@@ -61,7 +70,28 @@ func _ready() -> void:
 	if _body:
 		_luna = _body.get_node_or_null("Luna") as MoonLamp
 		GameState.mission_completed.connect(func() -> void: _comemorando = true)
+	_prender_na_mao.call_deferred()
 	_tocar(modo_fixo if modo_fixo != &"" else anim_parado)
+
+
+## Prende `objeto_na_mao` no osso da mão (BoneAttachment3D), compensando a escala do modelo.
+func _prender_na_mao() -> void:
+	if objeto_na_mao.is_empty():
+		return
+	var objeto := get_node_or_null(objeto_na_mao) as Node3D
+	var esqueleto: Skeleton3D = null
+	for n: Node in find_children("*", "Skeleton3D", true, false):
+		esqueleto = n as Skeleton3D
+		break
+	if objeto == null or esqueleto == null or esqueleto.find_bone(osso_mao) < 0:
+		return
+	var anexo := BoneAttachment3D.new()
+	anexo.name = "Mao_" + String(osso_mao)
+	anexo.bone_name = osso_mao
+	esqueleto.add_child(anexo)
+	objeto.reparent(anexo, false)
+	var escala: Vector3 = esqueleto.global_basis.get_scale()
+	objeto.transform = Transform3D(Basis.from_scale(Vector3.ONE / escala), deslocamento_mao / escala.y)
 
 
 ## Copia as animações do .glb retargetado para o AnimationPlayer do modelo, apontando as trilhas
@@ -153,7 +183,17 @@ func _process(delta: float) -> void:
 
 func _tocar(nome: StringName, velocidade: float = 1.0, inicio: float = 0.0) -> void:
 	if not _player.has_animation(nome):
-		return
+		# O importador do Godot remove o sufixo "_Loop" dos nomes do .glb.
+		var sem_loop := StringName(String(nome).trim_suffix("_Loop"))
+		if _player.has_animation(sem_loop):
+			nome = sem_loop
+		else:
+			if not _avisadas.has(nome):
+				_avisadas[nome] = true
+				push_warning("CharacterAnimator: animação '%s' não existe." % nome)
+			nome = anim_parado if _player.has_animation(anim_parado) else nome
+			if not _player.has_animation(nome):
+				return
 	if _player.current_animation != nome:
 		_player.play(nome, mistura)
 		if inicio > 0.0:

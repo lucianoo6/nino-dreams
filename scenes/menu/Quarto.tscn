@@ -52,12 +52,12 @@ script = ExtResource("1_menu")
 environment = SubResource("Env_quarto")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 1.65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.05, 1.75)
 attributes = SubResource("Cam_attrs")
 fov = 50.0
 
 [node name="Abajur" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.4, -2.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.4, -2.8)
 light_color = Color(1, 0.78, 0.5, 1)
 light_energy = 2.2
 shadow_enabled = true
@@ -89,7 +89,7 @@ surface_material_override/0 = ExtResource("5_felt")
 instance_shader_parameters/tint = Color(0.4, 0.42, 0.7, 1)
 
 [node name="Cama" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.225, -3.4)
+transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, 1.75, 0.225, -3.3)
 mesh = SubResource("Mesh_cama")
 surface_material_override/0 = ExtResource("5_felt")
 instance_shader_parameters/tint = Color(0.75, 0.55, 0.45, 1)
@@ -107,14 +107,14 @@ surface_material_override/0 = ExtResource("5_felt")
 instance_shader_parameters/tint = Color(1, 0.97, 0.92, 1)
 
 [node name="LunaNaParede" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.4, -2.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.4, -2.8)
 mesh = SubResource("Mesh_luna")
 surface_material_override/0 = ExtResource("5_felt")
 instance_shader_parameters/tint = Color(1, 0.96, 0.75, 1)
 
 [node name="Nino" parent="." instance=ExtResource("2_nino")]
-transform = Transform3D(-0.94, 0, -0.342, 0, 1, 0, 0.342, 0, -0.94, 0.45, 0.62, -3.55)
-modo_fixo = &"ual/Sitting_Idle_Loop"
+transform = Transform3D(-0.94, 0, -0.342, 0, 1, 0, 0.342, 0, -0.94, 1.72, 0.2, -3.0)
+modo_fixo = &"ual/Sitting_Idle"
 
 [node name="MaosDoNino" type="Marker3D" parent="Nino"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.4)

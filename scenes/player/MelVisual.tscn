@@ -7,7 +7,9 @@
 [node name="MelVisual" type="Node3D"]
 script = ExtResource("1_anim")
 biblioteca_extra = ExtResource("3_ual")
-anim_parado = &"ual/Idle_Lantern_Loop"
+objeto_na_mao = NodePath("../Estrelinha")
+osso_mao = &"RightHand"
+anim_parado = &"ual/Idle_Lantern"
 
 [node name="Modelo" parent="." instance=ExtResource("2_modelo")]
 transform = Transform3D(-0.62, 0, 0, 0, 0.62, 0, 0, 0, -0.62, 0, 0.589, 0)

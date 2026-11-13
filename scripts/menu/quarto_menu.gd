@@ -43,7 +43,7 @@ func _ready() -> void:
 	if _attrs == null:
 		_attrs = CameraAttributesPractical.new()
 		_camera.attributes = _attrs
-	_camera.look_at(Vector3(0.0, 0.62, -1.2))
+	_camera.look_at(Vector3(0.45, 0.62, -1.2))
 	_construir_moveis()
 	_construir_livros(_carregar_livros())
 	_foco_na_estante(0.0)
@@ -122,7 +122,7 @@ func _selecionar(i: int, com_pulo: bool = true) -> void:
 	_voz.blip(livro.data.titulo.substr(0, 1), 1.3)
 	var progresso: String = livro.progresso_texto()
 	_titulo.text = "%s\n%s%s" % [livro.data.titulo, livro.data.autor, ("\n" + progresso) if progresso else ""]
-	_titulo.global_position = livro.global_position + Vector3(0.0, 0.55, 0.1)
+	_titulo.global_position = Vector3(0.0, altura_prateleiras[0] + 0.75, 0.15) # sobre o meio da estante
 	_titulo.visible = true
 
 
@@ -156,10 +156,10 @@ func _escolher(livro: ShelfBook) -> void:
 	var linha: String = capitulo.ultima_linha if not capitulo.ultima_linha.is_empty() else capitulo.rotulo() + "…"
 	var animador := _nino as CharacterAnimator
 	if animador:
-		animador.modo_fixo = &"ual/Sitting_Talking_Loop" # lendo em voz alta
+		animador.modo_fixo = &"ual/Sitting_Talking" # lendo em voz alta
 	await _dialogo.falar(linha, _voz)
 	if animador:
-		animador.modo_fixo = &"ual/Sitting_Idle_Loop"
+		animador.modo_fixo = &"ual/Sitting_Idle"
 	if livro.data.e_ultimo(capitulo):
 		await _dialogo.dizer_fim(_voz)
 	else:
