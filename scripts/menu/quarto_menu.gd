@@ -9,6 +9,8 @@ extends Node3D
 
 const PASTA_LIVROS := "res://data/livros/"
 const FELTRO := preload("res://materials/feltro.tres")
+const MADEIRA := preload("res://materials/pbr/madeira.tres")
+const FUNDO_ESTANTE := preload("res://materials/pbr/feltro_creme.tres")
 
 @export_group("Estante")
 @export var largura: float = 1.6
@@ -25,6 +27,7 @@ var _attrs: CameraAttributesPractical
 var _livros: Array[ShelfBook] = []
 var _indice: int = -1
 var _ocupado: bool = false
+var _titulo: Label # texto 2D: Label3D transparente fica borrado pelo desfoque (DOF)
 
 @onready var _camera: Camera3D = $Camera3D
 @onready var _nino: Node3D = $Nino
@@ -32,7 +35,7 @@ var _ocupado: bool = false
 @onready var _voz: BabbleVoice = $VozDoNino
 @onready var _dialogo: BabbleDialog = $Dialogo
 @onready var _sumario: ChapterPicker = $Sumario
-@onready var _titulo: Label3D = $TituloLivro
+@onready var _titulo3d: Label3D = $TituloLivro
 @onready var _estante: Node3D = $Estante
 
 
@@ -44,6 +47,8 @@ func _ready() -> void:
 		_attrs = CameraAttributesPractical.new()
 		_camera.attributes = _attrs
 	_camera.look_at(Vector3(0.45, 0.62, -1.2))
+	_titulo3d.visible = false
+	_criar_titulo_2d()
 	_construir_moveis()
 	_construir_livros(_carregar_livros())
 	_foco_na_estante(0.0)
@@ -122,7 +127,8 @@ func _selecionar(i: int, com_pulo: bool = true) -> void:
 	_voz.blip(livro.data.titulo.substr(0, 1), 1.3)
 	var progresso: String = livro.progresso_texto()
 	_titulo.text = "%s\n%s%s" % [livro.data.titulo, livro.data.autor, ("\n" + progresso) if progresso else ""]
-	_titulo.global_position = Vector3(0.0, altura_prateleiras[0] + 0.75, 0.15) # sobre o meio da estante
+	var ancora: Vector2 = _camera.unproject_position(Vector3(0.0, altura_prateleiras[0] + 0.62, 0.0))
+	_titulo.position = ancora - Vector2(_titulo.size.x / 2.0, _titulo.size.y)
 	_titulo.visible = true
 
 
@@ -172,6 +178,21 @@ func _escolher(livro: ShelfBook) -> void:
 	GameState.entrar_no_capitulo(livro.data, capitulo)
 
 
+func _criar_titulo_2d() -> void:
+	var camada := CanvasLayer.new()
+	camada.layer = 40
+	add_child(camada)
+	_titulo = Label.new()
+	_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_titulo.custom_minimum_size = Vector2(520, 0)
+	_titulo.add_theme_font_size_override("font_size", 34)
+	_titulo.add_theme_color_override("font_color", Color(1.0, 0.96, 0.85))
+	_titulo.add_theme_color_override("font_outline_color", Color(0.3, 0.2, 0.4))
+	_titulo.add_theme_constant_override("outline_size", 12)
+	_titulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	camada.add_child(_titulo)
+
+
 # ---------------- Rack focus (desfoque) ----------------
 
 func _foco_na_estante(duracao: float) -> void:
@@ -203,24 +224,27 @@ func _construir_moveis() -> void:
 	# Laterais
 	for lado: float in [-1.0, 1.0]:
 		_caixa(_estante, Vector3(espessura, topo, profundidade),
-			Vector3(lado * (largura / 2.0 + espessura / 2.0), topo / 2.0, 0.0), cor_madeira)
+			Vector3(lado * (largura / 2.0 + espessura / 2.0), topo / 2.0, 0.0), cor_madeira, MADEIRA)
 	# Prateleiras + tampo
 	for y: float in altura_prateleiras:
-		_caixa(_estante, Vector3(largura, espessura, profundidade), Vector3(0.0, y, 0.0), cor_madeira)
+		_caixa(_estante, Vector3(largura, espessura, profundidade), Vector3(0.0, y, 0.0), cor_madeira, MADEIRA)
 	_caixa(_estante, Vector3(largura + espessura * 2.0, espessura, profundidade * 1.05),
-		Vector3(0.0, topo, 0.0), cor_madeira.darkened(0.1))
+		Vector3(0.0, topo, 0.0), cor_madeira.darkened(0.1), MADEIRA)
 	# Fundo (retalho xadrez — por enquanto liso)
 	_caixa(_estante, Vector3(largura, topo, 0.02), Vector3(0.0, topo / 2.0, -profundidade / 2.0),
-		Color(0.85, 0.7, 0.75))
+		Color(0.85, 0.7, 0.75), FUNDO_ESTANTE)
 
 
-func _caixa(pai: Node3D, tamanho: Vector3, pos: Vector3, cor: Color) -> MeshInstance3D:
+func _caixa(pai: Node3D, tamanho: Vector3, pos: Vector3, cor: Color, mat: Material = null) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = tamanho
 	mi.mesh = bm
-	mi.material_override = FELTRO
-	mi.set_instance_shader_parameter("tint", cor)
+	if mat:
+		mi.material_override = mat
+	else:
+		mi.material_override = FELTRO
+		mi.set_instance_shader_parameter("tint", cor)
 	mi.position = pos
 	pai.add_child(mi)
 	return mi

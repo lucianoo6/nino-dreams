@@ -238,6 +238,107 @@ def madreperola(n):
                 ceramica=True)
 
 
+@material("tule")
+def tule(n, celulas=24):
+    """Tule: rede hexagonal fina e transparente (nuvens, névoa, véus). Usa alpha recortado."""
+    y, x = np.mgrid[0:n, 0:n] / n
+    # grade hexagonal periódica: três famílias de linhas a 0/60/120 graus
+    linhas = np.zeros((n, n), np.float32)
+    for ang in (0.0, np.pi / 3, 2 * np.pi / 3):
+        k = np.cos(ang) * x * celulas + np.sin(ang) * y * celulas * (2 / np.sqrt(3))
+        k = np.round(k * 2) / 2 if False else k
+        linhas = np.maximum(linhas, np.clip(1 - np.abs(((k + 0.5) % 1.0) - 0.5) / 0.07, 0, 1))
+    fio = borrar(linhas, 0.6)
+    alpha = np.clip(fio * 1.6, 0, 1)
+    albedo = np.ones((n, n, 3)) * 0.97
+    return dict(albedo=albedo, alpha=alpha, altura=fio, rough=0.7, forca_normal=1.5, tule=True)
+
+
+@material("veludo")
+def veludo(n):
+    """Veludo liso: pelúcia curtíssima e densa; o brilho vem do rim (penugem contra a luz)."""
+    pelos = normalizar(borrar(linhas_tileaveis(n, int(n * n / 60), n * 0.004, 1, seed=100, espalhar=np.pi), 0.5))
+    manchas = campo(n, beta=2.8, fmin=1, seed=101)  # pelo "amassado" em direções diferentes
+    albedo = tingir(None, (0.72, 0.72, 0.72), (1.0, 1.0, 1.0), np.clip(manchas * 0.7 + pelos * 0.3, 0, 1))
+    return dict(albedo=albedo, altura=pelos * 0.3 + manchas * 0.1, rough=0.8 + 0.15 * manchas, forca_normal=1.0,
+                veludo=True)
+
+
+@material("lantejoula")
+def lantejoula(n, colunas=12, linhas_l=16):
+    """Lantejoulas em escama: discos metálicos em fileiras alternadas, cada fileira cobre a de cima."""
+    y, x = np.mgrid[0:n, 0:n] / n
+    h = np.zeros((n, n), np.float32)
+    brilho = np.zeros((n, n), np.float32)
+    r = rng(110)
+    for linha in range(linhas_l):
+        cy = (linha + 0.5) / linhas_l
+        desloc = 0.5 / colunas if linha % 2 else 0.0
+        dx = ((x - desloc) * colunas) % 1.0 - 0.5
+        dy = (((y - cy) + 0.5) % 1.0 - 0.5) * linhas_l * (colunas / linhas_l) * 1.0
+        dist = np.sqrt(dx ** 2 + dy ** 2)
+        dentro = dist < 0.62
+        col = np.floor((x - desloc) * colunas).astype(int) % colunas
+        incl = r.random(colunas)[col]
+        furo = dist < 0.07
+        h = np.where(dentro, 0.5 + 0.5 * (dy + 0.62) / 1.24 * 0.6 - furo * 0.4, h)
+        brilho = np.where(dentro, np.where(furo, 0.1, 0.55 + 0.45 * incl - 0.25 * dist), brilho)
+    albedo = np.repeat(np.clip(brilho, 0, 1)[..., None], 3, -1)
+    return dict(albedo=albedo, altura=h, rough=0.1 + 0.25 * (1 - brilho), forca_normal=3.0, metal=True)
+
+
+@material("linha")
+def linha(n, voltas=10):
+    """Linha de costura grossa (pontes de fio, carretéis): fios torcidos ao longo de X."""
+    y, x = np.mgrid[0:n, 0:n] / n
+    fios = 4
+    h = np.zeros((n, n), np.float32)
+    for k in range(fios):
+        fase = (x * voltas + y * fios + k) % fios / fios  # hélice
+        h = np.maximum(h, np.sqrt(np.clip(1 - ((((y * fios + x * voltas) - k) % 1.0) - 0.5) ** 2 / 0.2, 0, 1)) * 0)
+    torcao = (y * fios + x * voltas * 1.0) % 1.0
+    h = np.sqrt(np.clip(1 - ((torcao - 0.5) / 0.48) ** 2, 0, 1))
+    fibra = normalizar(borrar(linhas_tileaveis(n, int(n * n / 300), n * 0.03, 1, seed=120, direcao=0.35,
+                                               espalhar=0.3), 0.5))
+    h = normalizar(h * 0.85 + fibra * 0.15)
+    albedo = tingir(None, (0.70, 0.70, 0.70), (1.0, 1.0, 1.0), h)
+    return dict(albedo=albedo, altura=h, rough=0.75, forca_normal=4.0)
+
+
+@material("papel")
+def papel(n):
+    """Papel de livro antigo: fibras de celulose, manchinhas e leve amarelado nas bordas do tile."""
+    fibras = normalizar(borrar(linhas_tileaveis(n, int(n * n / 500), n * 0.02, 1, seed=130, curva=0.6), 0.7))
+    nuvem = campo(n, beta=2.6, fmin=1, seed=131)
+    manchas = np.clip((campo(n, beta=2.0, fmin=4, seed=132) - 0.7) * 3, 0, 1)
+    t = np.clip(nuvem * 0.5 + fibras * 0.3 + manchas * 0.4, 0, 1)
+    albedo = tingir(None, (0.97, 0.95, 0.88), (0.88, 0.82, 0.68), t)
+    return dict(albedo=albedo, altura=fibras * 0.4 + nuvem * 0.2, rough=0.9, forca_normal=1.5, tingivel=False)
+
+
+@material("assoalho")
+def assoalho(n, tabuas=6, comprimentos=2):
+    """Assoalho de tábuas: veios finos ao longo da tábua, tom diferente por tábua, juntas escuras e topos desencontrados."""
+    y, x = np.mgrid[0:n, 0:n] / n
+    linha = np.floor(y * tabuas).astype(int)
+    desloc = (linha * 0.37) % 1.0
+    xt = (x + desloc) % 1.0
+    col = np.floor(xt * comprimentos).astype(int)
+    r = rng(140)
+    tom = r.random((tabuas, comprimentos))[linha, col]
+    v = (y * tabuas) % 1.0
+    u = (xt * comprimentos) % 1.0
+    a, b = campo(n, beta=2.6, fmin=1, seed=141), campo(n, beta=2.6, fmin=1, seed=142)
+    veio = deformar(np.sin(2 * np.pi * (v * 3 + tom * 5 + a * 0.8)) * 0.5 + 0.5, a, b, n * 0.01)
+    fino = normalizar(borrar(linhas_tileaveis(n, int(n * 2), n * 0.3, 1, seed=143, direcao=0.0, espalhar=0.04,
+                                              curva=0.03), 0.6))
+    junta = np.maximum(np.clip(1 - np.minimum(v, 1 - v) / 0.025, 0, 1), np.clip(1 - np.minimum(u, 1 - u) / 0.006, 0, 1))
+    t = np.clip(veio * 0.35 + fino * 0.25 + tom * 0.4, 0, 1)
+    albedo = tingir(None, (0.45, 0.28, 0.16), (0.72, 0.52, 0.33), t) * (1 - 0.55 * junta[..., None])
+    h = normalizar(fino * 0.2 + veio * 0.1 - junta * 1.0)
+    return dict(albedo=albedo, altura=h, rough=0.55 + 0.25 * fino + 0.2 * junta, forca_normal=2.5, tingivel=False)
+
+
 # ---------------------------------------------------------------- SAÍDA
 
 VARIANTES = {
@@ -248,16 +349,21 @@ VARIANTES = {
     "cotele": [("marrom", (0.42, 0.26, 0.16)), ("oliva", (0.36, 0.34, 0.24)), ("vinho", (0.50, 0.16, 0.22))],
     "ceramica": [("branca", (0.97, 0.96, 0.93)), ("azul", (0.50, 0.66, 0.88)), ("rosa", (0.96, 0.74, 0.80))],
     "vidro": [("claro", (0.95, 0.98, 1.0)), ("ambar", (1.0, 0.75, 0.40))],
+    "tule": [("branco", (1.0, 1.0, 1.0)), ("rosa", (1.0, 0.85, 0.9)), ("lilas", (0.85, 0.8, 1.0))],
+    "veludo": [("vermelho", (0.62, 0.08, 0.14)), ("azul", (0.12, 0.18, 0.45)), ("verde", (0.10, 0.35, 0.22))],
+    "lantejoula": [("dourada", (1.0, 0.78, 0.35)), ("prata", (0.85, 0.88, 0.95)), ("rosa", (1.0, 0.55, 0.75))],
+    "linha": [("vermelha", (0.88, 0.22, 0.28)), ("dourada", (1.0, 0.80, 0.35)), ("azul", (0.35, 0.50, 0.90))],
     "botao_plastico": [("amarelo", (1.0, 0.82, 0.30)), ("vermelho", (0.90, 0.25, 0.25)), ("azul", (0.30, 0.55, 0.95))],
 }
 
 ESCALA_UV = {"feltro": 2, "la_trico": 1.5, "cotele": 3, "jeans": 3, "chita": 1, "ceramica": 1, "vidro": 1,
-             "botao_plastico": 1, "madeira": 1, "madreperola": 1}
+             "botao_plastico": 1, "madeira": 2.5, "madreperola": 1,
+             "tule": 3, "veludo": 2, "lantejoula": 3, "linha": 2, "papel": 1, "assoalho": 0.35}
 
 
 def salvar_png(caminho, arr):
     arr = np.clip(arr, 0, 1)
-    modo = "RGB" if arr.ndim == 3 else "L"
+    modo = {3: "RGB", 4: "RGBA"}.get(arr.shape[-1], "L") if arr.ndim == 3 else "L"
     Image.fromarray((arr * 255 + 0.5).astype(np.uint8), modo).save(caminho, optimize=True)
 
 
@@ -269,7 +375,10 @@ def gerar(nome, n):
     if h.min() < 0 or h.max() > 1:  # relevo pequeno (plástico, vidro) NÃO é esticado
         h = normalizar(h)
     rough = np.broadcast_to(np.asarray(m["rough"], np.float32), (n, n))
-    salvar_png(os.path.join(pasta, "albedo.png"), m["albedo"])
+    albedo = m["albedo"]
+    if "alpha" in m:
+        albedo = np.concatenate([albedo, m["alpha"][..., None]], -1)
+    salvar_png(os.path.join(pasta, "albedo.png"), albedo)
     salvar_png(os.path.join(pasta, "normal.png"), normal_de_altura(h, m.get("forca_normal", 3.0) * n / 256))
     salvar_png(os.path.join(pasta, "roughness.png"), rough)
     salvar_png(os.path.join(pasta, "ao.png"), ao_de_altura(h, raio=n / 128))
@@ -311,6 +420,11 @@ def escrever_tres(nome, m):
             linhas += ["transparency = 1", "metallic_specular = 0.9", "refraction_enabled = true",
                        "refraction_scale = 0.07", 'refraction_texture = ExtResource("3_rough")',
                        "rim_enabled = true", "rim = 0.4", "rim_tint = 1.0"]
+        elif m.get("tule"):
+            linhas += ["transparency = 2", "alpha_scissor_threshold = 0.35", "cull_mode = 2",
+                       "rim_enabled = true", "rim = 0.5", "rim_tint = 0.8"]
+        elif m.get("metal"):
+            linhas += ["metallic = 1.0", "metallic_specular = 0.8"]
         elif m.get("ceramica"):
             linhas += ["metallic_specular = 0.6", "clearcoat_enabled = true", "clearcoat = 0.8",
                        "clearcoat_roughness = 0.08"]

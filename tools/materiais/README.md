@@ -25,6 +25,12 @@ Normais na convenção OpenGL (a do Godot). Os materiais usam **triplanar** (ser
 | `botao_plastico` | plástico marmorizado brilhante | amarelo, vermelho, azul |
 | `madeira` | anéis deformados, veios e poros | — |
 | `madreperola` | faixas iridescentes | — |
+| `tule` | rede fina com alpha recortado (nuvens, névoa, véus) | branco, rosa, lilás |
+| `veludo` | pelúcia curtíssima + manchas de pelo amassado, rim forte | vermelho, azul, verde |
+| `lantejoula` | discos metálicos em escama com furinho | dourada, prata, rosa |
+| `linha` | linha de costura grossa torcida (pontes de fio, carretéis) | vermelha, dourada, azul |
+| `papel` | papel de livro antigo: fibras e manchinhas | — |
+| `assoalho` | tábuas com juntas, topos desencontrados e veios | — |
 
 **Cor:** os albedos de tecido/cerâmica/plástico são quase brancos — a cor vem do `albedo_color` da variante.
 Para uma cor nova, duplique um `.tres` e troque `albedo_color` (ou adicione em `VARIANTES` no gerador).

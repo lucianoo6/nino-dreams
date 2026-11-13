@@ -6,6 +6,11 @@
 [ext_resource type="Script" path="res://scripts/ui/babble_dialog.gd" id="4_dialogo"]
 [ext_resource type="Material" path="res://materials/feltro.tres" id="5_felt"]
 [ext_resource type="Script" path="res://scripts/ui/chapter_picker.gd" id="6_sumario"]
+[ext_resource type="Material" path="res://materials/pbr/assoalho.tres" id="pbr_1"]
+[ext_resource type="Material" path="res://materials/pbr/feltro_azul.tres" id="pbr_2"]
+[ext_resource type="Material" path="res://materials/pbr/chita.tres" id="pbr_3"]
+[ext_resource type="Material" path="res://materials/pbr/feltro_creme.tres" id="pbr_4"]
+[ext_resource type="Material" path="res://materials/pbr/madeira.tres" id="pbr_5"]
 
 [sub_resource type="Environment" id="Env_quarto"]
 background_mode = 1
@@ -79,32 +84,27 @@ spot_angle = 35.0
 [node name="Chao" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -1.5)
 mesh = SubResource("Mesh_chao")
-surface_material_override/0 = ExtResource("5_felt")
-instance_shader_parameters/tint = Color(0.55, 0.45, 0.6, 1)
+surface_material_override/0 = ExtResource("pbr_1")
 
 [node name="Parede" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -4.6)
 mesh = SubResource("Mesh_parede")
-surface_material_override/0 = ExtResource("5_felt")
-instance_shader_parameters/tint = Color(0.4, 0.42, 0.7, 1)
+surface_material_override/0 = ExtResource("pbr_2")
 
 [node name="Cama" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, 1.75, 0.225, -3.3)
 mesh = SubResource("Mesh_cama")
-surface_material_override/0 = ExtResource("5_felt")
-instance_shader_parameters/tint = Color(0.75, 0.55, 0.45, 1)
+surface_material_override/0 = ExtResource("pbr_5")
 
 [node name="Colcha" type="MeshInstance3D" parent="Cama"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.3)
 mesh = SubResource("Mesh_colcha")
-surface_material_override/0 = ExtResource("5_felt")
-instance_shader_parameters/tint = Color(0.95, 0.6, 0.65, 1)
+surface_material_override/0 = ExtResource("pbr_3")
 
 [node name="Travesseiro" type="MeshInstance3D" parent="Cama"]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.32, -0.8)
 mesh = SubResource("Mesh_travesseiro")
-surface_material_override/0 = ExtResource("5_felt")
-instance_shader_parameters/tint = Color(1, 0.97, 0.92, 1)
+surface_material_override/0 = ExtResource("pbr_4")
 
 [node name="LunaNaParede" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.4, -2.8)

@@ -12,6 +12,14 @@
 [ext_resource type="PackedScene" path="res://scenes/level/Carretel.tscn" id="10_carretel"]
 [ext_resource type="PackedScene" path="res://scenes/level/Cogumelo.tscn" id="11_cogumelo"]
 [ext_resource type="Material" path="res://materials/feltro.tres" id="12_felt"]
+[ext_resource type="Material" path="res://materials/pbr/feltro_verde.tres" id="pbr_1"]
+[ext_resource type="Material" path="res://materials/pbr/veludo_azul.tres" id="pbr_2"]
+[ext_resource type="Material" path="res://materials/pbr/ceramica_branca.tres" id="pbr_3"]
+[ext_resource type="Material" path="res://materials/pbr/ceramica_azul.tres" id="pbr_4"]
+[ext_resource type="Material" path="res://materials/pbr/ceramica_rosa.tres" id="pbr_5"]
+[ext_resource type="Material" path="res://materials/pbr/papel.tres" id="pbr_6"]
+[ext_resource type="Material" path="res://materials/pbr/veludo_vermelho.tres" id="pbr_7"]
+[ext_resource type="Material" path="res://materials/pbr/linha_dourada.tres" id="pbr_8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.3, 0.42, 0.75, 1)
@@ -102,6 +110,7 @@ script = ExtResource("2_planeta")
 raio = 8.0
 alcance_gravidade = 6.0
 cor = Color(0.55, 0.8, 0.5, 1)
+material_superficie = ExtResource("pbr_1")
 
 [node name="Nino" parent="." instance=ExtResource("7_nino")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.6, 0)
@@ -168,8 +177,7 @@ descricao = "borboleta de feltro"
 [node name="Visual" type="MeshInstance3D" parent="AncoraBorboleta/Borboleta"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("Mesh_borboleta")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.6, 0.4, 0.95, 1)
+surface_material_override/0 = ExtResource("pbr_2")
 
 [node name="AncoraCarretel1" type="Node3D" parent="."]
 script = ExtResource("3_ancora")
@@ -191,14 +199,14 @@ alcance_gravidade = 5.0
 prioridade = 1
 cor = Color(0.95, 0.93, 0.98, 1)
 achatamento = 0.85
+material_superficie = ExtResource("pbr_3")
 
 [node name="Tampa" type="StaticBody3D" parent="Bule"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.0, 0)
 
 [node name="Mesh" type="MeshInstance3D" parent="Bule/Tampa"]
 mesh = SubResource("Mesh_tampa")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.45, 0.6, 0.9, 1)
+surface_material_override/0 = ExtResource("pbr_4")
 
 [node name="Colisao" type="CollisionShape3D" parent="Bule/Tampa"]
 shape = SubResource("Shape_tampa")
@@ -206,20 +214,17 @@ shape = SubResource("Shape_tampa")
 [node name="Pegador" type="MeshInstance3D" parent="Bule/Tampa"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 mesh = SubResource("Mesh_pegador")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.3, 1)
+surface_material_override/0 = ExtResource("pbr_3")
 
 [node name="Bico" type="MeshInstance3D" parent="Bule"]
 transform = Transform3D(1, 0, 0, 0, 0.707, -0.707, 0, 0.707, 0.707, 0, 1.2, 6.3)
 mesh = SubResource("Mesh_bico")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.95, 0.93, 0.98, 1)
+surface_material_override/0 = ExtResource("pbr_3")
 
 [node name="Alca" type="MeshInstance3D" parent="Bule"]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 6.4, 0.3, 0)
 mesh = SubResource("Mesh_alca")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.45, 0.6, 0.9, 1)
+surface_material_override/0 = ExtResource("pbr_4")
 
 [node name="AncoraPousoBule" type="Node3D" parent="."]
 script = ExtResource("3_ancora")
@@ -253,8 +258,7 @@ descricao = "xicrinha de chá"
 [node name="Visual" type="MeshInstance3D" parent="AncoraXicara/Xicara"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 mesh = SubResource("Mesh_xicara")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(1, 0.7, 0.8, 1)
+surface_material_override/0 = ExtResource("pbr_5")
 
 [node name="AncoraCarretel2" type="Node3D" parent="."]
 script = ExtResource("3_ancora")
@@ -302,8 +306,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="Carta1"]
 mesh = SubResource("Mesh_carta")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.98, 0.96, 0.92, 1)
+surface_material_override/0 = ExtResource("pbr_6")
 
 [node name="Colisao" type="CollisionShape3D" parent="Carta1"]
 shape = SubResource("Shape_carta")
@@ -311,8 +314,7 @@ shape = SubResource("Shape_carta")
 [node name="Naipe" type="MeshInstance3D" parent="Carta1"]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
 mesh = SubResource("Mesh_naipe")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.9, 0.25, 0.3, 1)
+surface_material_override/0 = ExtResource("pbr_7")
 
 [node name="Carta2" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -36)
@@ -320,8 +322,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="Carta2"]
 mesh = SubResource("Mesh_carta")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.98, 0.96, 0.92, 1)
+surface_material_override/0 = ExtResource("pbr_6")
 
 [node name="Colisao" type="CollisionShape3D" parent="Carta2"]
 shape = SubResource("Shape_carta")
@@ -329,8 +330,7 @@ shape = SubResource("Shape_carta")
 [node name="Naipe" type="MeshInstance3D" parent="Carta2"]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
 mesh = SubResource("Mesh_naipe")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.15, 0.12, 0.2, 1)
+surface_material_override/0 = ExtResource("pbr_7")
 
 [node name="Carta3" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -54)
@@ -338,8 +338,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="Carta3"]
 mesh = SubResource("Mesh_carta")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.98, 0.96, 0.92, 1)
+surface_material_override/0 = ExtResource("pbr_6")
 
 [node name="Colisao" type="CollisionShape3D" parent="Carta3"]
 shape = SubResource("Shape_carta")
@@ -347,8 +346,7 @@ shape = SubResource("Shape_carta")
 [node name="Naipe" type="MeshInstance3D" parent="Carta3"]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
 mesh = SubResource("Mesh_naipe")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(0.9, 0.25, 0.3, 1)
+surface_material_override/0 = ExtResource("pbr_7")
 
 [node name="DicaChamarMel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 13.2, -39)
@@ -371,8 +369,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="PonteFio1/Corpo"]
 mesh = SubResource("Mesh_fio")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+surface_material_override/0 = ExtResource("pbr_8")
 
 [node name="Colisao" type="CollisionShape3D" parent="PonteFio1/Corpo"]
 shape = SubResource("Shape_fio")
@@ -387,8 +384,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="PonteFio2/Corpo"]
 mesh = SubResource("Mesh_fio")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+surface_material_override/0 = ExtResource("pbr_8")
 
 [node name="Colisao" type="CollisionShape3D" parent="PonteFio2/Corpo"]
 shape = SubResource("Shape_fio")
@@ -403,8 +399,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="PonteFio3/Corpo"]
 mesh = SubResource("Mesh_fio")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+surface_material_override/0 = ExtResource("pbr_8")
 
 [node name="Colisao" type="CollisionShape3D" parent="PonteFio3/Corpo"]
 shape = SubResource("Shape_fio")
@@ -419,8 +414,7 @@ collision_mask = 0
 
 [node name="Mesh" type="MeshInstance3D" parent="PonteFio4/Corpo"]
 mesh = SubResource("Mesh_fio")
-surface_material_override/0 = ExtResource("12_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+surface_material_override/0 = ExtResource("pbr_8")
 
 [node name="Colisao" type="CollisionShape3D" parent="PonteFio4/Corpo"]
 shape = SubResource("Shape_fio")

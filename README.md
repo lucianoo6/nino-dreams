@@ -83,7 +83,10 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] +40 animações CC0 (Quaternius UAL) retargetadas para Nino e Mel: pulo em 3 fases, andar/correr/disparar,
       agachado no pesadelo, segurar a luz, chamar a irmã, ler em voz alta sentado, acordar no sonho, comemorar
 - [x] Gerador procedural de materiais PBR (tools/materiais): feltro, tricô, cotelê, jeans, chita, cerâmica,
-      vidro, botões de plástico, madeira e madrepérola — 24 materiais prontos em materials/pbr/
+      vidro, botões, madeira, madrepérola, tule, veludo, lantejoula, linha, papel e assoalho (40 materiais)
+- [x] Materiais aplicados: fase da Alice (planeta de feltro, bule de cerâmica, cartas de papel, ponte de linha,
+      carretel de madeira) e quarto (assoalho, parede de feltro, colcha de chita, estante de madeira, livros de veludo)
+- [x] Botão 3D de verdade (borda, centro côncavo, 4 furos e X de linha) nos botões-estrela
 - [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

@@ -1,0 +1,25 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/materiais/veludo/albedo.png" id="1_albedo"]
+[ext_resource type="Texture2D" path="res://assets/materiais/veludo/normal.png" id="2_normal"]
+[ext_resource type="Texture2D" path="res://assets/materiais/veludo/roughness.png" id="3_rough"]
+[ext_resource type="Texture2D" path="res://assets/materiais/veludo/ao.png" id="4_ao"]
+
+[resource]
+resource_name = "veludo_azul"
+texture_filter = 5
+albedo_color = Color(0.12, 0.18, 0.45, 1)
+albedo_texture = ExtResource("1_albedo")
+roughness_texture = ExtResource("3_rough")
+normal_enabled = true
+normal_texture = ExtResource("2_normal")
+ao_enabled = true
+ao_texture = ExtResource("4_ao")
+uv1_triplanar = true
+uv1_scale = Vector3(2, 2, 2)
+metallic_specular = 0.25
+rim_enabled = true
+rim = 0.9
+rim_tint = 0.6
+backlight_enabled = true
+backlight = Color(0.12, 0.1, 0.1, 1)

@@ -1,17 +1,18 @@
-[gd_scene load_steps=5 format=3]
-[ext_resource type="AudioStream" path="res://assets/audio/sfx/botao_plim_a.mp3" id="3_som"]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/dream/mission_item.gd" id="1_item"]
-[ext_resource type="Material" path="res://materials/feltro.tres" id="2_felt"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/botao_plim_a.mp3" id="3_som"]
+[ext_resource type="Material" path="res://materials/pbr/botao_plastico_amarelo.tres" id="4_plastico"]
+[ext_resource type="Material" path="res://materials/pbr/linha_vermelha.tres" id="5_linha"]
 
 [sub_resource type="SphereShape3D" id="Shape_botao"]
 radius = 0.6
 
-[sub_resource type="CylinderMesh" id="Mesh_botao"]
-top_radius = 0.45
-bottom_radius = 0.45
-height = 0.12
-radial_segments = 24
+[sub_resource type="CylinderMesh" id="Mesh_ponto"]
+top_radius = 0.028
+bottom_radius = 0.028
+height = 0.36
+radial_segments = 8
 
 [node name="BotaoEstrela" type="Area3D"]
 collision_layer = 8
@@ -22,8 +23,73 @@ som = ExtResource("3_som")
 [node name="Colisao" type="CollisionShape3D" parent="."]
 shape = SubResource("Shape_botao")
 
-[node name="Visual" type="MeshInstance3D" parent="."]
+[node name="Visual" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.5, 0)
-mesh = SubResource("Mesh_botao")
-surface_material_override/0 = ExtResource("2_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.3, 1)
+
+[node name="Botao" type="CSGCombiner3D" parent="Visual"]
+
+[node name="Corpo" type="CSGCylinder3D" parent="Visual/Botao"]
+radius = 0.45
+height = 0.12
+sides = 48
+smooth_faces = true
+material = ExtResource("4_plastico")
+
+[node name="Borda" type="CSGTorus3D" parent="Visual/Botao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
+inner_radius = 0.33
+outer_radius = 0.47
+sides = 48
+ring_sides = 12
+smooth_faces = true
+material = ExtResource("4_plastico")
+
+[node name="Concavo" type="CSGSphere3D" parent="Visual/Botao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26, 0)
+operation = 2
+radius = 1.22
+radial_segments = 48
+rings = 24
+material = ExtResource("4_plastico")
+
+[node name="Furo1" type="CSGCylinder3D" parent="Visual/Botao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0, 0.1)
+operation = 2
+radius = 0.045
+height = 0.5
+sides = 16
+material = ExtResource("4_plastico")
+
+[node name="Furo2" type="CSGCylinder3D" parent="Visual/Botao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0, 0.1)
+operation = 2
+radius = 0.045
+height = 0.5
+sides = 16
+material = ExtResource("4_plastico")
+
+[node name="Furo3" type="CSGCylinder3D" parent="Visual/Botao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0, -0.1)
+operation = 2
+radius = 0.045
+height = 0.5
+sides = 16
+material = ExtResource("4_plastico")
+
+[node name="Furo4" type="CSGCylinder3D" parent="Visual/Botao"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0, -0.1)
+operation = 2
+radius = 0.045
+height = 0.5
+sides = 16
+material = ExtResource("4_plastico")
+
+[node name="PontoA" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(0.707, -0.707, 0, 0, 0, -1, 0.707, 0.707, 0, 0, 0.04, 0)
+mesh = SubResource("Mesh_ponto")
+surface_material_override/0 = ExtResource("5_linha")
+
+[node name="PontoB" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(0.707, 0.707, 0, 0, 0, -1, -0.707, 0.707, 0, 0, 0.05, 0)
+mesh = SubResource("Mesh_ponto")
+surface_material_override/0 = ExtResource("5_linha")

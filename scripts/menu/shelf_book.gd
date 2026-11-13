@@ -6,6 +6,9 @@ signal hovered(book: ShelfBook)
 signal clicked(book: ShelfBook)
 
 const FELTRO := preload("res://materials/feltro.tres")
+## Capa de veludo (tingida com a cor do livro) e faixa de linha dourada na lombada.
+const CAPA := preload("res://materials/pbr/veludo_vermelho.tres")
+const FAIXA := preload("res://materials/pbr/linha_dourada.tres")
 
 var data: BookData
 var rest_position: Vector3
@@ -25,8 +28,9 @@ func setup(livro: BookData, altura: float, largura: float, profundidade: float) 
 	var box := BoxMesh.new()
 	box.size = Vector3(largura, altura, profundidade)
 	capa.mesh = box
-	capa.material_override = FELTRO
-	capa.set_instance_shader_parameter("tint", livro.cor_da_capa)
+	var mat_capa := CAPA.duplicate() as StandardMaterial3D
+	mat_capa.albedo_color = livro.cor_da_capa
+	capa.material_override = mat_capa
 	capa.position.y = altura / 2.0
 	_visual.add_child(capa)
 
@@ -35,8 +39,7 @@ func setup(livro: BookData, altura: float, largura: float, profundidade: float) 
 	var fb := BoxMesh.new()
 	fb.size = Vector3(largura * 1.02, altura * 0.12, 0.01)
 	faixa.mesh = fb
-	faixa.material_override = FELTRO
-	faixa.set_instance_shader_parameter("tint", livro.cor_da_capa.lightened(0.45))
+	faixa.material_override = FAIXA
 	faixa.position = Vector3(0.0, altura * 0.72, profundidade / 2.0 + 0.003)
 	_visual.add_child(faixa)
 

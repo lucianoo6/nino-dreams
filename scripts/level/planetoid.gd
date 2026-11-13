@@ -30,6 +30,11 @@ const MASCARA_GRAVIDADE := 2 | 4
 	set(v):
 		cor = v
 		_rebuild()
+## Material PBR (ex.: materials/pbr/feltro_verde.tres). Vazio = shader de feltro estilizado tingido com `cor`.
+@export var material_superficie: Material:
+	set(v):
+		material_superficie = v
+		_rebuild()
 ## Achatamento (1 = esfera). Útil para bule, almofada, botão gigante.
 @export_range(0.2, 2.0, 0.05) var achatamento: float = 1.0:
 	set(v):
@@ -70,8 +75,11 @@ func _rebuild() -> void:
 	sm.radial_segments = clampi(int(raio * 8.0), 24, 96)
 	sm.rings = clampi(int(raio * 4.0), 12, 48)
 	_mesh.mesh = sm
-	_mesh.material_override = FELTRO
-	_mesh.set_instance_shader_parameter("tint", cor)
+	if material_superficie:
+		_mesh.material_override = material_superficie
+	else:
+		_mesh.material_override = FELTRO
+		_mesh.set_instance_shader_parameter("tint", cor)
 	_mesh.scale = Vector3(1.0, achatamento, 1.0)
 
 	var ss := SphereShape3D.new()
