@@ -13,6 +13,7 @@ var rest_position: Vector3
 var _visual: Node3D
 var _selected: bool = false
 var _hop_tween: Tween
+var _transform_estante: Transform3D
 
 
 func setup(livro: BookData, altura: float, largura: float, profundidade: float) -> void:
@@ -46,6 +47,7 @@ func setup(livro: BookData, altura: float, largura: float, profundidade: float) 
 	col.position.y = altura / 2.0
 	add_child(col)
 
+	_criar_marcador(altura, largura, profundidade)
 	input_ray_pickable = true
 	mouse_entered.connect(func() -> void: hovered.emit(self))
 	input_event.connect(_on_input_event)
@@ -53,6 +55,32 @@ func setup(livro: BookData, altura: float, largura: float, profundidade: float) 
 
 func _ready() -> void:
 	rest_position = position
+
+
+## Fitinha de marcador saindo do topo: mostra que o livro já foi começado (dourada se terminado).
+func _criar_marcador(altura: float, largura: float, profundidade: float) -> void:
+	var lidos: int = GameState.capitulos_concluidos(data).size()
+	if lidos == 0:
+		return
+	var terminado: bool = GameState.livro_terminado(data)
+	var fita := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(largura * 0.35, 0.12, 0.006)
+	fita.mesh = bm
+	fita.material_override = FELTRO
+	fita.set_instance_shader_parameter("tint", Color(1.0, 0.82, 0.3) if terminado else Color(0.85, 0.2, 0.3))
+	fita.position = Vector3(0.0, altura + 0.04, profundidade * 0.3)
+	_visual.add_child(fita)
+
+
+## Texto curto de progresso, ex.: "capítulo 3 de 12".
+func progresso_texto() -> String:
+	var total: int = data.total_capitulos()
+	if total <= 1:
+		return ""
+	if GameState.livro_terminado(data):
+		return "lido até o FIM ✨"
+	return "capítulo %d de %d" % [GameState.proximo_capitulo(data), total]
 
 
 func _on_input_event(_cam: Node, event: InputEvent, _pos: Vector3, _n: Vector3, _idx: int) -> void:
@@ -91,6 +119,7 @@ func set_selected(valor: bool) -> void:
 func voar_para(destino: Vector3, duracao: float = 0.9) -> void:
 	if _hop_tween:
 		_hop_tween.kill()
+	_transform_estante = global_transform
 	var meio: Vector3 = (global_position + destino) / 2.0 + Vector3.UP * 0.6
 	var tw := create_tween()
 	tw.tween_property(self, "global_position", meio, duracao * 0.5) \
@@ -100,3 +129,12 @@ func voar_para(destino: Vector3, duracao: float = 0.9) -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tw.parallel().tween_property(self, "scale", Vector3.ONE * 0.7, duracao * 0.5)
 	await tw.finished
+
+
+## Volta para o lugar na estante (quando o jogador desiste do livro).
+func voltar(duracao: float = 0.7) -> void:
+	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(self, "global_transform", _transform_estante, duracao)
+	await tw.finished
+	_selected = false
+	set_selected(true)

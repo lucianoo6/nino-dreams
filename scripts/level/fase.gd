@@ -1,6 +1,7 @@
 class_name Fase
 extends Node3D
-## Raiz de uma fase. Mostra o título do capítulo enquanto a câmera desce das nuvens.
+## Raiz de uma fase. Mostra o título do livro e do capítulo enquanto a câmera desce das nuvens.
+## Se o jogo veio da estante, o título vem do capítulo escolhido (GameState); senão, dos campos abaixo.
 
 @export var titulo: String = "Capítulo 1"
 @export var subtitulo: String = ""
@@ -9,6 +10,9 @@ extends Node3D
 
 
 func _ready() -> void:
+	if GameState.livro_atual and GameState.capitulo_atual:
+		titulo = GameState.livro_atual.titulo
+		subtitulo = GameState.capitulo_atual.rotulo()
 	var camada := CanvasLayer.new()
 	camada.layer = 60
 	add_child(camada)

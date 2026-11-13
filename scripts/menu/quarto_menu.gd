@@ -3,8 +3,9 @@ extends Node3D
 ## Passar o mouse (ou o direcional) faz os livros pularem. Ao escolher:
 ##   1. o foco da câmera "passa" da estante para o Nino (rack focus);
 ##   2. o livro voa até as mãos dele;
-##   3. ele lê a última linha da história em balbucio — e diz o grande "e FIM";
-##   4. nuvens cobrem a tela e o sonho começa com a câmera descendo das nuvens até o Nino.
+##   3. abre o sumário: o marcador de página aponta o próximo capítulo (dá para reler os já lidos);
+##   4. ele lê a última linha do CAPÍTULO em balbucio e diz "continua…" — ou "e FIM" no último capítulo;
+##   5. nuvens cobrem a tela e o sonho daquele capítulo começa com a câmera descendo das nuvens.
 
 const PASTA_LIVROS := "res://data/livros/"
 const FELTRO := preload("res://materials/feltro.tres")
@@ -30,6 +31,7 @@ var _ocupado: bool = false
 @onready var _maos: Marker3D = $Nino/MaosDoNino
 @onready var _voz: BabbleVoice = $VozDoNino
 @onready var _dialogo: BabbleDialog = $Dialogo
+@onready var _sumario: ChapterPicker = $Sumario
 @onready var _titulo: Label3D = $TituloLivro
 @onready var _estante: Node3D = $Estante
 
@@ -118,7 +120,8 @@ func _selecionar(i: int, com_pulo: bool = true) -> void:
 	var livro: ShelfBook = _livros[i]
 	livro.set_selected(true)
 	_voz.blip(livro.data.titulo.substr(0, 1), 1.3)
-	_titulo.text = "%s\n%s" % [livro.data.titulo, livro.data.autor]
+	var progresso: String = livro.progresso_texto()
+	_titulo.text = "%s\n%s%s" % [livro.data.titulo, livro.data.autor, ("\n" + progresso) if progresso else ""]
 	_titulo.global_position = livro.global_position + Vector3(0.0, 0.55, 0.1)
 	_titulo.visible = true
 
@@ -137,15 +140,31 @@ func _escolher(livro: ShelfBook) -> void:
 	_foco_no_nino(duracao_rack_focus)
 	await livro.voar_para(_maos.global_position, 1.0)
 
-	var linha: String = livro.data.ultima_linha if not livro.data.ultima_linha.is_empty() else "…"
+	# Sumário com o marcador de página (livros de um capítulo só pulam esta etapa).
+	var numero: int = 1
+	if livro.data.total_capitulos() > 1:
+		numero = await _sumario.escolher(livro.data)
+		if numero < 0:
+			_foco_na_estante(duracao_rack_focus)
+			await livro.voltar()
+			_titulo.visible = true
+			GameState.cutscene = false
+			_ocupado = false
+			return
+	var capitulo: ChapterData = livro.data.lista_capitulos()[numero - 1]
+
+	var linha: String = capitulo.ultima_linha if not capitulo.ultima_linha.is_empty() else capitulo.rotulo() + "…"
 	await _dialogo.falar(linha, _voz)
-	await _dialogo.dizer_fim(_voz)
+	if livro.data.e_ultimo(capitulo):
+		await _dialogo.dizer_fim(_voz)
+	else:
+		await _dialogo.dizer_continua(_voz)
 
 	# Nino boceja, a câmera se aproxima devagar e as nuvens tomam conta.
 	var tw := create_tween()
 	tw.tween_property(_camera, "fov", _camera.fov * 0.7, 1.6).set_trans(Tween.TRANS_SINE)
 	await Transicao.cobrir(1.6).finished
-	GameState.entrar_no_livro(livro.data)
+	GameState.entrar_no_capitulo(livro.data, capitulo)
 
 
 # ---------------- Rack focus (desfoque) ----------------

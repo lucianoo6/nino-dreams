@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scripts/ui/babble_voice.gd" id="3_voz"]
 [ext_resource type="Script" path="res://scripts/ui/babble_dialog.gd" id="4_dialogo"]
 [ext_resource type="Material" path="res://materials/feltro.tres" id="5_felt"]
+[ext_resource type="Script" path="res://scripts/ui/chapter_picker.gd" id="6_sumario"]
 
 [sub_resource type="Environment" id="Env_quarto"]
 background_mode = 1
@@ -135,3 +136,6 @@ tom_base = 340.0
 
 [node name="Dialogo" type="CanvasLayer" parent="."]
 script = ExtResource("4_dialogo")
+
+[node name="Sumario" type="CanvasLayer" parent="."]
+script = ExtResource("6_sumario")

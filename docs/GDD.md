@@ -36,6 +36,25 @@ O quarto evolui com o progresso — é a "sala de troféus" e o menu ao mesmo te
 2. **Medidor de calma:** ações no quarto antes de dormir (ler um trecho assustador, deixar a luz da lua sem carga) aumentam a chance de pesadelo.
 3. **Mistura:** estrutura fixa (1) + "pesadelos surpresa" opcionais que dão recompensas raras.
 
+## 2.0 Capítulos = noites ✅
+
+**Cada sonho é um capítulo do livro, não o livro inteiro.** Nino lê um capítulo por noite, como na vida real:
+
+- O **marcador de página** (fitinha no livro da estante) guarda até onde ele leu — salvo em `user://progresso.cfg`.
+- Ao escolher o livro, abre o **sumário**: ✓ lidos (dá para sonhar de novo), 🔖 próximo, 🔒 ainda não, 🌑 pesadelo.
+- Antes de dormir ele lê a **última linha do capítulo** e diz **"continua…"**. O **"e FIM"** só no último capítulo.
+- **Pesadelos são os capítulos do vilão** (Alice: 8 – Croquet da Rainha; 12 – O Depoimento de Alice, chefe final).
+- Livro sem capítulos cadastrados = um capítulo só (compatível com os livros antigos).
+- Em build de debug todos os capítulos ficam liberados para teste.
+
+**Alice — 12 capítulos (títulos do original):** 1 Descendo pela Toca do Coelho · 2 A Lagoa de Lágrimas ·
+3 Uma Corrida Maluca e uma História Comprida · 4 O Coelho Manda o Pequeno Bill · 5 Conselhos de uma Lagarta ·
+6 Porco e Pimenta · **7 Um Chá Maluco (fase pronta)** · 8 O Campo de Croquet da Rainha 🌑 · 9 A História da Tartaruga Falsa ·
+10 A Quadrilha da Lagosta · 11 Quem Roubou as Tortas? · 12 O Depoimento de Alice 🌑
+
+**Pendente:** traduzir a última linha de cada capítulo a partir do texto original (Project Gutenberg);
+enquanto isso o Nino lê o título do capítulo. Cadastrar os capítulos dos outros livros.
+
 ## 2.1 A estante (tela inicial / escolha de fase) — implementado
 
 Cena `scenes/menu/Quarto.tscn` (`quarto_menu.gd`):
@@ -66,9 +85,9 @@ A última linha fica em `BookData.ultima_linha` — **tradução nossa** do orig
   - **Agulha-gancho** (talvez) — enganchar em ilhoses para balançar.
   - **Retalho solto** — plataforma que cai se você ficar muito tempo.
 
-## 3.1 Alice — Capítulo 1: "Os botões do Coelho Branco" (greybox implementado)
+## 3.1 Alice — Capítulo 7: "Um Chá Maluco" (greybox implementado)
 
-`scenes/livros/alice/Capitulo1.tscn` — missão ENCONTRAR 3 botões.
+`scenes/livros/alice/Cap07_ChaMaluco.tscn` — missão ENCONTRAR 3 botões do colete do Coelho.
 
 1. **Jardim de Retalhos** (planeta r=8): início; cogumelos-plataforma; botão A escondido embaixo do planeta;
    borboleta de feltro para a Mel se distrair. **Carretel 1** lança para o Bule.

@@ -51,8 +51,7 @@ func _process(_delta: float) -> void:
 		_tocar(modo_fixo if modo_fixo != &"" else anim_parado)
 		return
 
-	var pesadelo: bool = GameState.livro_atual != null \
-		and GameState.livro_atual.tipo == BookData.DreamKind.PESADELO
+	var pesadelo: bool = GameState.e_pesadelo()
 	var up: Vector3 = _body.up_direction
 	var v: Vector3 = _body.velocity
 	var lateral: float = (v - up * v.dot(up)).length()

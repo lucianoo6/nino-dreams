@@ -93,6 +93,17 @@ func falar(frase: String, voz: BabbleVoice) -> void:
 
 ## O grande "e FIM": pula na tela com um balbucio mais grave e animado.
 func dizer_fim(voz: BabbleVoice) -> void:
+	await dizer_final("e FIM", 120, voz)
+
+
+## Fim de um capítulo que não é o último: "continua…" (menor e mais sonolento).
+func dizer_continua(voz: BabbleVoice) -> void:
+	await dizer_final("continua…", 84, voz)
+
+
+func dizer_final(texto: String, tamanho: int, voz: BabbleVoice) -> void:
+	_fim.text = texto
+	_fim.add_theme_font_size_override("font_size", tamanho)
 	_painel.visible = false
 	_fim.visible = true
 	_fim.pivot_offset = get_viewport().get_visible_rect().size / 2.0

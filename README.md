@@ -49,7 +49,7 @@ scripts/
   world/         distraction.gd (o que distrai a Mel), star_revealable.gd (só aparece na luz da Estrelinha)
 shaders/         feltro.gdshader (tecido), nuvens.gdshader (transição)
 materials/       feltro.tres — 1 material, cor por instância (instance uniform `tint`)
-scenes/          livros/alice/Capitulo1, level/ (Carretel, Cogumelo), menu/ (Quarto), player/ (Sonhador, NinoVisual, Mel), dream/, nightmare/, dev/
+scenes/          livros/alice/Cap07_ChaMaluco, level/ (Carretel, Cogumelo), menu/ (Quarto), player/ (Sonhador, NinoVisual, Mel), dream/, nightmare/, dev/
 data/livros/     um .tres de BookData por livro
 assets/          modelos, texturas, áudio, fontes (via Git LFS)
 ```
@@ -79,6 +79,7 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] Primeiros sons (ElevenLabs): "plim" do botão e "boing" do carretel
 - [x] Nino e Mel em 3D (Hyper3D Rodin) com esqueleto e 10 animações: parado, andar, corrida, pulo, rodopio,
       apontar, sentado, andar na ponta dos pés e parado triste (pesadelo)
+- [x] Capítulos: cada noite é um capítulo do livro; marcador de página salvo; "continua…" e "e FIM" só no último
 - [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

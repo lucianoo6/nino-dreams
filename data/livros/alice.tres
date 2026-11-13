@@ -1,6 +1,128 @@
-[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BookData" load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+[ext_resource type="Script" path="res://scripts/core/chapter_data.gd" id="2_cap"]
+
+[sub_resource type="Resource" id="Cap_01"]
+script = ExtResource("2_cap")
+numero = 1
+titulo = "Descendo pela Toca do Coelho"
+sinopse = "Cair devagarinho pela toca cheia de prateleiras e potes; achar a portinha do jardim."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_02"]
+script = ExtResource("2_cap")
+numero = 2
+titulo = "A Lagoa de Lágrimas"
+sinopse = "Atravessar a lagoa de lágrimas de tule, de planetinha em planetinha."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_03"]
+script = ExtResource("2_cap")
+numero = 3
+titulo = "Uma Corrida Maluca e uma História Comprida"
+sinopse = "A corrida em círculos ao redor de um planeta: juntar os confeitos de prêmio."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_04"]
+script = ExtResource("2_cap")
+numero = 4
+titulo = "O Coelho Manda o Pequeno Bill"
+sinopse = "Alice gigante dentro da casa do Coelho: sair pela chaminé."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_05"]
+script = ExtResource("2_cap")
+numero = 5
+titulo = "Conselhos de uma Lagarta"
+sinopse = "Pedaços do cogumelo fazem crescer e encolher: encontrar os 3 pedaços."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_06"]
+script = ExtResource("2_cap")
+numero = 6
+titulo = "Porco e Pimenta"
+sinopse = "A cozinha da Duquesa cheia de pimenta e o sorriso do Gato de Cheshire."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_07"]
+script = ExtResource("2_cap")
+numero = 7
+titulo = "Um Chá Maluco"
+sinopse = "Jardim de retalhos, o Bule do Chá Maluco e a trilha de cartas: os 3 botões do colete do Coelho."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = "res://scenes/livros/alice/Cap07_ChaMaluco.tscn"
+
+[sub_resource type="Resource" id="Cap_08"]
+script = ExtResource("2_cap")
+numero = 8
+titulo = "O Campo de Croquet da Rainha"
+sinopse = "Pesadelo: a Rainha de Copas grita “Cortem-lhe a cabeça!”. Acalme os soldados-carta com a Luna."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_09"]
+script = ExtResource("2_cap")
+numero = 9
+titulo = "A História da Tartaruga Falsa"
+sinopse = "Praia de feltro com o Grifo e a Tartaruga Falsa."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_10"]
+script = ExtResource("2_cap")
+numero = 10
+titulo = "A Quadrilha da Lagosta"
+sinopse = "Dançar a quadrilha no fundo do mar de lantejoulas: juntar 3 conchas."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_11"]
+script = ExtResource("2_cap")
+numero = 11
+titulo = "Quem Roubou as Tortas?"
+sinopse = "O tribunal: encontrar as 3 tortas desaparecidas antes do julgamento."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_12"]
+script = ExtResource("2_cap")
+numero = 12
+titulo = "O Depoimento de Alice"
+sinopse = "Pesadelo final: o baralho inteiro voa contra Alice. Luna e Estrelinha juntas!"
+ultima_linha = "…lembrando da sua própria infância e dos felizes dias de verão."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
 
 [resource]
 script = ExtResource("1_book")
@@ -9,10 +131,11 @@ titulo = "Alice no País das Maravilhas"
 autor = "Lewis Carroll"
 ano_publicacao = 1865
 ano_morte_autor = 1898
-sinopse = "Seguir o Coelho Branco por planetinhas de chá, cartas e cogumelos. Missão: encontrar os 3 botões do colete do Coelho."
+sinopse = "Alice segue o Coelho Branco toca abaixo. 12 capítulos = 12 noites de sonho (2 pesadelos com a Rainha de Copas)."
 ultima_linha = "…lembrando da sua própria infância e dos felizes dias de verão."
 tipo = 0
 missao = 0
 itens_necessarios = 3
-cena_do_sonho = "res://scenes/livros/alice/Capitulo1.tscn"
+cena_do_sonho = ""
 cor_da_capa = Color(0.45, 0.6, 0.9, 1)
+capitulos = Array[ExtResource("2_cap")]([SubResource("Cap_01"), SubResource("Cap_02"), SubResource("Cap_03"), SubResource("Cap_04"), SubResource("Cap_05"), SubResource("Cap_06"), SubResource("Cap_07"), SubResource("Cap_08"), SubResource("Cap_09"), SubResource("Cap_10"), SubResource("Cap_11"), SubResource("Cap_12")])
