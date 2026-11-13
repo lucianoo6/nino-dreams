@@ -1,6 +1,148 @@
-[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BookData" load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+[ext_resource type="Script" path="res://scripts/core/chapter_data.gd" id="2_cap"]
+
+[sub_resource type="Resource" id="Cap_01"]
+script = ExtResource("2_cap")
+numero = 1
+titulo = "Véspera de Natal"
+sinopse = "Nino explora a sala de estar de feltro enfeitada para o Natal, procurando presentes escondidos enquanto a árvore de lã brilha e o relógio do tio Drosselmeyer bate as horas."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_02"]
+script = ExtResource("2_cap")
+numero = 2
+titulo = "Os Presentes"
+sinopse = "Nino desembrulha os presentes de tecido um a um, descobrindo soldadinhos de botão e bonecas de pano até achar o Quebra-Nozes de madeira, o presente mais especial de todos."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_03"]
+script = ExtResource("2_cap")
+numero = 3
+titulo = "O Favorito"
+sinopse = "Nino cuida do Quebra-Nozes de feltro, que quebrou os dentes, e procura nozes de lã macias para alimentá-lo enquanto os outros brinquedos de pano observam com carinho."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_04"]
+script = ExtResource("2_cap")
+numero = 4
+titulo = "Maravilhas e Mais Maravilhas"
+sinopse = "À meia-noite, Nino atravessa a sala gigante de tecido onde os brinquedos ganham vida, saltando entre almofadas enormes até chegar ao armário de vidro onde o Quebra-Nozes o espera."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_05"]
+script = ExtResource("2_cap")
+numero = 5
+titulo = "A Batalha"
+sinopse = "O Rei dos Ratos de sete cabeças de feltro escuro invade a sala com seu exército, e Nino precisa acalmá-lo com a luz da Luna enquanto os soldadinhos de botão lutam ao seu lado."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_06"]
+script = ExtResource("2_cap")
+numero = 6
+titulo = "A Doença"
+sinopse = "Doente na cama de retalhos após a batalha, Nino sonha em encontrar os pedaços da história que o tio Drosselmeyer conta, costurados como remendos de tecido pelo quarto."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_07"]
+script = ExtResource("2_cap")
+numero = 7
+titulo = "A História da Noz Dura"
+sinopse = "No castelo de feltro do conto, a Rainha dos Ratos aparece furiosa para ameaçar a princesinha Pirlipat, e Nino precisa acalmá-la com a luz da Luna antes que ela lance seu feitiço."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_08"]
+script = ExtResource("2_cap")
+numero = 8
+titulo = "A História da Noz Dura Continua"
+sinopse = "Nino viaja pelo mundo de lã com o relógioiro Drosselmeyer, procurando a noz Krakatuk e o jovem que nunca fez a barba nem usou botas, os únicos capazes de quebrar o feitiço."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_09"]
+script = ExtResource("2_cap")
+numero = 9
+titulo = "O Fim da História da Noz Dura"
+sinopse = "Nino acompanha o jovem sobrinho quebrando a noz Krakatuk no grande salão de tecido, correndo para entregar o miolo à princesa antes que o Rei dos Ratos de feltro atrapalhe tudo."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_10"]
+script = ExtResource("2_cap")
+numero = 10
+titulo = "O Tio e o Sobrinho"
+sinopse = "Nino visita a oficina de engrenagens de linha e botões do tio Drosselmeyer, procurando as peças que revelam o segredo: o Quebra-Nozes é o sobrinho enfeitiçado do relojoeiro."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_11"]
+script = ExtResource("2_cap")
+numero = 11
+titulo = "A Vitória"
+sinopse = "O Rei dos Ratos volta uma última vez para exigir os doces de açúcar de Nino, e com a luz da Luna e a Estrelinha de Mel, Nino o acalma de vez e liberta o Quebra-Nozes do feitiço."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_12"]
+script = ExtResource("2_cap")
+numero = 12
+titulo = "O Reino dos Brinquedos"
+sinopse = "Nino atravessa a floresta de Natal de feltro e o lago de leite de cetim, pulando em planetinhas de doce até chegar às portas do Reino dos Brinquedos com o príncipe Quebra-Nozes."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_13"]
+script = ExtResource("2_cap")
+numero = 13
+titulo = "A Capital"
+sinopse = "Na capital de maçapão e glacê, Nino procura as maravilhas do reino: o rio de limonada, as casas de bolo e os jardins de bala, tudo feito de tecido brilhante e botões coloridos."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_14"]
+script = ExtResource("2_cap")
+numero = 14
+titulo = "O Final Feliz"
+sinopse = "Nino acorda de volta ao quarto de retalhos e, guiado pela luz da Luna, atravessa a sala de feltro uma última vez para descobrir que o sobrinho de Drosselmeyer chegou de verdade, terminando o sonho com um sorriso."
+ultima_linha = "…e até hoje ela é rainha de um reino onde se podem ver as coisas mais maravilhosas — para quem tiver olhos para vê-las."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
 
 [resource]
 script = ExtResource("1_book")
@@ -16,3 +158,4 @@ missao = 2
 itens_necessarios = 0
 cena_do_sonho = ""
 cor_da_capa = Color(0.7, 0.2, 0.25, 1)
+capitulos = Array[ExtResource("2_cap")]([SubResource("Cap_01"), SubResource("Cap_02"), SubResource("Cap_03"), SubResource("Cap_04"), SubResource("Cap_05"), SubResource("Cap_06"), SubResource("Cap_07"), SubResource("Cap_08"), SubResource("Cap_09"), SubResource("Cap_10"), SubResource("Cap_11"), SubResource("Cap_12"), SubResource("Cap_13"), SubResource("Cap_14")])

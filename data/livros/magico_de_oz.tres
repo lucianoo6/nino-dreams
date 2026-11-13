@@ -1,6 +1,248 @@
-[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BookData" load_steps=27 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+[ext_resource type="Script" path="res://scripts/core/chapter_data.gd" id="2_cap"]
+
+[sub_resource type="Resource" id="Cap_01"]
+script = ExtResource("2_cap")
+numero = 1
+titulo = "O Ciclone"
+sinopse = "Nino atravessa a casa de feltro girando no céu de lã até pousar na terra colorida de Oz."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_02"]
+script = ExtResource("2_cap")
+numero = 2
+titulo = "O Conselho dos Munchkins"
+sinopse = "Nino encontra os pequenos Munchkins de tecido azul e procura os três presentes que preparam para a jornada."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_03"]
+script = ExtResource("2_cap")
+numero = 3
+titulo = "O Espantalho Salvo"
+sinopse = "Nino tira o Espantalho de palha da estaca e junta as três coisas que ele precisa para caminhar."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_04"]
+script = ExtResource("2_cap")
+numero = 4
+titulo = "A Estrada da Floresta"
+sinopse = "Nino segue a estrada de tijolos amarelos de feltro atravessando a floresta de lã escura até a clareira."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_05"]
+script = ExtResource("2_cap")
+numero = 5
+titulo = "O Lenhador de Lata"
+sinopse = "Nino encontra o Lenhador de Lata enferrujado e procura as três gotas de óleo para soltar suas juntas."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_06"]
+script = ExtResource("2_cap")
+numero = 6
+titulo = "O Leão Covarde"
+sinopse = "Nino conhece o Leão de pelúcia medroso e o guia pela trilha da floresta até reencontrar os amigos."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_07"]
+script = ExtResource("2_cap")
+numero = 7
+titulo = "A Jornada até Oz"
+sinopse = "Nino pula sobre fossos de linha e escapa das feras Kalidah de botão até a margem do grande rio."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_08"]
+script = ExtResource("2_cap")
+numero = 8
+titulo = "O Campo de Papoulas"
+sinopse = "Nino corre pelo campo de papoulas de tecido vermelho antes que o perfume sonolento o faça dormir."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_09"]
+script = ExtResource("2_cap")
+numero = 9
+titulo = "A Rainha dos Camundongos"
+sinopse = "Nino ajuda os ratinhos de feltro a carregar o Leão adormecido e encontra as três peças da plataforma de resgate."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_10"]
+script = ExtResource("2_cap")
+numero = 10
+titulo = "O Guardião dos Portões"
+sinopse = "Nino chega à Cidade das Esmeraldas e procura os três pares de óculos verdes para poder entrar."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_11"]
+script = ExtResource("2_cap")
+numero = 11
+titulo = "A Cidade das Esmeraldas"
+sinopse = "Nino passeia pela cidade verde de feltro brilhante e sobe as escadas do palácio até o trono do Grande Oz."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_12"]
+script = ExtResource("2_cap")
+numero = 12
+titulo = "A Caça à Bruxa Má"
+sinopse = "Nino enfrenta a Bruxa Má do Oeste em seu castelo de lã cinza e a acalma com a luz da Luna até ela derreter em fios."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_13"]
+script = ExtResource("2_cap")
+numero = 13
+titulo = "O Resgate"
+sinopse = "Nino procura os três amigos desfeitos pelo castelo e os remenda com agulha e linha de feltro."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_14"]
+script = ExtResource("2_cap")
+numero = 14
+titulo = "Os Macacos Alados"
+sinopse = "Nino foge dos Macacos Alados de botão que voam pelo céu escuro e os acalma com a luz da Luna e da Estrelinha."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_15"]
+script = ExtResource("2_cap")
+numero = 15
+titulo = "O Segredo de Oz"
+sinopse = "Nino puxa a cortina de tecido verde e descobre o pequeno mágico, seguindo-o até a saída do trono."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_16"]
+script = ExtResource("2_cap")
+numero = 16
+titulo = "A Mágica do Grande Impostor"
+sinopse = "Nino ajuda o mágico a encontrar o cérebro de alfinetes, o coração de seda e a coragem em garrafa para os amigos."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_17"]
+script = ExtResource("2_cap")
+numero = 17
+titulo = "O Balão Decola"
+sinopse = "Nino corre pela praça de feltro tentando alcançar o balão de retalhos antes que ele suba sem Dorothy."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_18"]
+script = ExtResource("2_cap")
+numero = 18
+titulo = "Rumo ao Sul"
+sinopse = "Nino guia os amigos pela estrada de lã em direção ao sul, atravessando colinas de almofadas até a floresta."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_19"]
+script = ExtResource("2_cap")
+numero = 19
+titulo = "As Árvores Lutadoras"
+sinopse = "Nino desvia dos galhos de feltro que agarram e empurram, abrindo caminho com o machado do Lenhador."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_20"]
+script = ExtResource("2_cap")
+numero = 20
+titulo = "O País de Porcelana"
+sinopse = "Nino caminha com cuidado pelo reino de porcelana e encontra as três peças quebradas para consertar a princesinha."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_21"]
+script = ExtResource("2_cap")
+numero = 21
+titulo = "O Leão Vira Rei"
+sinopse = "Nino acompanha o Leão pela floresta de lã escura até a teia da aranha gigante de botões e ajuda a libertar os animais."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_22"]
+script = ExtResource("2_cap")
+numero = 22
+titulo = "O País dos Quadlings"
+sinopse = "Nino atravessa as colinas vermelhas de feltro dos Quadlings e escala a montanha dos Homens de Cabeça Chata."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_23"]
+script = ExtResource("2_cap")
+numero = 23
+titulo = "O Desejo de Glinda"
+sinopse = "Nino encontra as três despedidas dos amigos no palácio cor-de-rosa de Glinda antes do sapatinho mágico brilhar."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_24"]
+script = ExtResource("2_cap")
+numero = 24
+titulo = "De Volta ao Lar"
+sinopse = "Nino voa sobre os campos de lã do Kansas até a porta da casa de feltro, onde o abraço da família espera."
+ultima_linha = "— E, ah, Tia Em! Estou tão feliz de estar em casa de novo!"
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
 
 [resource]
 script = ExtResource("1_book")
@@ -16,3 +258,4 @@ missao = 1
 itens_necessarios = 0
 cena_do_sonho = ""
 cor_da_capa = Color(0.3, 0.65, 0.4, 1)
+capitulos = Array[ExtResource("2_cap")]([SubResource("Cap_01"), SubResource("Cap_02"), SubResource("Cap_03"), SubResource("Cap_04"), SubResource("Cap_05"), SubResource("Cap_06"), SubResource("Cap_07"), SubResource("Cap_08"), SubResource("Cap_09"), SubResource("Cap_10"), SubResource("Cap_11"), SubResource("Cap_12"), SubResource("Cap_13"), SubResource("Cap_14"), SubResource("Cap_15"), SubResource("Cap_16"), SubResource("Cap_17"), SubResource("Cap_18"), SubResource("Cap_19"), SubResource("Cap_20"), SubResource("Cap_21"), SubResource("Cap_22"), SubResource("Cap_23"), SubResource("Cap_24")])

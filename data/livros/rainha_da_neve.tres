@@ -1,6 +1,78 @@
-[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BookData" load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+[ext_resource type="Script" path="res://scripts/core/chapter_data.gd" id="2_cap"]
+
+[sub_resource type="Resource" id="Cap_01"]
+script = ExtResource("2_cap")
+numero = 1
+titulo = "O Espelho Encantado"
+sinopse = "Nino desliza por céus de feltro estrelado recolhendo 3 cacos brilhantes do espelho mágico que se quebrou e caiu sobre o mundo."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_02"]
+script = ExtResource("2_cap")
+numero = 2
+titulo = "Kai e Gerda"
+sinopse = "A Rainha da Neve surge num trenó de lã gelada e leva Kai embora, e Nino precisa alcançá-la e acalmá-la com a luz da Luna entre telhados de tecido nevado."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_03"]
+script = ExtResource("2_cap")
+numero = 3
+titulo = "O Jardim da Velhinha"
+sinopse = "Num jardim de flores gigantes de feltro que contam histórias, Nino procura 3 flores falantes para descobrir notícias de Kai."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_04"]
+script = ExtResource("2_cap")
+numero = 4
+titulo = "O Príncipe e a Princesa"
+sinopse = "Nino atravessa um palácio de almofadas e cortinas de seda, ajudado por um corvo de botões, até chegar à carruagem dourada que o levará adiante na busca por Kai."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_05"]
+script = ExtResource("2_cap")
+numero = 5
+titulo = "A Pequena Ladra"
+sinopse = "No castelo bagunçado dos ladrões, cheio de panos e animais de pelúcia, Nino faz amizade com a menina ladra e encontra 3 amigos animais que indicam o caminho do norte."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena = ""
+
+[sub_resource type="Resource" id="Cap_06"]
+script = ExtResource("2_cap")
+numero = 6
+titulo = "A Mulher da Lapônia e a Mulher da Finlândia"
+sinopse = "Montado numa rena de lã fofa, Nino viaja por cabanas quentinhas de tricô e planícies de neve de algodão até alcançar a saída que leva ao palácio de gelo."
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena = ""
+
+[sub_resource type="Resource" id="Cap_07"]
+script = ExtResource("2_cap")
+numero = 7
+titulo = "O Palácio da Rainha da Neve"
+sinopse = "No palácio de gelo de feltro branco, Nino encontra Kai congelado de tristeza e enfrenta a Rainha da Neve, derretendo o frio com a luz da Luna e o calor da Estrelinha de Mel."
+ultima_linha = "Ali estavam os dois, crescidos e ainda assim crianças, crianças no coração; e era verão, um verão quente e abençoado."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena = ""
 
 [resource]
 script = ExtResource("1_book")
@@ -16,3 +88,4 @@ missao = 2
 itens_necessarios = 0
 cena_do_sonho = ""
 cor_da_capa = Color(0.65, 0.82, 0.95, 1)
+capitulos = Array[ExtResource("2_cap")]([SubResource("Cap_01"), SubResource("Cap_02"), SubResource("Cap_03"), SubResource("Cap_04"), SubResource("Cap_05"), SubResource("Cap_06"), SubResource("Cap_07")])
