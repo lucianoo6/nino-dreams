@@ -6,6 +6,7 @@ namespace Sonhos.Player;
 /// <summary>
 /// O sonhador. Movimento estilo "planetinhas": a gravidade vem das Area3D (gravity point)
 /// de cada planeta, e o personagem alinha o "para cima" com o oposto da gravidade.
+/// O mesmo controlador serve para Nino (jogador 1) e para a irmãzinha (jogador 2 ou IA).
 /// </summary>
 public partial class DreamerController : CharacterBody3D
 {
@@ -28,11 +29,18 @@ public partial class DreamerController : CharacterBody3D
     [ExportGroup("Gravidade")]
     [Export] public float UpAlignSpeed { get; set; } = 10f;
 
+    /// <summary>Câmera usada como referência de direção. Vazio = procura no grupo "camera_sonho".</summary>
     [Export] public NodePath CameraRigPath { get; set; } = new("CameraRig");
+
+    /// <summary>Prefixo das ações de input: "" = jogador 1 (Nino), "p2_" = jogador 2 (irmãzinha no coop).</summary>
+    [Export] public string ActionPrefix { get; set; } = "";
 
     public bool IsSpinning => _spinTimer > 0f;
 
-    private DreamCamera _camera = null!;
+    private DreamCamera? _camera;
+    protected DreamCamera Camera =>
+        _camera ??= (CameraRigPath.IsEmpty ? null : GetNodeOrNull<DreamCamera>(CameraRigPath))
+                    ?? (DreamCamera)GetTree().GetFirstNodeInGroup("camera_sonho");
     private float _coyote;
     private float _jumpBuffer;
     private bool _spinAvailable = true;
@@ -41,7 +49,6 @@ public partial class DreamerController : CharacterBody3D
     public override void _Ready()
     {
         AddToGroup("sonhador");
-        _camera = GetNode<DreamCamera>(CameraRigPath);
         FloorSnapLength = 0.4f;
     }
 
@@ -67,11 +74,7 @@ public partial class DreamerController : CharacterBody3D
         Vector3 lateral = v - up * vertical;
 
         // 3) Direção desejada relativa à câmera, projetada no plano tangente.
-        Vector2 input = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
-        Basis cb = _camera.GlobalBasis;
-        Vector3 camF = ProjectOnPlane(-cb.Z, up);
-        Vector3 camR = ProjectOnPlane(cb.X, up);
-        Vector3 wish = camR * input.X + camF * -input.Y;
+        Vector3 wish = ComputeWish(up);
         if (wish.LengthSquared() > 1f) wish = wish.Normalized();
 
         bool onFloor = IsOnFloor();
@@ -81,7 +84,7 @@ public partial class DreamerController : CharacterBody3D
         if (onFloor) { _coyote = CoyoteTime; _spinAvailable = true; }
         else _coyote -= d;
 
-        if (Input.IsActionJustPressed("jump")) _jumpBuffer = JumpBuffer;
+        if (ReadJumpPressed()) _jumpBuffer = JumpBuffer;
         else _jumpBuffer -= d;
 
         if (_jumpBuffer > 0f && _coyote > 0f)
@@ -92,13 +95,13 @@ public partial class DreamerController : CharacterBody3D
         }
         else
         {
-            bool cutJump = vertical > 0f && !Input.IsActionPressed("jump");
+            bool cutJump = vertical > 0f && !ReadJumpHeld();
             vertical -= gLen * d * (cutJump ? LowJumpMultiplier : 1f);
         }
 
         // 5) Rodopio.
         _spinTimer -= d;
-        if (Input.IsActionJustPressed("spin") && _spinTimer <= 0f)
+        if (ReadSpinPressed() && _spinTimer <= 0f)
         {
             _spinTimer = 0.35f;
             if (!onFloor && _spinAvailable)
@@ -114,6 +117,25 @@ public partial class DreamerController : CharacterBody3D
         // 6) Orientar o corpo: em pé no planeta e virado para onde anda.
         OrientBody(up, wish, d);
     }
+
+    // ---- Input virtual: a irmãzinha sobrescreve isto quando é controlada pela IA. ----
+
+    /// <summary>Direção desejada no mundo (plano tangente). Padrão: analógico relativo à câmera.</summary>
+    protected virtual Vector3 ComputeWish(Vector3 up)
+    {
+        Vector2 input = ReadMove();
+        Basis cb = Camera.GlobalBasis;
+        Vector3 camF = ProjectOnPlane(-cb.Z, up);
+        Vector3 camR = ProjectOnPlane(cb.X, up);
+        return camR * input.X + camF * -input.Y;
+    }
+
+    protected virtual Vector2 ReadMove() =>
+        Input.GetVector(ActionPrefix + "move_left", ActionPrefix + "move_right",
+                        ActionPrefix + "move_forward", ActionPrefix + "move_back");
+    protected virtual bool ReadJumpPressed() => Input.IsActionJustPressed(ActionPrefix + "jump");
+    protected virtual bool ReadJumpHeld() => Input.IsActionPressed(ActionPrefix + "jump");
+    protected virtual bool ReadSpinPressed() => Input.IsActionJustPressed(ActionPrefix + "spin");
 
     private void OrientBody(Vector3 up, Vector3 wish, float d)
     {
@@ -133,7 +155,7 @@ public partial class DreamerController : CharacterBody3D
         GlobalBasis = current.Slerp(target, t).Orthonormalized();
     }
 
-    private static Vector3 ProjectOnPlane(Vector3 v, Vector3 normal)
+    protected static Vector3 ProjectOnPlane(Vector3 v, Vector3 normal)
     {
         Vector3 p = v - normal * v.Dot(normal);
         return p.LengthSquared() > 0.0001f ? p.Normalized() : Vector3.Zero;

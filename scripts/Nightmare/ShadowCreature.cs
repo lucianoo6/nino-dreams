@@ -16,6 +16,11 @@ public partial class ShadowCreature : CharacterBody3D
     [Export] public float LitSlowdown { get; set; } = 0.2f;
     [Export] public bool IsBoss { get; set; }
 
+    /// <summary>Atualizado pela Estrelinha a cada frame físico.</summary>
+    public bool IsInStarAura { get; set; }
+    /// <summary>Ponto de onde a criatura deve fugir (centro da aura da Estrelinha).</summary>
+    public Vector3? RepelFrom { get; set; }
+
     private float _maxDarkness;
     private float _litTimer;
     private Node3D? _target;
@@ -52,6 +57,15 @@ public partial class ShadowCreature : CharacterBody3D
             if (to.LengthSquared() > 0.01f)
                 lateral = to.Normalized() * ChaseSpeed * (_litTimer > 0f ? LitSlowdown : 1f);
         }
+        // A luz quente da Estrelinha é uma zona segura: sombras não entram, são empurradas para fora.
+        if (RepelFrom is Vector3 c)
+        {
+            Vector3 away = GlobalPosition - c;
+            away -= up * away.Dot(up);
+            if (away.LengthSquared() > 0.001f) lateral = away.Normalized() * ChaseSpeed * 1.2f;
+        }
+        IsInStarAura = false;
+        RepelFrom = null;
 
         float vertical = Velocity.Dot(up) - gravity.Length() * d;
         Velocity = lateral + up * vertical;

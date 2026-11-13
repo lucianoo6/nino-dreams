@@ -3,7 +3,8 @@ using Godot;
 namespace Sonhos.Nightmare;
 
 /// <summary>
-/// A luz em formato de lua do quarto, levada para dentro do pesadelo.
+/// LUNA — a luz em formato de lua do quarto do Nino, levada para dentro do pesadelo.
+/// Luz fria, em cone, direcional: é a "arma" que dissipa as sombras.
 /// Segurar "lamp" acende o cone; criaturas de sombra dentro do cone perdem escuridão.
 /// A bateria ("brilho") gasta enquanto acesa e recarrega apagada.
 /// </summary>
@@ -16,12 +17,17 @@ public partial class MoonLamp : SpotLight3D
     [Export] public float RechargePerSecond { get; set; } = 14f;
     [Export] public float LightPower { get; set; } = 1f;
     [Export] public float OnEnergy { get; set; } = 6f;
+    [Export] public string ActionName { get; set; } = "lamp";
+
+    /// <summary>Multiplicador de recarga (a Estrelinha da irmã perto acelera a recarga).</summary>
+    public float RechargeMultiplier { get; set; } = 1f;
 
     public float Glow { get; private set; }
     public bool IsOn { get; private set; }
 
     public override void _Ready()
     {
+        AddToGroup("luna");
         Glow = MaxGlow;
         LightEnergy = 0f;
     }
@@ -29,12 +35,12 @@ public partial class MoonLamp : SpotLight3D
     public override void _PhysicsProcess(double delta)
     {
         float d = (float)delta;
-        bool wantsOn = Input.IsActionPressed("lamp") && Glow > 0f;
+        bool wantsOn = Input.IsActionPressed(ActionName) && Glow > 0f;
         IsOn = wantsOn;
 
         Glow = IsOn
             ? Mathf.Max(0f, Glow - DrainPerSecond * d)
-            : Mathf.Min(MaxGlow, Glow + RechargePerSecond * d);
+            : Mathf.Min(MaxGlow, Glow + RechargePerSecond * RechargeMultiplier * d);
         EmitSignal(SignalName.GlowChanged, Glow / MaxGlow);
 
         LightEnergy = Mathf.Lerp(LightEnergy, IsOn ? OnEnergy : 0f, 1f - Mathf.Exp(-14f * d));
@@ -59,7 +65,9 @@ public partial class MoonLamp : SpotLight3D
             if (space.IntersectRay(query).Count > 0) continue;
 
             float falloff = 1f - dist / SpotRange;
-            creature.ReceiveLight(LightPower * (0.5f + falloff) * d);
+            // Luz cruzada: Luna + Estrelinha ao mesmo tempo = "luz de amanhecer", bem mais forte.
+            float combo = creature.IsInStarAura ? StarLight.CrossLightBonus : 1f;
+            creature.ReceiveLight(LightPower * (0.5f + falloff) * combo * d);
         }
     }
 }

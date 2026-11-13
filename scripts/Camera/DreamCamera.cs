@@ -20,6 +20,7 @@ public partial class DreamCamera : Node3D
     public override void _Ready()
     {
         _target = GetParent<CharacterBody3D>();
+        AddToGroup("camera_sonho");
         TopLevel = true;
         GlobalTransform = _target.GlobalTransform;
     }

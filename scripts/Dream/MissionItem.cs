@@ -34,7 +34,7 @@ public partial class MissionItem : Area3D
 
     private void OnBodyEntered(Node3D body)
     {
-        if (!body.IsInGroup("sonhador")) return;
+        if (!body.IsInGroup("sonhador") && !body.IsInGroup("irmazinha")) return;
         if (IsExit) GameState.Instance.CompletarMissao();
         else GameState.Instance.ColetarItem();
         // TODO: partículas de fiapos/purpurina + som de "plim" de botão.

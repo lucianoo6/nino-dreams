@@ -1,0 +1,84 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/Player/SisterController.cs" id="1_sis"]
+[ext_resource type="Script" path="res://scripts/Nightmare/StarLight.cs" id="2_star"]
+[ext_resource type="Material" path="res://materials/feltro.tres" id="3_felt"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_corpo"]
+radius = 0.28
+height = 0.95
+
+[sub_resource type="CapsuleMesh" id="Mesh_camisola"]
+radius = 0.28
+height = 0.7
+
+[sub_resource type="SphereMesh" id="Mesh_cabeca"]
+radius = 0.26
+height = 0.52
+
+[sub_resource type="SphereMesh" id="Mesh_maria_chiquinha"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="PrismMesh" id="Mesh_estrela"]
+size = Vector3(0.2, 0.2, 0.06)
+
+[sub_resource type="SphereMesh" id="Mesh_brilho"]
+radius = 0.07
+height = 0.14
+
+[node name="Irmazinha" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_sis")
+MoveSpeed = 6.5
+JumpVelocity = 10.0
+CameraRigPath = NodePath("")
+
+[node name="Colisao" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
+shape = SubResource("Shape_corpo")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Camisola" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+mesh = SubResource("Mesh_camisola")
+surface_material_override/0 = ExtResource("3_felt")
+instance_shader_parameters/tint = Color(1, 0.65, 0.75, 1)
+
+[node name="Cabeca" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.88, 0)
+mesh = SubResource("Mesh_cabeca")
+surface_material_override/0 = ExtResource("3_felt")
+instance_shader_parameters/tint = Color(1, 0.82, 0.7, 1)
+
+[node name="ChiquinhaE" type="MeshInstance3D" parent="Visual/Cabeca"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.27, 0.08, 0)
+mesh = SubResource("Mesh_maria_chiquinha")
+surface_material_override/0 = ExtResource("3_felt")
+instance_shader_parameters/tint = Color(0.45, 0.28, 0.2, 1)
+
+[node name="ChiquinhaD" type="MeshInstance3D" parent="Visual/Cabeca"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27, 0.08, 0)
+mesh = SubResource("Mesh_maria_chiquinha")
+surface_material_override/0 = ExtResource("3_felt")
+instance_shader_parameters/tint = Color(0.45, 0.28, 0.2, 1)
+
+[node name="Estrelinha" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.25, 0)
+light_color = Color(1, 0.78, 0.45, 1)
+light_energy = 2.0
+shadow_enabled = true
+omni_range = 5.6
+script = ExtResource("2_star")
+
+[node name="Ponta" type="MeshInstance3D" parent="Estrelinha"]
+mesh = SubResource("Mesh_estrela")
+surface_material_override/0 = ExtResource("3_felt")
+instance_shader_parameters/tint = Color(1, 0.85, 0.4, 1)
+
+[node name="Brilho" type="MeshInstance3D" parent="Estrelinha"]
+mesh = SubResource("Mesh_brilho")
+surface_material_override/0 = ExtResource("3_felt")
+instance_shader_parameters/tint = Color(1, 0.95, 0.7, 1)
