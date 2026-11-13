@@ -1,0 +1,43 @@
+name: Verificar no Godot
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GODOT_VERSION: "4.7"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Baixar Godot ${{ env.GODOT_VERSION }}
+        run: |
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" godot
+          chmod +x godot
+
+      - name: Importar o projeto
+        run: ./godot --headless --path . --import 2>&1 | tee import.log
+
+      - name: Carregar todos os scripts e cenas
+        run: ./godot --headless --path . --script res://tools/ci/verificar.gd 2>&1 | tee verificar.log
+
+      - name: Rodar as cenas principais por alguns segundos
+        run: |
+          for cena in res://scenes/menu/Quarto.tscn res://scenes/livros/alice/Capitulo1.tscn res://scenes/dev/PlanetaTeste.tscn; do
+            echo "::group::$cena"
+            ./godot --headless --path . "$cena" --quit-after 300 2>&1 | tee -a smoke.log
+            echo "::endgroup::"
+          done
+
+      - name: Falhar se apareceu algum erro
+        run: |
+          if grep -nE "SCRIPT ERROR|Parse Error|Compile Error|ERROR:|❌" import.log verificar.log smoke.log; then
+            echo "::error::O Godot reportou erros (veja acima)."
+            exit 1
+          fi
+          echo "Sem erros 🎉"

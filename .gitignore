@@ -11,3 +11,8 @@ Thumbs.db
 
 # Builds
 /builds/
+
+# Python (ferramentas)
+__pycache__/
+*.pyc
+.venv/
