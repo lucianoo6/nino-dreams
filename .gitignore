@@ -5,17 +5,6 @@
 export_presets.cfg
 *.tmp
 
-# .NET
-.mono/
-bin/
-obj/
-*.user
-*.suo
-.vs/
-.idea/
-.vscode/*
-!.vscode/extensions.json
-
 # SO
 .DS_Store
 Thumbs.db

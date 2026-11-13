@@ -4,12 +4,12 @@
 
 ## 1. Premissa
 
-**Nino** lê um livro antes de dormir — às vezes junto com a irmãzinha. Quando apaga a luz, ele sonha
+**Nino** lê um livro antes de dormir — às vezes junto com a irmãzinha, **Mel**. Quando apaga a luz, ele sonha
 com aquele livro — mas o mundo do sonho é feito do que tem no quarto dele: **feltro, lã, retalhos, botões,
 zíperes, linha de costura, almofadas**. Cada livro vira uma pequena "galáxia" de planetinhas de tecido.
 
 Algumas noites são **sonhos** (explorar, cumprir uma missão). Outras são **pesadelos**: o vilão do livro aparece,
-o mundo perde a cor, e Nino enfrenta o vilão com a **Luna**, a luz em formato de lua do quarto dele. A irmãzinha vem junto com a **Estrelinha**, uma luz de estrela quente.
+o mundo perde a cor, e Nino enfrenta o vilão com a **Luna**, a luz em formato de lua do quarto dele. A Mel vem junto com a **Estrelinha**, uma luz de estrela quente.
 
 **Tom:** fofo, aconchegante, mas com controle **dinâmico** e gostoso (pulo responsivo, rodopio, gravidade de planetinhas).
 Os pesadelos dão um friozinho na barriga, nunca terror — o vilão não morre: é **acalmado** pela luz e adormece / vira pelúcia.
@@ -50,7 +50,7 @@ O quarto evolui com o progresso — é a "sala de troféus" e o menu ao mesmo te
 
 | Tipo | Exemplo | Status |
 |---|---|---|
-| **Encontrar** | 3 botões do colete do Coelho Branco | base implementada (`MissionItem`) |
+| **Encontrar** | 3 botões do colete do Coelho Branco | base implementada (`mission_item.gd`) |
 | **Sair** | achar a porta pequenininha / a toca | base implementada (`IsExit`) |
 | Corrida | chegar antes do relógio do Coelho | ideia |
 | Escoltar | levar o Patinho Feio até o lago | ideia |
@@ -61,8 +61,8 @@ Colecionável global: **Estrelas de Botão** (equivalente às estrelas de progre
 ## 5. Pesadelos — Luna
 
 - **Luna**, a luz de cabeceira em forma de lua, vira a "arma" de Nino: **segurar** acende um **cone de luz**.
-- Tem **Brilho** (bateria): gasta acesa, recarrega apagada → ritmo de tensão/alívio. (implementado: `MoonLamp`)
-- Sombras de lã escura **desaceleram, encolhem e se desfazem em estrelinhas** sob a luz. (implementado: `ShadowCreature`)
+- Tem **Brilho** (bateria): gasta acesa, recarrega apagada → ritmo de tensão/alívio. (implementado: `moon_lamp.gd`)
+- Sombras de lã escura **desaceleram, encolhem e se desfazem em estrelinhas** sob a luz. (implementado: `shadow_creature.gd`)
 - Ideias para deixar dinâmico:
   - **Lampejo**: soltar toda a carga num flash circular (bom para cercos).
   - **Revelar**: a luz mostra fios brilhantes / plataformas que só existem iluminadas.
@@ -71,12 +71,12 @@ Colecionável global: **Estrelas de Botão** (equivalente às estrelas de progre
 - **Chefes**: em fases; o vilão tem pontos fracos que só ficam expostos depois de um padrão de ataque (estilo clássico de plataforma 3D).
   Ex.: Rei dos Camundongos (7 cabeças → 7 pompons a iluminar), Rainha da Neve (espelho de gelo que reflete a luz), Bruxa de João e Maria (casa de doces que anda).
 
-## 6. A irmãzinha e a Estrelinha (nome dela ❓)
+## 6. Mel e a Estrelinha
 
-**Personalidade:** menor, curiosa e **toda distraída**. Para para brincar com o cenário, fica para trás olhando uma borboleta de feltro,
+**Mel** — **personalidade:** menor, curiosa e **toda distraída**. Para para brincar com o cenário, fica para trás olhando uma borboleta de feltro,
 pula numa poça de lantejoulas… É o charme dela e uma mecânica.
 
-**Sozinho (IA)** — implementado em `SisterController` + `Distraction`:
+**Sozinho (IA)** — implementado em `mel_controller.gd` + `distraction.gd`:
 - Segue o Nino e **pula junto quando ele pula** (imitando o irmão).
 - De tempos em tempos procura uma **Distração** por perto e vai brincar (3–6 s).
 - Volta sozinha se o Nino se afastar muito, ou quando ele **chama** (C / Y).
@@ -85,7 +85,7 @@ pula numa poça de lantejoulas… É o charme dela e uma mecânica.
 
 **Coop (drop-in/drop-out)** — o jogador 2 aperta pular ou luz e assume a irmã; sai com Select/Backspace e ela volta para a IA.
 
-**Estrelinha — a luz quente dela** (implementada em `StarLight` + `StarRevealable`), complementar à Luna:
+**Estrelinha — a luz quente dela** (implementada em `star_light.gd` + `star_revealable.gd`), complementar à Luna:
 
 | | Luna (Nino) | Estrelinha (irmã) |
 |---|---|---|
@@ -132,8 +132,9 @@ Sensação: *coyote time*, *jump buffer*, pulo curto ao soltar, rodopio 1× por 
 
 ## 10. Decisões em aberto (para discutirmos)
 
-- ✅ Nomes: **Nino** e a luz **Luna**. ❓ Nome da irmãzinha.
-- ✅ Plataformas: **PC/Steam (Steam Deck) + todos os consoles** — ver `PLATAFORMAS.md` (⚠️ risco do C# no PS5).
+- ✅ Nomes: **Nino** com a luz **Luna**, e a irmãzinha **Mel** com a **Estrelinha**.
+- ✅ Plataformas: **PC/Steam (Steam Deck) + todos os consoles** — ver `PLATAFORMAS.md`.
+- ✅ Linguagem: **GDScript tipado** (C# não roda em PS5 pelos parceiros de port).
 - ✅ Câmera: livre com zonas guiadas, interface dentro do mundo.
-- ✅ Coop local: o 2º jogador controla a irmãzinha (drop-in).
+- ✅ Coop local: o 2º jogador controla a Mel (drop-in).
 - ❓ Narração: um narrador lendo trechos do livro original nas transições (texto em domínio público = podemos citar!).

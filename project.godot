@@ -1,5 +1,5 @@
 ; Engine configuration file.
-; Godot 4.7 (.NET / C#)
+; Godot 4.7 — GDScript
 
 config_version=5
 
@@ -8,15 +8,16 @@ config_version=5
 config/name="Sonhos"
 config/description="Um menino sonha com o livro que leu antes de dormir. Mundos de feltro, lã e retalhos."
 run/main_scene="res://scenes/dev/PlanetaTeste.tscn"
-config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 
 [autoload]
 
-GameState="*res://scripts/Core/GameState.cs"
+GameState="*res://scripts/core/game_state.gd"
 
-[dotnet]
+[debug]
 
-project/assembly_name="Sonhos"
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/unsafe_cast=1
 
 [layer_names]
 

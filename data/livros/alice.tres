@@ -1,17 +1,17 @@
 [gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/Core/BookData.cs" id="1_book"]
+[ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
 
 [resource]
 script = ExtResource("1_book")
-Id = "alice"
-Titulo = "Alice no País das Maravilhas"
-Autor = "Lewis Carroll"
-AnoPublicacao = 1865
-AnoMorteAutor = 1898
-Sinopse = "Seguir o Coelho Branco por planetinhas de chá, cartas e cogumelos. Missão: encontrar os 3 botões do colete do Coelho."
-Tipo = 0
-Missao = 0
-ItensNecessarios = 3
-CenaDoSonho = "res://scenes/dev/PlanetaTeste.tscn"
-CorDaCapa = Color(0.45, 0.6, 0.9, 1)
+id = "alice"
+titulo = "Alice no País das Maravilhas"
+autor = "Lewis Carroll"
+ano_publicacao = 1865
+ano_morte_autor = 1898
+sinopse = "Seguir o Coelho Branco por planetinhas de chá, cartas e cogumelos. Missão: encontrar os 3 botões do colete do Coelho."
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena_do_sonho = "res://scenes/dev/PlanetaTeste.tscn"
+cor_da_capa = Color(0.45, 0.6, 0.9, 1)

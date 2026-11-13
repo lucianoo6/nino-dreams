@@ -4,8 +4,8 @@
 [ext_resource type="Material" path="res://materials/feltro.tres" id="2_felt"]
 [ext_resource type="PackedScene" path="res://scenes/dream/BotaoEstrela.tscn" id="3_botao"]
 [ext_resource type="PackedScene" path="res://scenes/nightmare/SombraDeLa.tscn" id="4_sombra"]
-[ext_resource type="PackedScene" path="res://scenes/player/Irmazinha.tscn" id="5_irma"]
-[ext_resource type="Script" path="res://scripts/World/Distraction.cs" id="6_distr"]
+[ext_resource type="PackedScene" path="res://scenes/player/Mel.tscn" id="5_mel"]
+[ext_resource type="Script" path="res://scripts/world/distraction.gd" id="6_distr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.2, 0.17, 0.4, 1)
@@ -130,13 +130,13 @@ transform = Transform3D(0.707, 0.707, 0, -0.707, 0.707, 0, 0, 0, 1, 12.26, 12.26
 [node name="Sombra" parent="." instance=ExtResource("4_sombra")]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -8.3, 0, 0)
 
-[node name="Irmazinha" parent="." instance=ExtResource("5_irma")]
+[node name="Mel" parent="." instance=ExtResource("5_mel")]
 transform = Transform3D(1, 0, 0, 0, 0.996, -0.087, 0, 0.087, 0.996, 0, 8.55, 0.75)
 
 [node name="BorboletaDeFeltro" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866, 0.5, 0, -0.5, 0.866, 0, 7.4, -4.3)
 script = ExtResource("6_distr")
-Descricao = "borboleta de feltro"
+descricao = "borboleta de feltro"
 
 [node name="Visual" type="MeshInstance3D" parent="BorboletaDeFeltro"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)

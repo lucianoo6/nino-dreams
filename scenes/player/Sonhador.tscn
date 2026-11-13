@@ -1,8 +1,8 @@
 [gd_scene load_steps=11 format=3]
 
-[ext_resource type="Script" path="res://scripts/Player/DreamerController.cs" id="1_ctrl"]
-[ext_resource type="Script" path="res://scripts/Camera/DreamCamera.cs" id="2_cam"]
-[ext_resource type="Script" path="res://scripts/Nightmare/MoonLamp.cs" id="3_lamp"]
+[ext_resource type="Script" path="res://scripts/player/dreamer_controller.gd" id="1_ctrl"]
+[ext_resource type="Script" path="res://scripts/camera/dream_camera.gd" id="2_cam"]
+[ext_resource type="Script" path="res://scripts/nightmare/moon_lamp.gd" id="3_lamp"]
 [ext_resource type="Material" path="res://materials/feltro.tres" id="4_felt"]
 
 [sub_resource type="CapsuleShape3D" id="Shape_corpo"]

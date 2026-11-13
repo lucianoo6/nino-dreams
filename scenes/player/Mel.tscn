@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" path="res://scripts/Player/SisterController.cs" id="1_sis"]
-[ext_resource type="Script" path="res://scripts/Nightmare/StarLight.cs" id="2_star"]
+[ext_resource type="Script" path="res://scripts/player/mel_controller.gd" id="1_sis"]
+[ext_resource type="Script" path="res://scripts/nightmare/star_light.gd" id="2_star"]
 [ext_resource type="Material" path="res://materials/feltro.tres" id="3_felt"]
 
 [sub_resource type="CapsuleShape3D" id="Shape_corpo"]
@@ -27,13 +27,13 @@ size = Vector3(0.2, 0.2, 0.06)
 radius = 0.07
 height = 0.14
 
-[node name="Irmazinha" type="CharacterBody3D"]
+[node name="Mel" type="CharacterBody3D"]
 collision_layer = 2
 collision_mask = 1
 script = ExtResource("1_sis")
-MoveSpeed = 6.5
-JumpVelocity = 10.0
-CameraRigPath = NodePath("")
+move_speed = 6.5
+jump_velocity = 10.0
+camera_rig_path = NodePath("")
 
 [node name="Colisao" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
