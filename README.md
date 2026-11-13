@@ -77,6 +77,8 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] Alice — Capítulo 1 (greybox): Jardim → Bule do Chá Maluco → trilha de cartas com ponte de fio que só a Estrelinha revela
 - [x] Carretel-lançador (leva a Mel junto), zonas de câmera, gravidade direcional, volta ao chão ao cair no vazio
 - [x] Primeiros sons (ElevenLabs): "plim" do botão e "boing" do carretel
+- [x] Nino e Mel em 3D (Hyper3D Rodin) com esqueleto e 10 animações: parado, andar, corrida, pulo, rodopio,
+      apontar, sentado, andar na ponta dos pés e parado triste (pesadelo)
 - [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

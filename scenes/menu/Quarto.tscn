@@ -112,10 +112,11 @@ surface_material_override/0 = ExtResource("5_felt")
 instance_shader_parameters/tint = Color(1, 0.96, 0.75, 1)
 
 [node name="Nino" parent="." instance=ExtResource("2_nino")]
-transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, 0.45, 0.5, -3.55)
+transform = Transform3D(-0.94, 0, -0.342, 0, 1, 0, 0.342, 0, -0.94, 0.45, 0.62, -3.55)
+modo_fixo = &"human_000085"
 
 [node name="MaosDoNino" type="Marker3D" parent="Nino"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.42)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.4)
 
 [node name="Estante" type="Node3D" parent="."]
 

@@ -36,6 +36,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("chamar_mel"):
 		get_tree().call_group("mel", "chamar")
+		get_tree().call_group("sonhador", "animar", &"human_000041", 1.2) # Nino aponta e chama
 
 
 ## Chamado ao escolher um livro na estante: Nino dorme e entra no sonho.

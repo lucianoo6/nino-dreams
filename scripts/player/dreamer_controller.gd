@@ -43,6 +43,8 @@ var _jump_buffer_t: float = 0.0
 var _spin_available: bool = true
 var _spin_timer: float = 0.0
 var _launching: bool = false
+var _anim_override: StringName = &""
+var _anim_override_timer: float = 0.0
 var _launch_a: Vector3
 var _launch_b: Vector3
 var _launch_c: Vector3
@@ -163,6 +165,21 @@ func launch_to(destino: Vector3, altura: float, duracao: float) -> void:
 
 func _launch_step(t: float) -> void:
 	global_position = _launch_a.lerp(_launch_b, t).lerp(_launch_b.lerp(_launch_c, t), t)
+
+
+## Força uma animação por um tempo (ex.: Nino apontando ao chamar a Mel).
+func animar(nome: StringName, duracao: float) -> void:
+	_anim_override = nome
+	_anim_override_timer = duracao
+
+
+## Usado pelo CharacterAnimator; vazio = animação automática pelo movimento.
+func get_animation_override() -> StringName:
+	return _anim_override if _anim_override_timer > 0.0 else &""
+
+
+func _process(delta: float) -> void:
+	_anim_override_timer -= delta
 
 
 func is_launching() -> bool:

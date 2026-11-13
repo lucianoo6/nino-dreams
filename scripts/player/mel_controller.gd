@@ -149,6 +149,17 @@ func _compute_wish(up: Vector3) -> Vector3:
 	return to / dist * speed01
 
 
+## Brincando com a distração: pulinhos de alegria.
+func get_animation_override() -> StringName:
+	var base: StringName = super()
+	if base != &"":
+		return base
+	if estado == Mood.DISTRAIDA and is_instance_valid(_distraction) \
+			and global_position.distance_to(_distraction.global_position) < 1.5:
+		return &"human_000030"
+	return &""
+
+
 func _read_jump_pressed() -> bool:
 	return super() if player_controlled else _ai_jump
 

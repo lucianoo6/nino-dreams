@@ -24,7 +24,6 @@ var _attrs: CameraAttributesPractical
 var _livros: Array[ShelfBook] = []
 var _indice: int = -1
 var _ocupado: bool = false
-var _tempo: float = 0.0
 
 @onready var _camera: Camera3D = $Camera3D
 @onready var _nino: Node3D = $Nino
@@ -49,12 +48,6 @@ func _ready() -> void:
 	Transicao.descobrir(1.2)
 	if not _livros.is_empty():
 		_selecionar(0, false)
-
-
-func _process(delta: float) -> void:
-	# Respiração bem de leve do Nino (ele está vivo mesmo desfocado).
-	_tempo += delta
-	_nino.scale = Vector3(1.0, 1.0 + 0.015 * sin(_tempo * 2.2), 1.0)
 
 
 func _unhandled_input(event: InputEvent) -> void:

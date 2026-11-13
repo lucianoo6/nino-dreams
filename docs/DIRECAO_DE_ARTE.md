@@ -55,6 +55,14 @@ luz suave de abajur. Fofo de dia (sonho), frio e descolorido nos pesadelos.
 Jogos de "mundo de lã" e de artesanato, animação stop-motion com bonecos de feltro, livros de pano infantis, amigurumi,
 bordado livre, colchas de patchwork brasileiras. **Não usar nenhuma arte/personagem de terceiros** — só como referência de sensação.
 
+## Personagens (feito)
+
+Nino e Mel foram gerados no **Hyper3D Rodin Gen-2.5** a partir das folhas de referência (frente + costas, em T-pose),
+com malha em quads (~20k), textura PBR 2K e **esqueleto humano de 52 ossos com animações do catálogo Rodin**.
+Arquivos: `assets/models/personagens/{nino,mel}.glb`. Prévias das animações: `docs/referencias/*_animacoes.png`.
+A agulha de feltrar que aparecia na referência de costas do Nino foi removida da malha.
+O `CharacterAnimator` escolhe a animação pelo movimento (e troca para "triste" e "ponta dos pés" nos pesadelos).
+
 ## Próximos passos de arte
 
 1. Fotografar 6 tecidos-base e gerar materiais PBR.

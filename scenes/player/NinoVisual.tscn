@@ -1,46 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Material" path="res://materials/feltro.tres" id="1_felt"]
-
-[sub_resource type="CapsuleMesh" id="Mesh_pijama"]
-radius = 0.35
-height = 0.9
-
-[sub_resource type="SphereMesh" id="Mesh_cabeca"]
-radius = 0.3
-height = 0.6
-
-[sub_resource type="CylinderMesh" id="Mesh_touca"]
-top_radius = 0.02
-bottom_radius = 0.28
-height = 0.55
-
-[sub_resource type="SphereMesh" id="Mesh_pompom"]
-radius = 0.08
-height = 0.16
+[ext_resource type="Script" path="res://scripts/player/character_animator.gd" id="1_anim"]
+[ext_resource type="PackedScene" path="res://assets/models/personagens/nino.glb" id="2_modelo"]
 
 [node name="NinoVisual" type="Node3D"]
+script = ExtResource("1_anim")
 
-[node name="Pijama" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-mesh = SubResource("Mesh_pijama")
-surface_material_override/0 = ExtResource("1_felt")
-instance_shader_parameters/tint = Color(0.45, 0.62, 0.95, 1)
-
-[node name="Cabeca" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
-mesh = SubResource("Mesh_cabeca")
-surface_material_override/0 = ExtResource("1_felt")
-instance_shader_parameters/tint = Color(1, 0.82, 0.7, 1)
-
-[node name="Touca" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.96, -0.28, 0, 0.28, 0.96, 0, 0, 0, 1, 0.08, 1.42, 0)
-mesh = SubResource("Mesh_touca")
-surface_material_override/0 = ExtResource("1_felt")
-instance_shader_parameters/tint = Color(0.35, 0.3, 0.75, 1)
-
-[node name="Pompom" type="MeshInstance3D" parent="Touca"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-mesh = SubResource("Mesh_pompom")
-surface_material_override/0 = ExtResource("1_felt")
-instance_shader_parameters/tint = Color(1, 0.95, 0.6, 1)
+[node name="Modelo" parent="." instance=ExtResource("2_modelo")]
+transform = Transform3D(-0.76, 0, 0, 0, 0.76, 0, 0, 0, -0.76, 0, 0.724, 0)
