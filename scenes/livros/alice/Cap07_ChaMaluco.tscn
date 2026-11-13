@@ -23,6 +23,13 @@
 [ext_resource type="Script" path="res://scripts/level/prop_procedural.gd" id="pp_1"]
 [ext_resource type="AudioStream" path="res://assets/audio/musica/cha_maluco_a.mp3" id="pp_musica"]
 [ext_resource type="Script" path="res://scripts/level/costura_planeta.gd" id="pp_2"]
+[ext_resource type="Script" path="res://scripts/level/fio_esticado.gd" id="pp_fio"]
+[ext_resource type="Material" path="res://materials/pbr/linha_dourada.tres" id="pp_ouro"]
+[ext_resource type="Material" path="res://materials/pbr/madeira.tres" id="pp_madeira"]
+[ext_resource type="FontFile" path="res://assets/fonts/Fredoka-Bold.woff2" id="pp_fonte"]
+[ext_resource type="Script" path="res://scripts/level/personagem.gd" id="pp_npc"]
+[ext_resource type="PackedScene" path="res://assets/models/personagens/coelho.glb" id="pp_coelho"]
+[ext_resource type="PackedScene" path="res://assets/models/personagens/chapeleiro.glb" id="pp_chapeleiro"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.34, 0.33, 0.7, 1)
@@ -114,6 +121,9 @@ size = Vector3(0.9, 0.15, 2.4)
 
 [sub_resource type="BoxShape3D" id="Shape_fio"]
 size = Vector3(0.9, 0.15, 2.4)
+
+[sub_resource type="BoxMesh" id="Mesh_poste"]
+size = Vector3(0.12, 1.1, 0.12)
 
 [node name="AliceCap07ChaMaluco" type="Node3D"]
 script = ExtResource("1_fase")
@@ -1061,3 +1071,355 @@ tipo = 3
 tamanho = 9.9
 semente = 125
 cor = Color(0.94, 0.90, 0.87, 1)
+
+[node name="AncoraMorro0" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.700, 0.300, 0.600)
+elevacao = -0.410
+giro = 0
+
+[node name="Morrinho" type="Node3D" parent="AncoraMorro0"]
+script = ExtResource("pp_1")
+tipo = 7
+tamanho = 1.64
+cor = Color(0.42, 0.68, 0.36, 1)
+
+[node name="AncoraMorro1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.400, -0.300, -0.850)
+elevacao = -0.290
+giro = 0
+
+[node name="Morrinho" type="Node3D" parent="AncoraMorro1"]
+script = ExtResource("pp_1")
+tipo = 7
+tamanho = 1.16
+cor = Color(0.5, 0.75, 0.4, 1)
+
+[node name="AncoraMorro2" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.500, -0.600, 0.600)
+elevacao = -0.415
+giro = 0
+
+[node name="Morrinho" type="Node3D" parent="AncoraMorro2"]
+script = ExtResource("pp_1")
+tipo = 7
+tamanho = 1.66
+cor = Color(0.5, 0.75, 0.4, 1)
+
+[node name="AncoraMorro3" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.950, -0.400, 0.000)
+elevacao = -0.307
+giro = 0
+
+[node name="Morrinho" type="Node3D" parent="AncoraMorro3"]
+script = ExtResource("pp_1")
+tipo = 7
+tamanho = 1.23
+cor = Color(0.6, 0.8, 0.45, 1)
+
+[node name="AncoraMorro4" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.100, 0.200, 0.980)
+elevacao = -0.450
+giro = 0
+
+[node name="Morrinho" type="Node3D" parent="AncoraMorro4"]
+script = ExtResource("pp_1")
+tipo = 7
+tamanho = 1.8
+cor = Color(0.5, 0.75, 0.4, 1)
+
+[node name="AncoraMorro5" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.300, 0.550, -0.750)
+elevacao = -0.280
+giro = 0
+
+[node name="Morrinho" type="Node3D" parent="AncoraMorro5"]
+script = ExtResource("pp_1")
+tipo = 7
+tamanho = 1.12
+cor = Color(0.6, 0.8, 0.45, 1)
+
+[node name="AncoraCerca0" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.600, 0.700, 0.450)
+elevacao = 0.000
+giro = 30
+
+[node name="Cerca" type="Node3D" parent="AncoraCerca0"]
+script = ExtResource("pp_1")
+tipo = 6
+tamanho = 2.4
+
+[node name="AncoraCerca1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.350, 0.450, -0.850)
+elevacao = 0.000
+giro = -20
+
+[node name="Cerca" type="Node3D" parent="AncoraCerca1"]
+script = ExtResource("pp_1")
+tipo = 6
+tamanho = 2.0
+
+[node name="AncoraTrilha0" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.187, 0.968, 0.000)
+elevacao = -0.050
+giro = 0
+
+[node name="BotaoTrilha" type="Node3D" parent="AncoraTrilha0"]
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.34
+com_colisao = false
+cor = Color(0.95, 0.9, 0.78, 1)
+
+[node name="AncoraTrilha1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.320, 0.905, 0.000)
+elevacao = -0.050
+giro = 25
+
+[node name="BotaoTrilha" type="Node3D" parent="AncoraTrilha1"]
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.34
+com_colisao = false
+cor = Color(0.7, 0.45, 0.3, 1)
+
+[node name="AncoraTrilha2" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.453, 0.842, 0.000)
+elevacao = -0.050
+giro = 50
+
+[node name="BotaoTrilha" type="Node3D" parent="AncoraTrilha2"]
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.34
+com_colisao = false
+cor = Color(0.95, 0.9, 0.78, 1)
+
+[node name="AncoraTrilha3" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.587, 0.778, 0.000)
+elevacao = -0.050
+giro = 75
+
+[node name="BotaoTrilha" type="Node3D" parent="AncoraTrilha3"]
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.34
+com_colisao = false
+cor = Color(0.7, 0.45, 0.3, 1)
+
+[node name="AncoraTrilha4" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.720, 0.715, 0.000)
+elevacao = -0.050
+giro = 100
+
+[node name="BotaoTrilha" type="Node3D" parent="AncoraTrilha4"]
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.34
+com_colisao = false
+cor = Color(0.95, 0.9, 0.78, 1)
+
+[node name="AncoraTrilha5" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.853, 0.652, 0.000)
+elevacao = -0.050
+giro = 125
+
+[node name="BotaoTrilha" type="Node3D" parent="AncoraTrilha5"]
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.34
+com_colisao = false
+cor = Color(0.7, 0.45, 0.3, 1)
+
+[node name="LinhaCarretel1" type="Node3D" parent="."]
+script = ExtResource("pp_fio")
+pontos = Array[NodePath]([NodePath("../AncoraCarretel1/Carretel1"), NodePath("../AncoraPousoBule/Pouso")])
+curvatura = 0.18
+raio = 0.05
+
+[node name="LinhaCarretel2" type="Node3D" parent="."]
+script = ExtResource("pp_fio")
+pontos = Array[NodePath]([NodePath("../AncoraCarretel2/Carretel2"), NodePath("../PousoCartas")])
+curvatura = 0.14
+raio = 0.05
+
+[node name="PosteE0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.4, 11.68, -22.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteE0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="PosteE1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.4, 11.68, -30.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteE1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="PosteE2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.4, 11.68, -32.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteE2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="PosteE3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.4, 11.68, -40.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteE3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="VaralE" type="Node3D" parent="."]
+script = ExtResource("pp_fio")
+pontos = Array[NodePath]([NodePath("../PosteE0/Topo"), NodePath("../PosteE1/Topo"), NodePath("../PosteE2/Topo"), NodePath("../PosteE3/Topo")])
+curvatura = -0.12
+raio = 0.02
+material = ExtResource("pp_ouro")
+luzinhas = true
+espacamento_luzes = 1.0
+
+[node name="PosteD0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.6, 11.68, -22.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteD0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="PosteD1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.6, 11.68, -30.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteD1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="PosteD2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.6, 11.68, -32.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteD2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="PosteD3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.6, 11.68, -40.0)
+mesh = SubResource("Mesh_poste")
+surface_material_override/0 = ExtResource("pp_madeira")
+
+[node name="Topo" type="Marker3D" parent="PosteD3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="VaralD" type="Node3D" parent="."]
+script = ExtResource("pp_fio")
+pontos = Array[NodePath]([NodePath("../PosteD0/Topo"), NodePath("../PosteD1/Topo"), NodePath("../PosteD2/Topo"), NodePath("../PosteD3/Topo")])
+curvatura = -0.12
+raio = 0.02
+material = ExtResource("pp_ouro")
+luzinhas = true
+espacamento_luzes = 1.0
+
+[node name="Letra0" type="Label3D" parent="Carta1"]
+transform = Transform3D(1.000, 0.000, 0.000, 0.000, 0.000, 1.000, 0.000, -1.000, 0.000, -2.5, 0.135, -3.9)
+pixel_size = 0.01
+modulate = Color(0.8, 0.15, 0.2, 1)
+outline_size = 0
+alpha_cut = 2
+text = "A"
+font = ExtResource("pp_fonte")
+font_size = 96
+
+[node name="Letra1" type="Label3D" parent="Carta1"]
+transform = Transform3D(-1.000, -0.000, 0.000, 0.000, 0.000, 1.000, -0.000, 1.000, 0.000, 2.5, 0.135, 3.9)
+pixel_size = 0.01
+modulate = Color(0.8, 0.15, 0.2, 1)
+outline_size = 0
+alpha_cut = 2
+text = "A"
+font = ExtResource("pp_fonte")
+font_size = 96
+
+[node name="Letra0" type="Label3D" parent="Carta2"]
+transform = Transform3D(1.000, 0.000, 0.000, 0.000, 0.000, 1.000, 0.000, -1.000, 0.000, -2.5, 0.135, -3.9)
+pixel_size = 0.01
+modulate = Color(0.12, 0.1, 0.15, 1)
+outline_size = 0
+alpha_cut = 2
+text = "K"
+font = ExtResource("pp_fonte")
+font_size = 96
+
+[node name="Letra1" type="Label3D" parent="Carta2"]
+transform = Transform3D(-1.000, -0.000, 0.000, 0.000, 0.000, 1.000, -0.000, 1.000, 0.000, 2.5, 0.135, 3.9)
+pixel_size = 0.01
+modulate = Color(0.12, 0.1, 0.15, 1)
+outline_size = 0
+alpha_cut = 2
+text = "K"
+font = ExtResource("pp_fonte")
+font_size = 96
+
+[node name="CoelhoBranco" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 31.7, 11.13, -56.4)
+script = ExtResource("pp_npc")
+modelo = ExtResource("pp_coelho")
+escala = 0.72
+altura_pes = 0.68
+altura_balao = 1.85
+anim_parado = &"human_000063"
+anim_falando = &"human_000041"
+falas = PackedStringArray("Ai, ai! Ai, ai! Vou chegar atrasado!", "Meus botões! Alguém viu os botões do meu colete?")
+tom_voz = 420.0
+raio_conversa = 5.0
+
+[node name="AncoraChapeleiro" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Bule")
+direcao = Vector3(0.42, -0.22, 1.0)
+elevacao = 0.0
+giro = 0
+
+[node name="Chapeleiro" type="Node3D" parent="AncoraChapeleiro"]
+script = ExtResource("pp_npc")
+modelo = ExtResource("pp_chapeleiro")
+escala = 0.78
+altura_pes = 0.74
+altura_balao = 2.1
+anim_parado = &"human_000025"
+anim_falando = &"human_000009"
+falas = PackedStringArray("Não tem lugar! Não tem lugar!", "Por que um corvo se parece com uma escrivaninha?")
+tom_voz = 250.0
+raio_conversa = 5.0

@@ -98,6 +98,13 @@ Alvo visual: `docs/referencias/conceitos/cap07_a.png` (arte conceitual gerada). 
 - Som: trilha de caixinha de música em valsa (loop), passinhos no feltro, "puf" de pouso; efeitos de fiapos
   ao pousar e estrelinhas ao pegar botão.
 - Peças procedurais reutilizáveis: `PropProcedural` (bule, xícara, relógio, nuvem, flor, botão) e `CosturaPlaneta`.
+- Relevo e caminhos: morrinhos de feltro, cerquinhas, trilha de botões até o carretel.
+- Linhas dos carretéis esticadas até o destino (`FioEsticado`); postes com varal de luzinhas na trilha de cartas;
+  letras nos cantos das cartas.
+- **Personagens do livro** (Hyper3D, com esqueleto e animações): **Coelho Branco** no relógio, batendo no pulso
+  ("Ai, ai! Vou chegar atrasado!" / dica: "Alguém viu os botões do meu colete?") e **Chapeleiro** na porta do bule
+  ("Não tem lugar!" / "Por que um corvo se parece com uma escrivaninha?"). Viram para o Nino e falam em balbucio
+  (`Personagem`), com frases do texto original traduzidas pela equipe.
 
 ### (histórico) greybox
 

@@ -5,11 +5,12 @@ extends Node3D
 ## nuvem de algodão, florzinha de feltro e botão decorativo. Torno (revolução) + tubos ao longo de curvas.
 ## `tamanho` = raio principal em metros. Os filhos gerados não são salvos na cena (são refeitos ao abrir).
 
-enum Tipo { BULE, XICARA, RELOGIO, NUVEM, FLOR, BOTAO }
+enum Tipo { BULE, XICARA, RELOGIO, NUVEM, FLOR, BOTAO, CERCA, MORRINHO }
 
 const PORCELANA := preload("res://materials/pbr/porcelana_florida.tres")
 const CERAMICA_AZUL := preload("res://materials/pbr/ceramica_azul.tres")
 const MADEIRA := preload("res://materials/pbr/madeira_verniz.tres")
+const MADEIRA_RUSTICA := preload("res://materials/pbr/madeira.tres")
 const ALGODAO := preload("res://materials/pbr/feltro_creme.tres")
 const FELTRO_FLOR := preload("res://materials/pbr/feltro_rosa.tres")
 const FELTRO_VERDE := preload("res://materials/pbr/feltro_verde.tres")
@@ -66,6 +67,10 @@ func _refazer() -> void:
 			_flor()
 		Tipo.BOTAO:
 			_botao()
+		Tipo.CERCA:
+			_cerca()
+		Tipo.MORRINHO:
+			_morrinho()
 
 
 # ---------------------------------------------------------------- peças
@@ -267,6 +272,37 @@ func _botao() -> void:
 	for ang: float in [PI / 4, -PI / 4]:
 		var ponto := _caixa(Vector3(0.08, 0.05, 0.75) * s, Vector3(0, 0.13, 0) * s, LINHA)
 		ponto.rotation.y = ang
+
+
+## Cerquinha de madeira: postes e duas travessas, comprimento = tamanho (ao longo de X).
+func _cerca() -> void:
+	var s: float = tamanho
+	var postes: int = maxi(2, int(s / 0.7) + 1)
+	for i in postes:
+		var x: float = lerpf(-s / 2.0, s / 2.0, float(i) / (postes - 1))
+		var poste := _caixa(Vector3(0.09, 0.62, 0.09), Vector3(x, 0.26, 0), MADEIRA_RUSTICA)
+		poste.rotation.z = deg_to_rad(randf_range(-4.0, 4.0)) if not Engine.is_editor_hint() else 0.0
+	for y: float in [0.22, 0.44]:
+		_caixa(Vector3(s + 0.1, 0.06, 0.04), Vector3(0, y, 0.05), MADEIRA_RUSTICA)
+
+
+## Morrinho de feltro (meio enterrado): dá relevo ao planeta liso.
+func _morrinho() -> void:
+	var mat := FELTRO_VERDE.duplicate() as StandardMaterial3D
+	mat.albedo_color = cor
+	var m := MeshInstance3D.new()
+	var esf := SphereMesh.new()
+	esf.radius = tamanho
+	esf.height = tamanho * 0.7
+	m.mesh = esf
+	m.material_override = mat
+	_raiz.add_child(m)
+	if com_colisao:
+		var corpo := StaticBody3D.new()
+		var forma := CollisionShape3D.new()
+		forma.shape = esf.create_convex_shape()
+		corpo.add_child(forma)
+		_raiz.add_child(corpo)
 
 
 # ---------------------------------------------------------------- utilidades
