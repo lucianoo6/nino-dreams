@@ -387,7 +387,8 @@ func _malha(m: Mesh, mat: Material, colisao: bool) -> MeshInstance3D:
 		corpo.collision_layer = 1
 		corpo.collision_mask = 0
 		var forma := CollisionShape3D.new()
-		forma.shape = m.create_trimesh_shape()
+		# Convexa, não malha exata: dobras e "pratinhos" côncavos prendem o CharacterBody.
+		forma.shape = m.create_convex_shape(true, false)
 		corpo.add_child(forma)
 		_raiz.add_child(corpo)
 	return mi

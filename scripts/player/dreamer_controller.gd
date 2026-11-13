@@ -23,6 +23,12 @@ extends CharacterBody3D
 @export_group("Gravidade")
 @export var up_align_speed: float = 10.0
 
+@export_group("Colisão")
+## Velocidade máxima de queda (m/s): evita acumular gravidade se ficar encostado numa parede.
+@export var queda_maxima: float = 30.0
+## Degrau que sobe sozinho (m): bordas de botão, raízes, tábuas.
+@export var degrau: float = 0.3
+
 @export_group("Vazio")
 ## Sem gravidade nenhuma (fora de todos os planetas) por este tempo = volta ao último chão seguro.
 @export var tempo_no_vazio: float = 1.2
@@ -52,6 +58,7 @@ var _launching: bool = false
 var _audio: AudioStreamPlayer3D
 var _tempo_passo: float = 0.0
 var _queda: float = 0.0
+var _tempo_preso: float = 0.0
 var _anim_override: StringName = &""
 var _anim_override_timer: float = 0.0
 var _launch_a: Vector3
@@ -65,6 +72,8 @@ var _last_safe_up: Vector3 = Vector3.UP
 func _ready() -> void:
 	add_to_group("sonhador")
 	floor_snap_length = 0.4
+	floor_max_angle = deg_to_rad(55.0)  # planetinhas curvos: rampa mais íngreme ainda é chão
+	safe_margin = 0.02
 	_last_safe_position = global_position
 	_audio = AudioStreamPlayer3D.new()
 	_audio.max_polyphony = 3
@@ -144,11 +153,14 @@ func _physics_process(delta: float) -> void:
 			vertical = maxf(vertical, spin_boost)
 			_spin_available = false
 
+	vertical = maxf(vertical, -queda_maxima)
 	velocity = lateral + up * vertical
 	var estava_no_chao: bool = on_floor
 	if not on_floor:
 		_queda = maxf(_queda, -vertical)
+	var antes: Vector3 = global_position
 	move_and_slide()
+	_desatolar(antes, wish, up, delta)
 	_sons_e_poeira(estava_no_chao, lateral.length(), delta)
 	if is_on_floor():
 		_last_safe_position = global_position
@@ -156,6 +168,31 @@ func _physics_process(delta: float) -> void:
 
 	# 6) Orientar o corpo: em pé no planeta e virado para onde anda.
 	_orient_body(up, wish, delta)
+
+
+## Se está tentando andar mas a posição não muda (encostado numa borda baixa ou preso numa dobra),
+## sobe um degrau; se ficar preso por mais tempo, desgruda da parede.
+func _desatolar(antes: Vector3, wish: Vector3, up: Vector3, delta: float) -> void:
+	var andou: float = (global_position - antes).length()
+	var querendo_andar: bool = wish.length_squared() > 0.04
+	var preso_na_parede: bool = is_on_wall() and not is_on_floor() and velocity.dot(up) < -2.0
+	if (querendo_andar and andou < 0.002 and is_on_wall()) or preso_na_parede:
+		_tempo_preso += delta
+	else:
+		_tempo_preso = 0.0
+		return
+	if _tempo_preso > 0.08 and querendo_andar:
+		# tenta subir o degrau: sobe, anda um pouquinho para frente e deixa o snap assentar no chão
+		var teste := global_transform.translated(up * degrau)
+		if not test_move(teste, wish.normalized() * 0.08):
+			global_position += up * degrau + wish.normalized() * 0.08
+			_tempo_preso = 0.0
+			return
+	if _tempo_preso > 0.35:
+		var n: Vector3 = get_wall_normal() if is_on_wall() else -wish
+		global_position += n * 0.12 + up * 0.15
+		velocity = Vector3.ZERO
+		_tempo_preso = 0.0
 
 
 ## Passinhos no feltro enquanto anda e um "puf" de fiapos ao pousar de uma queda.

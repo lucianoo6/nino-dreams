@@ -18,3 +18,6 @@ sudo apt-get install -y mesa-vulkan-drivers xvfb
 VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json CENA=res://tools/debug/VitrineMateriais.tscn SHOTS=/tmp/f \
   xvfb-run -a godot --rendering-driver vulkan --path . res://tools/debug/FotoCena.tscn
 ```
+
+- `TesteColisao.tscn`: coloca o Nino contra a lateral do cogumelo, cai no bule, cai num botão do chão e pula contra o
+  chapéu do cogumelo; imprime posição/velocidade/chão/parede. Use para pegar "travamentos" de colisão.
