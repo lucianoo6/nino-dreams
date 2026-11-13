@@ -43,6 +43,9 @@ func _intro_das_nuvens() -> void:
 		Transicao.descobrir()
 		return
 	GameState.cutscene = true
+	# Chegou no sonho: Nino (e a Mel) "acordam" deitados no planeta e se levantam.
+	get_tree().call_group("sonhador", "animar", &"ual/LayToIdle", intro_duracao)
+	get_tree().call_group("mel", "animar", &"ual/LayToIdle", intro_duracao)
 	var comprimento_final: float = arm.spring_length
 	var inclinacao_final: float = arm.rotation.x
 	arm.spring_length = intro_distancia

@@ -1,0 +1,15 @@
+<!doctype html><html><body style="margin:0">
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+const P=new URLSearchParams(location.search); const W=1800,H=700;
+const r=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});r.setSize(W,H);r.outputColorSpace=THREE.SRGBColorSpace;r.toneMapping=THREE.ACESFilmicToneMapping;document.body.appendChild(r.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xefe6f5);scene.add(new THREE.HemisphereLight(0xffffff,0x8877aa,1.6));const d=new THREE.DirectionalLight(0xfff0dd,2.2);d.position.set(2,3,4);scene.add(d);
+const L=new GLTFLoader(); const model=await L.loadAsync(P.get('m')); const lib=await L.loadAsync(P.get('a'));
+const shots=JSON.parse(P.get('s'));
+shots.forEach(([name,t],i)=>{const o=SkeletonUtils.clone(model.scene);o.position.x=(i-(shots.length-1)/2)*1.25;o.rotation.y=0.45;scene.add(o);
+ const mx=new THREE.AnimationMixer(o);const clip=lib.animations.find(c=>c.name===name); if(!clip){console.log('missing',name);return;} mx.clipAction(clip).play();mx.setTime(t);});
+const cam=new THREE.OrthographicCamera(-W/H*1.95,W/H*1.95,1.95,-1.95,0.1,100);cam.position.set(0,0.1,20);cam.lookAt(0,0.1,0);r.render(scene,cam);window.done=true;
+</script></body></html>

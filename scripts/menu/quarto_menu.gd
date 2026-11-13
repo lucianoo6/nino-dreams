@@ -154,7 +154,12 @@ func _escolher(livro: ShelfBook) -> void:
 	var capitulo: ChapterData = livro.data.lista_capitulos()[numero - 1]
 
 	var linha: String = capitulo.ultima_linha if not capitulo.ultima_linha.is_empty() else capitulo.rotulo() + "…"
+	var animador := _nino as CharacterAnimator
+	if animador:
+		animador.modo_fixo = &"ual/Sitting_Talking_Loop" # lendo em voz alta
 	await _dialogo.falar(linha, _voz)
+	if animador:
+		animador.modo_fixo = &"ual/Sitting_Idle_Loop"
 	if livro.data.e_ultimo(capitulo):
 		await _dialogo.dizer_fim(_voz)
 	else:

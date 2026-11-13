@@ -114,7 +114,7 @@ instance_shader_parameters/tint = Color(1, 0.96, 0.75, 1)
 
 [node name="Nino" parent="." instance=ExtResource("2_nino")]
 transform = Transform3D(-0.94, 0, -0.342, 0, 1, 0, 0.342, 0, -0.94, 0.45, 0.62, -3.55)
-modo_fixo = &"human_000085"
+modo_fixo = &"ual/Sitting_Idle_Loop"
 
 [node name="MaosDoNino" type="Marker3D" parent="Nino"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.4)

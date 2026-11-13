@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/character_animator.gd" id="1_anim"]
 [ext_resource type="PackedScene" path="res://assets/models/personagens/mel.glb" id="2_modelo"]
+[ext_resource type="PackedScene" path="res://assets/animacoes/ual/mel_ual.glb" id="3_ual"]
 
 [node name="MelVisual" type="Node3D"]
 script = ExtResource("1_anim")
+biblioteca_extra = ExtResource("3_ual")
+anim_parado = &"ual/Idle_Lantern_Loop"
 
 [node name="Modelo" parent="." instance=ExtResource("2_modelo")]
 transform = Transform3D(-0.62, 0, 0, 0, 0.62, 0, 0, 0, -0.62, 0, 0.589, 0)

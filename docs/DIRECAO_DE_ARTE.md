@@ -63,6 +63,26 @@ Arquivos: `assets/models/personagens/{nino,mel}.glb`. Prévias das animações: 
 A agulha de feltrar que aparecia na referência de costas do Nino foi removida da malha.
 O `CharacterAnimator` escolhe a animação pelo movimento (e troca para "triste" e "ponta dos pés" nos pesadelos).
 
+### Animações extras (Quaternius UAL, CC0)
+
+40 animações da Universal Animation Library 1 e 2 foram retargetadas para Nino e Mel
+(`assets/animacoes/ual/`, ferramenta em `tools/retarget/`). Uso no jogo:
+
+| Situação | Animação |
+|---|---|
+| Andar / correr / disparar | Walk_Loop · Jog_Fwd_Loop · Sprint_Loop (ritmo segue a velocidade) |
+| Pulo | Jump_Start → Jump_Loop → Jump_Land |
+| Pesadelo | Crouch_Fwd_Loop (andar agachadinho) + sad idle |
+| Nino com a Luna acesa (parado) | Idle_Torch_Loop |
+| Mel parada | Idle_Lantern_Loop — a Estrelinha fica presa na mão dela |
+| Nino chama a Mel | Idle_Rail_Call |
+| Chegar no sonho | LayToIdle (acorda deitado no planeta) |
+| Missão completa | Dance_Loop |
+| Quarto | Sitting_Idle_Loop · Sitting_Talking_Loop enquanto lê |
+
+Também disponíveis para fases futuras: Swim (cap. 2, lagoa de lágrimas), Push, Roll, Slide, ClimbUp,
+PickUp, Interact, Yes/No, Walk_Carry, Chest_Open, NinjaJump, Hit.
+
 ## Próximos passos de arte
 
 1. Fotografar 6 tecidos-base e gerar materiais PBR.

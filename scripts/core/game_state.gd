@@ -82,7 +82,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("chamar_mel"):
 		get_tree().call_group("mel", "chamar")
-		get_tree().call_group("sonhador", "animar", &"human_000041", 1.2) # Nino aponta e chama
+		get_tree().call_group("sonhador", "animar", &"ual/Idle_Rail_Call", 1.4) # Nino chama a irmã
 
 
 ## Chamado depois que o Nino lê o capítulo: ele dorme e sonha com ele.

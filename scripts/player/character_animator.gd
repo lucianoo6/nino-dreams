@@ -1,33 +1,52 @@
 class_name CharacterAnimator
 extends Node3D
-## Escolhe a animação do personagem (modelo do Hyper3D com 52 ossos) a partir do estado do DreamerController.
+## Escolhe a animação do personagem a partir do estado do DreamerController.
+## Fontes de animação:
+##   • embutidas no modelo (.glb do Hyper3D): "human_0000xx"
+##   • biblioteca extra retargetada (Quaternius UAL, CC0): carregada em `biblioteca_extra`, nomes "ual/<Nome>"
 ## Sem pai DreamerController (ex.: Nino sentado no quarto), toca só `modo_fixo`.
-## Nomes = IDs das animações do catálogo Rodin embutidas no .glb.
+
+const LIB_EXTRA := &"ual"
+
+## .glb com as animações retargetadas para ESTE personagem (assets/animacoes/ual/*.glb).
+@export var biblioteca_extra: PackedScene
 
 @export_group("Animações")
 @export var anim_parado: StringName = &"human_000025" ## happy idle
 @export var anim_parado_pesadelo: StringName = &"human_000050" ## sad idle
-@export var anim_andar: StringName = &"human_000089" ## walking
-@export var anim_andar_pesadelo: StringName = &"human_000086" ## tiptoe walk
-@export var anim_correr: StringName = &"human_000024" ## goofy running
-@export var anim_pulo: StringName = &"human_000030" ## joyful jump
+## Parado segurando a luz acesa (Nino com a Luna).
+@export var anim_parado_luz: StringName = &"ual/Idle_Torch_Loop"
+@export var anim_andar: StringName = &"ual/Walk_Loop"
+@export var anim_andar_pesadelo: StringName = &"ual/Crouch_Fwd_Loop"
+@export var anim_correr: StringName = &"ual/Jog_Fwd_Loop"
+@export var anim_disparada: StringName = &"ual/Sprint_Loop"
+@export var anim_pulo_inicio: StringName = &"ual/Jump_Start"
+@export var anim_pulo_ar: StringName = &"ual/Jump_Loop"
+@export var anim_aterrissar: StringName = &"ual/Jump_Land"
 @export var anim_rodopio: StringName = &"human_000039" ## northern soul spin
-## Começa o pulo já no ar (pula a preparação agachada da animação).
-@export var pulo_inicio: float = 0.45
+@export var anim_comemorar: StringName = &"ual/Dance_Loop"
 
 @export_group("Ritmo")
 @export var limiar_andar: float = 0.4
-@export var limiar_correr: float = 4.0
-## Velocidade (m/s) em que a animação de andar/correr fica no ritmo natural (já na escala do modelo).
-@export var ritmo_andar: float = 1.4
-@export var ritmo_correr: float = 2.6
-@export var mistura: float = 0.18
+@export var limiar_correr: float = 3.0
+@export var limiar_disparada: float = 6.0
+## Velocidade (m/s) em que cada animação fica no ritmo natural (já na escala do modelo).
+@export var ritmo_andar: float = 1.3
+@export var ritmo_correr: float = 3.0
+@export var ritmo_disparada: float = 5.5
+@export var tempo_aterrissagem: float = 0.25
+@export var mistura: float = 0.15
 
 ## Se preenchido, toca sempre esta animação (cutscenes, quarto).
 @export var modo_fixo: StringName = &""
 
 var _player: AnimationPlayer
 var _body: DreamerController
+var _luna: MoonLamp
+var _no_ar: float = 0.0
+var _aterrissando: float = 0.0
+var _estava_no_chao: bool = true
+var _comemorando: bool = false
 
 
 func _ready() -> void:
@@ -36,15 +55,53 @@ func _ready() -> void:
 	if _player == null:
 		push_warning("CharacterAnimator: AnimationPlayer não encontrado no modelo.")
 		return
-	# Todas em loop (o .glb vem sem loop); o pulo é tratado à parte.
-	for nome: StringName in _player.get_animation_list():
-		var anim: Animation = _player.get_animation(nome)
-		if anim:
-			anim.loop_mode = Animation.LOOP_NONE if nome == anim_pulo else Animation.LOOP_LINEAR
+	if biblioteca_extra:
+		_importar_biblioteca(biblioteca_extra)
+	_configurar_loops()
+	if _body:
+		_luna = _body.get_node_or_null("Luna") as MoonLamp
+		GameState.mission_completed.connect(func() -> void: _comemorando = true)
 	_tocar(modo_fixo if modo_fixo != &"" else anim_parado)
 
 
-func _process(_delta: float) -> void:
+## Copia as animações do .glb retargetado para o AnimationPlayer do modelo, apontando as trilhas
+## para o Skeleton3D deste modelo (os caminhos de nó dos dois .glb não são idênticos).
+func _importar_biblioteca(cena: PackedScene) -> void:
+	var inst: Node = cena.instantiate()
+	var origem := inst.find_child("AnimationPlayer", true, false) as AnimationPlayer
+	var raiz: Node = _player.get_node(_player.root_node)
+	var esqueleto: Skeleton3D = null
+	for n: Node in raiz.find_children("*", "Skeleton3D", true, false):
+		esqueleto = n as Skeleton3D
+		break
+	if origem == null or esqueleto == null:
+		push_warning("CharacterAnimator: biblioteca extra sem AnimationPlayer ou modelo sem Skeleton3D.")
+		inst.free()
+		return
+	var caminho: String = String(raiz.get_path_to(esqueleto))
+	var lib := AnimationLibrary.new()
+	for nome: StringName in origem.get_animation_list():
+		var anim := origem.get_animation(nome).duplicate(true) as Animation
+		for t in anim.get_track_count():
+			var p: String = String(anim.track_get_path(t))
+			var i: int = p.find(":")
+			if i >= 0:
+				anim.track_set_path(t, NodePath(caminho + p.substr(i)))
+		lib.add_animation(StringName(String(nome).trim_prefix("ual_")), anim)
+	_player.add_animation_library(LIB_EXTRA, lib)
+	inst.free()
+
+
+func _configurar_loops() -> void:
+	var sem_loop: Array[StringName] = [anim_pulo_inicio, anim_aterrissar, &"ual/LayToIdle", &"ual/Sitting_Enter",
+		&"ual/Sitting_Exit", &"ual/Interact", &"ual/PickUp_Table", &"ual/Hit_Head", &"ual/Roll", &"ual/Yes"]
+	for nome: StringName in _player.get_animation_list():
+		var anim: Animation = _player.get_animation(nome)
+		if anim:
+			anim.loop_mode = Animation.LOOP_NONE if sem_loop.has(nome) else Animation.LOOP_LINEAR
+
+
+func _process(delta: float) -> void:
 	if _player == null:
 		return
 	if modo_fixo != &"" or _body == null:
@@ -54,20 +111,42 @@ func _process(_delta: float) -> void:
 	var pesadelo: bool = GameState.e_pesadelo()
 	var up: Vector3 = _body.up_direction
 	var v: Vector3 = _body.velocity
-	var lateral: float = (v - up * v.dot(up)).length()
+	var vertical: float = v.dot(up)
+	var lateral: float = (v - up * vertical).length()
+	var no_chao: bool = _body.is_on_floor()
+
+	if no_chao:
+		if not _estava_no_chao and _no_ar > 0.2:
+			_aterrissando = tempo_aterrissagem
+		_no_ar = 0.0
+	else:
+		_no_ar += delta
+	_estava_no_chao = no_chao
+	_aterrissando -= delta
 
 	var forcada: StringName = _body.get_animation_override()
 	if forcada != &"":
 		_tocar(forcada)
+	elif _comemorando:
+		_tocar(anim_comemorar)
 	elif _body.is_launching() or _body.is_spinning:
 		_tocar(anim_rodopio, 1.4)
-	elif not _body.is_on_floor():
-		_tocar(anim_pulo, 1.2, pulo_inicio)
+	elif not no_chao:
+		if _no_ar < 0.3 and vertical > 0.0:
+			_tocar(anim_pulo_inicio, 1.6, 0.1)
+		else:
+			_tocar(anim_pulo_ar)
+	elif _aterrissando > 0.0 and lateral < limiar_correr:
+		_tocar(anim_aterrissar, 1.5)
+	elif lateral > limiar_disparada and not pesadelo:
+		_tocar(anim_disparada, clampf(lateral / ritmo_disparada, 0.8, 2.0))
 	elif lateral > limiar_correr and not pesadelo:
-		_tocar(anim_correr, clampf(lateral / ritmo_correr, 0.8, 2.6))
+		_tocar(anim_correr, clampf(lateral / ritmo_correr, 0.8, 2.0))
 	elif lateral > limiar_andar:
 		var andar: StringName = anim_andar_pesadelo if pesadelo else anim_andar
 		_tocar(andar, clampf(lateral / ritmo_andar, 0.7, 2.2))
+	elif _luna and _luna.is_on:
+		_tocar(anim_parado_luz)
 	else:
 		_tocar(anim_parado_pesadelo if pesadelo else anim_parado)
 
