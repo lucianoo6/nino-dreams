@@ -4,7 +4,7 @@ extends Node3D
 ## à altura dos olhos; o resto são livros decorativos com títulos de obras em domínio público.
 ## Um rastro de faíscas douradas passeia entre as prateleiras.
 
-const MADEIRA := preload("res://materials/pbr/madeira.tres")
+const MADEIRA := preload("res://materials/pbr/madeira_verniz.tres")
 const FUNDO := preload("res://materials/pbr/cotele_vinho.tres")
 
 const TITULOS_DECORATIVOS: Array[String] = [

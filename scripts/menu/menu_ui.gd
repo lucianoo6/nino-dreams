@@ -16,6 +16,9 @@ const CREME := Color(1.0, 0.95, 0.82)
 const MARROM := Color(0.28, 0.18, 0.12)
 
 var _conteudo: Control
+var _icone_estilo: StyleBoxFlat
+var _icone_texto: Label
+var _dispositivo: String = ""
 var _titulo_livro: Label
 var _detalhe_livro: Label
 
@@ -81,6 +84,49 @@ func _ready() -> void:
 	_conteudo.add_child(barra)
 	barra.add_child(_pilula_selecionar())
 	barra.add_child(_etiqueta_livro())
+	var joys: Array[int] = Input.get_connected_joypads()
+	_aplicar_icone(_familia(Input.get_joy_name(joys[0])) if not joys.is_empty() else "teclado")
+
+
+## Troca o ícone do botão conforme o último dispositivo usado (teclado, Xbox, PlayStation, Nintendo).
+func _input(event: InputEvent) -> void:
+	var tipo: String = ""
+	if event is InputEventJoypadButton:
+		tipo = _familia(Input.get_joy_name(event.device))
+	elif event is InputEventJoypadMotion and absf((event as InputEventJoypadMotion).axis_value) > 0.5:
+		tipo = _familia(Input.get_joy_name(event.device))
+	elif event is InputEventKey or event is InputEventMouseButton:
+		tipo = "teclado"
+	if tipo != "" and tipo != _dispositivo:
+		_aplicar_icone(tipo)
+
+
+static func _familia(nome: String) -> String:
+	var n: String = nome.to_lower()
+	for chave: String in ["playstation", "dualsense", "dualshock", "ps4", "ps5", "sony"]:
+		if n.contains(chave):
+			return "ps"
+	for chave: String in ["nintendo", "switch", "joy-con", "pro controller"]:
+		if n.contains(chave):
+			return "nintendo"
+	return "xbox"
+
+
+func _aplicar_icone(tipo: String) -> void:
+	_dispositivo = tipo
+	# Botão de baixo do controle (o que confirma): A no Xbox, ✕ no PlayStation, B no layout Nintendo.
+	var dados: Dictionary = {
+		"xbox": ["A", Color(0.32, 0.62, 0.25)],
+		"ps": ["X", Color(0.22, 0.36, 0.72)],
+		"nintendo": ["B", Color(0.28, 0.28, 0.32)],
+		"teclado": ["Enter", Color(0.45, 0.3, 0.2)],
+	}
+	var d: Array = dados.get(tipo, dados["teclado"])
+	_icone_texto.text = d[0]
+	_icone_estilo.bg_color = d[1]
+	var largo: bool = String(d[0]).length() > 1
+	_icone_estilo.set_corner_radius_all(12 if largo else 22)
+	_icone_texto.add_theme_font_size_override("font_size", 20 if largo else 26)
 
 
 func definir_livro(titulo: String, detalhe: String) -> void:
@@ -115,12 +161,14 @@ func _pilula_selecionar() -> Control:
 	pilula.add_child(linha)
 	var icone := PanelContainer.new()
 	var bola := StyleBoxFlat.new()
+	_icone_estilo = bola
 	bola.bg_color = Color(0.2, 0.32, 0.62)
 	bola.set_corner_radius_all(22)
 	bola.content_margin_left = 12
 	bola.content_margin_right = 12
 	icone.add_theme_stylebox_override("panel", bola)
-	icone.add_child(_rotulo("A", FONTE_B, 26, Color.WHITE, Color(0, 0, 0, 0), 0))
+	_icone_texto = _rotulo("A", FONTE_B, 26, Color.WHITE, Color(0, 0, 0, 0), 0)
+	icone.add_child(_icone_texto)
 	icone.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	linha.add_child(icone)
 	linha.add_child(_rotulo("Selecionar" if _pt() else "Select", FONTE_SB, 30, MARROM, Color(0, 0, 0, 0), 0))

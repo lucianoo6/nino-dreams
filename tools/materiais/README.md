@@ -31,6 +31,7 @@ Normais na convenção OpenGL (a do Godot). Os materiais usam **triplanar** (ser
 | `linha` | linha de costura grossa torcida (pontes de fio, carretéis) | vermelha, dourada, azul |
 | `papel` | papel de livro antigo: fibras e manchinhas | — |
 | `assoalho` | tábuas com juntas, topos desencontrados e veios | — |
+| `madeira_verniz` | móvel envernizado: veio reto, pouco contraste, poros finos, clearcoat | — |
 
 **Cor:** os albedos de tecido/cerâmica/plástico são quase brancos — a cor vem do `albedo_color` da variante.
 Para uma cor nova, duplique um `.tres` e troque `albedo_color` (ou adicione em `VARIANTES` no gerador).

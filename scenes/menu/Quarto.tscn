@@ -9,12 +9,13 @@
 [ext_resource type="Script" path="res://scripts/menu/menu_ui.gd" id="7_ui"]
 [ext_resource type="Material" path="res://materials/pbr/assoalho.tres" id="8_assoalho"]
 [ext_resource type="Material" path="res://materials/pbr/feltro_azul.tres" id="9_parede"]
-[ext_resource type="Material" path="res://materials/pbr/madeira.tres" id="10_madeira"]
+[ext_resource type="Material" path="res://materials/pbr/madeira_verniz.tres" id="10_madeira"]
 [ext_resource type="Material" path="res://materials/pbr/chita.tres" id="11_chita"]
 [ext_resource type="Material" path="res://materials/pbr/feltro_creme.tres" id="12_travesseiro"]
 [ext_resource type="Material" path="res://materials/pbr/la_trico_creme.tres" id="13_tapete"]
 [ext_resource type="Material" path="res://materials/pbr/veludo_vermelho.tres" id="14_capa"]
 [ext_resource type="Material" path="res://materials/pbr/papel.tres" id="15_papel"]
+[ext_resource type="Script" path="res://scripts/menu/livro_nas_maos.gd" id="16_livro_maos"]
 
 [sub_resource type="Environment" id="Env_quarto"]
 background_mode = 1
@@ -224,7 +225,7 @@ modo_fixo = &"ual/Sitting_Idle"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, -0.38)
 
 [node name="LivroNoColo" type="Node3D" parent="Nino"]
-transform = Transform3D(1, 0, 0, 0, 0.766, -0.643, 0, 0.643, 0.766, 0, 0.36, -0.27)
+script = ExtResource("16_livro_maos")
 
 [node name="Capa" type="MeshInstance3D" parent="Nino/LivroNoColo"]
 mesh = SubResource("Mesh_capa_aberta")

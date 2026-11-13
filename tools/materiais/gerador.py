@@ -339,6 +339,21 @@ def assoalho(n, tabuas=6, comprimentos=2):
     return dict(albedo=albedo, altura=h, rough=0.55 + 0.25 * fino + 0.2 * junta, forca_normal=2.5, tingivel=False)
 
 
+@material("madeira_verniz")
+def madeira_verniz(n):
+    """Madeira envernizada de móvel: veio reto e longo (corte radial), pouco contraste, poros finos e verniz."""
+    y, x = np.mgrid[0:n, 0:n] / n
+    a = campo(n, beta=3.0, fmin=1, seed=150)
+    faixas = np.sin(2 * np.pi * (x * 9 + (a - 0.5) * 0.6)) * 0.5 + 0.5
+    veios = normalizar(borrar(linhas_tileaveis(n, int(n * 1.2), n * 0.4, 1, seed=151, direcao=np.pi / 2,
+                                               espalhar=0.03, curva=0.02), 0.8))
+    poros = np.clip((campo(n, beta=0.5, fmin=60, seed=152) - 0.75) * 4, 0, 1)
+    t = np.clip(faixas * 0.45 + veios * 0.35 + campo(n, beta=2.5, fmin=1, seed=153) * 0.2, 0, 1)
+    albedo = tingir(None, (0.42, 0.24, 0.12), (0.62, 0.40, 0.22), t) * (1 - 0.15 * poros[..., None])
+    return dict(albedo=albedo, altura=(veios * 0.05 + faixas * 0.02 - poros * 0.03) + 0.5, rough=0.32 + 0.1 * poros,
+                forca_normal=0.8, tingivel=False, ceramica=True)
+
+
 # ---------------------------------------------------------------- SAÍDA
 
 VARIANTES = {
@@ -358,7 +373,7 @@ VARIANTES = {
 
 ESCALA_UV = {"feltro": 2, "la_trico": 1.5, "cotele": 3, "jeans": 3, "chita": 1, "ceramica": 1, "vidro": 1,
              "botao_plastico": 1, "madeira": 2.5, "madreperola": 1,
-             "tule": 3, "veludo": 2, "lantejoula": 3, "linha": 2, "papel": 1, "assoalho": 0.35}
+             "tule": 3, "veludo": 2, "lantejoula": 3, "linha": 2, "papel": 1, "assoalho": 0.35, "madeira_verniz": 1.5}
 
 
 def salvar_png(caminho, arr):
