@@ -38,6 +38,7 @@ func _ready() -> void:
 	add_child(_painel)
 
 	_texto = Label.new()
+	_texto.add_theme_font_override("font", preload("res://assets/fonts/Fredoka-SemiBold.woff2"))
 	_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_texto.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -46,6 +47,7 @@ func _ready() -> void:
 	_painel.add_child(_texto)
 
 	_fim = Label.new()
+	_fim.add_theme_font_override("font", preload("res://assets/fonts/Fredoka-Bold.woff2"))
 	_fim.text = "e FIM"
 	_fim.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_fim.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

@@ -13,6 +13,7 @@ extends Node3D
 
 func _ready() -> void:
 	_tocar_musica()
+	add_child(HudSonho.new())
 	if GameState.livro_atual and GameState.capitulo_atual:
 		titulo = GameState.livro_atual.titulo
 		subtitulo = GameState.capitulo_atual.rotulo()
@@ -43,6 +44,7 @@ func _ready() -> void:
 func _rotulo(texto: String, tamanho: int) -> Label:
 	var l := Label.new()
 	l.text = texto
+	l.add_theme_font_override("font", preload("res://assets/fonts/Fredoka-Bold.woff2"))
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.add_theme_font_size_override("font_size", tamanho)
 	l.add_theme_color_override("font_color", Color(1.0, 0.96, 0.85))
@@ -59,6 +61,7 @@ func _tocar_musica() -> void:
 		mp3.loop = true
 	var player := AudioStreamPlayer.new()
 	player.stream = musica
+	player.bus = &"Musica"
 	player.volume_db = -40.0
 	add_child(player)
 	player.play()

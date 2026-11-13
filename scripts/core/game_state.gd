@@ -27,6 +27,7 @@ var itens_necessarios: int:
 		return capitulo_atual.itens_necessarios if capitulo_atual else 3
 
 var _intro_das_nuvens: bool = false
+var _manha: String = ""  # texto da manhã seguinte a um capítulo concluído (vazio = sem manhã)
 var _progresso := ConfigFile.new()
 
 
@@ -142,11 +143,28 @@ func completar_missao() -> void:
 	print("✨ Missão completa! Hora de acordar.")
 	cutscene = true
 	# TODO: comemoração (estrelinhas, Nino e Mel pulando) antes das nuvens.
-	get_tree().create_timer(1.5).timeout.connect(_acordar_com_nuvens)
+	if capitulo_atual and livro_atual:
+		_manha = "%s — %s" % [livro_atual.titulo, capitulo_atual.rotulo()]
+	get_tree().create_timer(3.5).timeout.connect(_acordar_com_nuvens)  # tempo da comemoração
 
 
 func _acordar_com_nuvens() -> void:
 	Transicao.cobrir(1.5).finished.connect(acordar)
+
+
+## A estante chama isto: devolve o texto da manhã uma única vez (vazio se não houve capítulo concluído).
+func consumir_manha() -> String:
+	var t: String = _manha
+	_manha = ""
+	return t
+
+
+## Quantos capítulos o Nino já concluiu em todos os livros (vira botões costurados na colcha).
+func total_concluidos() -> int:
+	var total: int = 0
+	for secao: String in _progresso.get_sections():
+		total += (_progresso.get_value(secao, "concluidos", PackedInt32Array()) as PackedInt32Array).size()
+	return total
 
 
 func acordar() -> void:
@@ -171,6 +189,9 @@ func _registrar_controles() -> void:
 	_add_keys("lamp", [KEY_F])
 	_add_keys("interact", [KEY_ENTER])
 	_add_keys("chamar_mel", [KEY_C])
+	_add_keys("pausa", [KEY_ESCAPE])
+	_add_joy_button("pausa", JOY_BUTTON_START)
+	_add_joy_button("pausa", JOY_BUTTON_START, 1)
 
 	_add_joy_axis("move_forward", JOY_AXIS_LEFT_Y, -1.0)
 	_add_joy_axis("move_back", JOY_AXIS_LEFT_Y, 1.0)

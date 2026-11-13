@@ -32,6 +32,7 @@ func _ready() -> void:
 	coluna.add_theme_constant_override("separation", 12)
 	_painel.add_child(coluna)
 	_titulo = Label.new()
+	_titulo.add_theme_font_override("font", preload("res://assets/fonts/Fredoka-Bold.woff2"))
 	_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_titulo.add_theme_font_size_override("font_size", 30)
@@ -74,6 +75,7 @@ func escolher(livro: BookData) -> int:
 	for c: ChapterData in livro.lista_capitulos():
 		var b := Button.new()
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.add_theme_font_override("font", preload("res://assets/fonts/Fredoka-SemiBold.woff2"))
 		b.add_theme_font_size_override("font_size", 22)
 		var liberado: bool = GameState.capitulo_liberado(livro, c.numero)
 		var marca: String = "✓" if lidos.has(c.numero) else ("🔖" if c.numero == proximo and liberado else "·")

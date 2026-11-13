@@ -49,7 +49,11 @@ func _ready() -> void:
 	_ui.selecionar.connect(_on_selecionar)
 
 	_foco_na_estante(0.0)
+	_costurar_recompensas()
 	Transicao.descobrir(1.2)
+	var manha: String = GameState.consumir_manha()
+	if not manha.is_empty():
+		_amanhecer(manha)
 	if not _livros.is_empty():
 		_selecionar(0)
 
@@ -162,6 +166,57 @@ func _escolher(livro: ShelfBook) -> void:
 	tw.tween_property(_camera, "fov", _camera.fov * 0.7, 1.6).set_trans(Tween.TRANS_SINE)
 	await Transicao.cobrir(1.6).finished
 	GameState.entrar_no_capitulo(livro.data, capitulo)
+
+
+# ---------------- Manhã e recompensas ----------------
+
+## Cada capítulo concluído vira um botão costurado na colcha da cama (o quarto guarda as conquistas).
+func _costurar_recompensas() -> void:
+	var colcha := get_node_or_null("Cama/Colcha") as Node3D
+	if colcha == null:
+		return
+	var cores: Array[Color] = [Color(1, 0.8, 0.3), Color(0.35, 0.55, 0.95), Color(0.9, 0.3, 0.3), Color(0.45, 0.8, 0.5),
+		Color(0.85, 0.6, 0.95)]
+	for i in mini(GameState.total_concluidos(), 24):
+		var b := PropProcedural.new()
+		b.tipo = PropProcedural.Tipo.BOTAO
+		b.tamanho = 0.07
+		b.com_colisao = false
+		b.cor = cores[i % cores.size()]
+		b.position = Vector3(-0.5 + (i % 6) * 0.2, 0.052, 0.55 - floori(i / 6.0) * 0.2)
+		colcha.add_child(b)
+
+
+## Manhã depois de um sonho: luz do dia entrando, Nino conta o que sonhou e ganha um botão na colcha.
+func _amanhecer(texto: String) -> void:
+	_ocupado = true
+	_ui.esconder(0.0)
+	var env: Environment = ($WorldEnvironment as WorldEnvironment).environment
+	var noite: Dictionary = {"cor": env.ambient_light_color, "energia": env.ambient_light_energy}
+	var luar := $Luar as DirectionalLight3D
+	var luar_cor: Color = luar.light_color
+	var luar_e: float = luar.light_energy
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(env, "ambient_light_color", Color(1.0, 0.9, 0.75), 1.5)
+	tw.tween_property(env, "ambient_light_energy", 1.1, 1.5)
+	tw.tween_property(luar, "light_color", Color(1.0, 0.85, 0.6), 1.5)
+	tw.tween_property(luar, "light_energy", 1.4, 1.5)
+	await tw.finished
+	var animador := _nino as CharacterAnimator
+	if animador:
+		animador.modo_fixo = &"ual/Sitting_Talking"
+	var bom_dia: String = "Bom dia! Que sonho! " if MenuEstanteUI._pt() else "Good morning! What a dream! "
+	await _dialogo.falar(bom_dia + texto, _voz)
+	if animador:
+		animador.modo_fixo = &"ual/Sitting_Idle"
+	var volta := create_tween().set_parallel(true)
+	volta.tween_property(env, "ambient_light_color", noite["cor"], 2.0)
+	volta.tween_property(env, "ambient_light_energy", noite["energia"], 2.0)
+	volta.tween_property(luar, "light_color", luar_cor, 2.0)
+	volta.tween_property(luar, "light_energy", luar_e, 2.0)
+	await volta.finished
+	_ui.mostrar()
+	_ocupado = false
 
 
 # ---------------- Rack focus (desfoque) ----------------
