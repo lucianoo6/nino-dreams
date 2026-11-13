@@ -160,6 +160,12 @@ func _botao(texto: String, acao: Callable) -> Button:
 	var b := Button.new()
 	b.text = texto
 	_estilo_texto(b, 28)
+	b.pressed.connect(acao)
+	return b
+
+
+## Pílula creme (normal) / amarela com borda vermelha (foco), igual para botões, check e lista.
+func _pilula(b: Control) -> void:
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.97, 0.93, 0.85)
 	normal.set_corner_radius_all(22)
@@ -172,8 +178,7 @@ func _botao(texto: String, acao: Callable) -> Button:
 	b.add_theme_stylebox_override("hover", foco)
 	b.add_theme_stylebox_override("focus", foco)
 	b.add_theme_stylebox_override("pressed", foco)
-	b.pressed.connect(acao)
-	return b
+	b.add_theme_stylebox_override("hover_pressed", foco)
 
 
 func _slider(texto: String, secao: String, chave: String, padrao: float) -> Control:
@@ -196,9 +201,10 @@ func _slider(texto: String, secao: String, chave: String, padrao: float) -> Cont
 func _estilo_texto(c: Control, tamanho: int) -> void:
 	c.add_theme_font_override("font", FONTE_SB)
 	c.add_theme_font_size_override("font_size", tamanho)
-	c.add_theme_color_override("font_color", MARROM if c is Button and not c is CheckButton else CREME)
-	c.add_theme_color_override("font_focus_color", MARROM)
-	c.add_theme_color_override("font_hover_color", MARROM)
+	for cor: String in ["font_color", "font_focus_color", "font_hover_color", "font_pressed_color",
+			"font_hover_pressed_color"]:
+		c.add_theme_color_override(cor, MARROM)
+	_pilula(c)
 
 
 static func _pt() -> bool:
