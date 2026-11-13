@@ -10,7 +10,7 @@ const MIX_RATE := 22050.0
 @export var tom_base: float = 340.0 ## Hz — Nino ~340, Mel ~460
 @export var variacao: float = 0.35 ## quanto o tom varia entre letras (0..1)
 @export var duracao_silaba: float = 0.075
-@export_range(0.0, 1.0) var volume_linear: float = 0.35
+@export_range(0.0, 1.0) var volume_balbucio: float = 0.35
 
 var _playback: AudioStreamGeneratorPlayback
 
@@ -45,5 +45,5 @@ func blip(caractere: String, multiplicador_tom: float = 1.0) -> void:
 		var f: float = freq * (1.0 + 0.12 * sin(k * PI))
 		fase += TAU * f / MIX_RATE
 		var s: float = sin(fase) + 0.35 * sin(fase * 2.0) + (0.15 * sin(fase * 3.0) if vogal else 0.0)
-		s *= env * volume_linear * 0.6
+		s *= env * volume_balbucio * 0.6
 		_playback.push_frame(Vector2(s, s))
