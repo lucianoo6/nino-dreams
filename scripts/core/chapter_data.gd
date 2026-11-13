@@ -17,5 +17,10 @@ extends Resource
 @export_file("*.tscn") var cena: String = ""
 
 
+## Este capítulo já tem fase própria? (os outros aparecem como "em breve")
+func tem_fase() -> bool:
+	return not cena.is_empty()
+
+
 func rotulo() -> String:
 	return "Capítulo %d — %s" % [numero, titulo]

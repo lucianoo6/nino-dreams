@@ -116,6 +116,11 @@ func _selecionar(i: int) -> void:
 func _escolher(livro: ShelfBook) -> void:
 	if _ocupado:
 		return
+	if not GameState.livro_jogavel(livro.data):
+		livro.hop()
+		_ui.definir_livro(livro.data.titulo, "em breve — ainda sendo costurado 🧵")
+		_voz.blip("e", 0.8)
+		return
 	_ocupado = true
 	GameState.cutscene = true
 	_ui.esconder()

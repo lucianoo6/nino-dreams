@@ -37,11 +37,11 @@ func _ready() -> void:
 
 # ---------------- Progresso (marcador de página) ----------------
 
-## Próximo capítulo a ler (1-based). Depois do último, volta a apontar para o último.
+## Próximo capítulo a ler (1-based): o primeiro COM FASE ainda não concluído.
 func proximo_capitulo(livro: BookData) -> int:
 	var lidos: PackedInt32Array = capitulos_concluidos(livro)
 	for c: ChapterData in livro.lista_capitulos():
-		if not lidos.has(c.numero):
+		if c.tem_fase() and not lidos.has(c.numero):
 			return c.numero
 	return livro.total_capitulos()
 
@@ -50,13 +50,34 @@ func capitulos_concluidos(livro: BookData) -> PackedInt32Array:
 	return _progresso.get_value(livro.id, "concluidos", PackedInt32Array())
 
 
+## Liberado = tem fase e todos os capítulos ANTERIORES que têm fase já foram concluídos.
 func capitulo_liberado(livro: BookData, numero: int) -> bool:
-	return liberar_todos_capitulos or numero <= proximo_capitulo(livro) \
-		or capitulos_concluidos(livro).has(numero)
+	var cap: ChapterData = livro.lista_capitulos()[numero - 1]
+	if not cap.tem_fase():
+		return false
+	if liberar_todos_capitulos:
+		return true
+	var lidos: PackedInt32Array = capitulos_concluidos(livro)
+	for c: ChapterData in livro.lista_capitulos():
+		if c.numero < numero and c.tem_fase() and not lidos.has(c.numero):
+			return false
+	return true
+
+
+## O livro tem pelo menos uma fase pronta?
+func livro_jogavel(livro: BookData) -> bool:
+	for c: ChapterData in livro.lista_capitulos():
+		if c.tem_fase():
+			return true
+	return false
 
 
 func livro_terminado(livro: BookData) -> bool:
-	return capitulos_concluidos(livro).size() >= livro.total_capitulos()
+	var lidos: PackedInt32Array = capitulos_concluidos(livro)
+	for c: ChapterData in livro.lista_capitulos():
+		if c.tem_fase() and not lidos.has(c.numero):
+			return false
+	return livro_jogavel(livro)
 
 
 func _marcar_concluido() -> void:

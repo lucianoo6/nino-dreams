@@ -76,8 +76,16 @@ func escolher(livro: BookData) -> int:
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size", 22)
 		var liberado: bool = GameState.capitulo_liberado(livro, c.numero)
-		var marca: String = "✓" if lidos.has(c.numero) else ("🔖" if c.numero == proximo else ("🔒" if not liberado else "·"))
-		var nome: String = c.titulo if liberado else "???"
+		var marca: String = "✓" if lidos.has(c.numero) else ("🔖" if c.numero == proximo and liberado else "·")
+		if not c.tem_fase():
+			marca = "🧵"  # ainda sendo costurado
+		elif not liberado:
+			marca = "🔒"
+		var nome: String = c.titulo
+		if not c.tem_fase():
+			nome += "  (em breve)"
+		elif not liberado:
+			nome = "???"
 		var pesadelo: String = "  🌑" if c.tipo == BookData.DreamKind.PESADELO and liberado else ""
 		b.text = "%s  %d. %s%s" % [marca, c.numero, nome, pesadelo]
 		b.disabled = not liberado

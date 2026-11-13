@@ -59,7 +59,9 @@ func _criar_marcador(alt: float, largura: float, profundidade: float) -> void:
 func progresso_texto() -> String:
 	var total: int = data.total_capitulos()
 	if total <= 1:
-		return ""
+		return "" if GameState.livro_jogavel(data) else "em breve — ainda sendo costurado 🧵"
+	if not GameState.livro_jogavel(data):
+		return "em breve — ainda sendo costurado 🧵"
 	if GameState.livro_terminado(data):
 		return "lido até o FIM ✨"
 	return "capítulo %d de %d" % [GameState.proximo_capitulo(data), total]
