@@ -69,6 +69,7 @@ func _physics_process(delta: float) -> void:
 		if not fotos.is_empty() and t >= fotos[0]:
 			var tt: float = fotos.pop_front()
 			await RenderingServer.frame_post_draw
-			get_viewport().get_texture().get_image().save_png("%s/t%.2f_%s.png" % [pasta, tt, String(anim._player.current_animation).replace("/", "-")])
+			var nome_anim: String = String(anim._player.current_animation).replace("/", "-")
+			get_viewport().get_texture().get_image().save_png("%s/t%.2f_%s.png" % [pasta, tt, nome_anim])
 	if t > 7.0:
 		get_tree().quit()
