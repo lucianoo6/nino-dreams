@@ -1,33 +1,22 @@
 extends Node3D
-## Tela inicial / escolha de fase: a estante de livros fofa em primeiro plano e o Nino na cama, desfocado ao fundo.
-## Passar o mouse (ou o direcional) faz os livros pularem. Ao escolher:
-##   1. o foco da câmera "passa" da estante para o Nino (rack focus);
-##   2. o livro voa até as mãos dele;
-##   3. abre o sumário: o marcador de página aponta o próximo capítulo (dá para reler os já lidos);
-##   4. ele lê a última linha do CAPÍTULO em balbucio e diz "continua…" — ou "e FIM" no último capítulo;
-##   5. nuvens cobrem a tela e o sonho daquele capítulo começa com a câmera descendo das nuvens.
+## Tela de escolha de história (estilo do conceito):
+##   • esquerda: Nino lendo na cama, desfocado, com a luz quente do abajur e a janela virando bokeh;
+##   • direita: estante alta e lotada, nítida, com um rastro de faíscas douradas;
+##   • moldura de papelão kraft, título num remendo de jeans e etiqueta ‹ livro › embaixo.
+## Escolher um livro: o foco passa para o Nino, o livro voa até ele, abre o sumário (capítulos),
+## ele lê a última linha em balbucio, diz "continua…" ou "e FIM", e as nuvens levam ao sonho.
 
 const PASTA_LIVROS := "res://data/livros/"
-const FELTRO := preload("res://materials/feltro.tres")
-const MADEIRA := preload("res://materials/pbr/madeira.tres")
-const FUNDO_ESTANTE := preload("res://materials/pbr/feltro_creme.tres")
-
-@export_group("Estante")
-@export var largura: float = 1.6
-@export var profundidade: float = 0.3
-@export var altura_prateleiras: PackedFloat32Array = PackedFloat32Array([0.5, 0.06])
-@export var cor_madeira: Color = Color(0.62, 0.42, 0.3)
 
 @export_group("Foco")
-@export var foco_estante_distancia: float = 2.3
-@export var foco_nino_distancia: float = 3.2
+@export var foco_estante_distancia: float = 2.7
+@export var foco_nino_distancia: float = 3.4
 @export var duracao_rack_focus: float = 1.2
 
 var _attrs: CameraAttributesPractical
 var _livros: Array[ShelfBook] = []
 var _indice: int = -1
 var _ocupado: bool = false
-var _titulo: Label # texto 2D: Label3D transparente fica borrado pelo desfoque (DOF)
 
 @onready var _camera: Camera3D = $Camera3D
 @onready var _nino: Node3D = $Nino
@@ -35,8 +24,8 @@ var _titulo: Label # texto 2D: Label3D transparente fica borrado pelo desfoque (
 @onready var _voz: BabbleVoice = $VozDoNino
 @onready var _dialogo: BabbleDialog = $Dialogo
 @onready var _sumario: ChapterPicker = $Sumario
-@onready var _titulo3d: Label3D = $TituloLivro
-@onready var _estante: Node3D = $Estante
+@onready var _estante: Estante = $Estante
+@onready var _ui: MenuEstanteUI = $Interface
 
 
 func _ready() -> void:
@@ -46,24 +35,32 @@ func _ready() -> void:
 	if _attrs == null:
 		_attrs = CameraAttributesPractical.new()
 		_camera.attributes = _attrs
-	_camera.look_at(Vector3(0.45, 0.62, -1.2))
-	_titulo3d.visible = false
-	_criar_titulo_2d()
-	_construir_moveis()
-	_construir_livros(_carregar_livros())
+	_camera.look_at($AlvoCamera.global_position)
+	# Nino olha para o livro no colo, virado de 3/4 para a estante
+	_nino.look_at(_nino.global_position + Vector3(0.9, 0.0, 1.0), Vector3.UP)
+
+	_estante.construir(_carregar_livros())
+	_livros = _estante.livros
+	for livro: ShelfBook in _livros:
+		livro.hovered.connect(_on_livro_hover)
+		livro.clicked.connect(_escolher)
+	_ui.anterior.connect(func() -> void: _mover(-1))
+	_ui.proximo.connect(func() -> void: _mover(1))
+	_ui.selecionar.connect(_on_selecionar)
+
 	_foco_na_estante(0.0)
 	Transicao.descobrir(1.2)
 	if not _livros.is_empty():
-		_selecionar(0, false)
+		_selecionar(0)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _ocupado or _livros.is_empty():
 		return
 	if event.is_action_pressed("ui_right") or event.is_action_pressed("move_right"):
-		_selecionar(wrapi(_indice + 1, 0, _livros.size()))
+		_mover(1)
 	elif event.is_action_pressed("ui_left") or event.is_action_pressed("move_left"):
-		_selecionar(wrapi(_indice - 1, 0, _livros.size()))
+		_mover(-1)
 	elif event.is_action_pressed("ui_accept") or event.is_action_pressed("jump"):
 		_escolher(_livros[_indice])
 
@@ -82,54 +79,36 @@ func _carregar_livros() -> Array[BookData]:
 	return lista
 
 
-func _construir_livros(lista: Array[BookData]) -> void:
-	var margem: float = 0.08
-	var prateleira: int = 0
-	var x: float = -largura / 2.0 + margem
-	for i in lista.size():
-		# Tamanhos variados (mas sempre iguais para o mesmo livro) para parecer uma estante de verdade.
-		var semente: int = hash(lista[i].id)
-		var largura_livro: float = 0.07 + float(absi(semente) % 5) * 0.012
-		var altura_livro: float = 0.3 + float(absi(semente >> 3) % 5) * 0.02
-		if x + largura_livro > largura / 2.0 - margem:
-			prateleira += 1
-			x = -largura / 2.0 + margem
-			if prateleira >= altura_prateleiras.size():
-				push_warning("Estante cheia: aumente a largura ou adicione prateleiras.")
-				break
-		var livro := ShelfBook.new()
-		livro.setup(lista[i], altura_livro, largura_livro, profundidade * 0.8)
-		livro.position = Vector3(x + largura_livro / 2.0, altura_prateleiras[prateleira] + 0.02, 0.0)
-		livro.rotation.z = deg_to_rad(float(semente % 5) * 0.8) # inclinadinhos, feitos à mão
-		_estante.add_child(livro)
-		livro.hovered.connect(_on_livro_hover)
-		livro.clicked.connect(_escolher)
-		_livros.append(livro)
-		x += largura_livro + 0.012
+func _on_selecionar() -> void:
+	if not _livros.is_empty():
+		_escolher(_livros[_indice])
+
+
+func _mover(passo: int) -> void:
+	if _ocupado or _livros.is_empty():
+		return
+	_selecionar(wrapi(_indice + passo, 0, _livros.size()))
 
 
 func _on_livro_hover(livro: ShelfBook) -> void:
-	if _ocupado:
+	if not _ocupado:
+		_selecionar(_livros.find(livro))
+
+
+func _selecionar(i: int) -> void:
+	if i < 0:
 		return
-	_selecionar(_livros.find(livro))
-
-
-func _selecionar(i: int, com_pulo: bool = true) -> void:
-	if i < 0 or i == _indice:
-		if i >= 0 and com_pulo:
-			_livros[i].hop()
+	if i == _indice:
+		_livros[i].hop()
 		return
 	if _indice >= 0:
 		_livros[_indice].set_selected(false)
 	_indice = i
 	var livro: ShelfBook = _livros[i]
 	livro.set_selected(true)
+	_estante.destacar(livro)
 	_voz.blip(livro.data.titulo.substr(0, 1), 1.3)
-	var progresso: String = livro.progresso_texto()
-	_titulo.text = "%s\n%s%s" % [livro.data.titulo, livro.data.autor, ("\n" + progresso) if progresso else ""]
-	var ancora: Vector2 = _camera.unproject_position(Vector3(0.0, altura_prateleiras[0] + 0.62, 0.0))
-	_titulo.position = ancora - Vector2(_titulo.size.x / 2.0, _titulo.size.y)
-	_titulo.visible = true
+	_ui.definir_livro(livro.data.titulo, livro.progresso_texto())
 
 
 # ---------------- Escolha: ler, "e FIM", nuvens ----------------
@@ -139,12 +118,13 @@ func _escolher(livro: ShelfBook) -> void:
 		return
 	_ocupado = true
 	GameState.cutscene = true
-	_titulo.visible = false
+	_ui.esconder()
 	livro.hop()
 	await get_tree().create_timer(0.25).timeout
 
 	_foco_no_nino(duracao_rack_focus)
 	await livro.voar_para(_maos.global_position, 1.0)
+	_nino.get_node("LivroNoColo").visible = false  # o livro escolhido toma o lugar do que estava no colo
 
 	# Sumário com o marcador de página (livros de um capítulo só pulam esta etapa).
 	var numero: int = 1
@@ -152,8 +132,9 @@ func _escolher(livro: ShelfBook) -> void:
 		numero = await _sumario.escolher(livro.data)
 		if numero < 0:
 			_foco_na_estante(duracao_rack_focus)
+			_nino.get_node("LivroNoColo").visible = true
 			await livro.voltar()
-			_titulo.visible = true
+			_ui.mostrar()
 			GameState.cutscene = false
 			_ocupado = false
 			return
@@ -162,7 +143,7 @@ func _escolher(livro: ShelfBook) -> void:
 	var linha: String = capitulo.ultima_linha if not capitulo.ultima_linha.is_empty() else capitulo.rotulo() + "…"
 	var animador := _nino as CharacterAnimator
 	if animador:
-		animador.modo_fixo = &"ual/Sitting_Talking" # lendo em voz alta
+		animador.modo_fixo = &"ual/Sitting_Talking"  # lendo em voz alta
 	await _dialogo.falar(linha, _voz)
 	if animador:
 		animador.modo_fixo = &"ual/Sitting_Idle"
@@ -171,35 +152,20 @@ func _escolher(livro: ShelfBook) -> void:
 	else:
 		await _dialogo.dizer_continua(_voz)
 
-	# Nino boceja, a câmera se aproxima devagar e as nuvens tomam conta.
+	# A câmera se aproxima devagar e as nuvens tomam conta.
 	var tw := create_tween()
 	tw.tween_property(_camera, "fov", _camera.fov * 0.7, 1.6).set_trans(Tween.TRANS_SINE)
 	await Transicao.cobrir(1.6).finished
 	GameState.entrar_no_capitulo(livro.data, capitulo)
 
 
-func _criar_titulo_2d() -> void:
-	var camada := CanvasLayer.new()
-	camada.layer = 40
-	add_child(camada)
-	_titulo = Label.new()
-	_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_titulo.custom_minimum_size = Vector2(520, 0)
-	_titulo.add_theme_font_size_override("font_size", 34)
-	_titulo.add_theme_color_override("font_color", Color(1.0, 0.96, 0.85))
-	_titulo.add_theme_color_override("font_outline_color", Color(0.3, 0.2, 0.4))
-	_titulo.add_theme_constant_override("outline_size", 12)
-	_titulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	camada.add_child(_titulo)
-
-
 # ---------------- Rack focus (desfoque) ----------------
 
 func _foco_na_estante(duracao: float) -> void:
-	_attrs.dof_blur_amount = 0.12
+	_attrs.dof_blur_amount = 0.16
 	_attrs.dof_blur_near_enabled = false
 	_attrs.dof_blur_far_enabled = true
-	_attrs.dof_blur_far_transition = 1.4
+	_attrs.dof_blur_far_transition = 1.2
 	if duracao <= 0.0:
 		_attrs.dof_blur_far_distance = foco_estante_distancia
 		return
@@ -209,42 +175,8 @@ func _foco_na_estante(duracao: float) -> void:
 func _foco_no_nino(duracao: float) -> void:
 	_attrs.dof_blur_near_enabled = true
 	_attrs.dof_blur_near_distance = 0.01
-	_attrs.dof_blur_near_transition = 1.2
+	_attrs.dof_blur_near_transition = 1.4
 	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_property(_attrs, "dof_blur_far_distance", 30.0, duracao)
 	tw.tween_property(_attrs, "dof_blur_near_distance", foco_nino_distancia, duracao)
 	tw.chain().tween_callback(func() -> void: _attrs.dof_blur_far_enabled = false)
-
-
-# ---------------- Móveis de feltro ----------------
-
-func _construir_moveis() -> void:
-	var espessura: float = 0.035
-	var topo: float = altura_prateleiras[0] + 0.44
-	# Laterais
-	for lado: float in [-1.0, 1.0]:
-		_caixa(_estante, Vector3(espessura, topo, profundidade),
-			Vector3(lado * (largura / 2.0 + espessura / 2.0), topo / 2.0, 0.0), cor_madeira, MADEIRA)
-	# Prateleiras + tampo
-	for y: float in altura_prateleiras:
-		_caixa(_estante, Vector3(largura, espessura, profundidade), Vector3(0.0, y, 0.0), cor_madeira, MADEIRA)
-	_caixa(_estante, Vector3(largura + espessura * 2.0, espessura, profundidade * 1.05),
-		Vector3(0.0, topo, 0.0), cor_madeira.darkened(0.1), MADEIRA)
-	# Fundo (retalho xadrez — por enquanto liso)
-	_caixa(_estante, Vector3(largura, topo, 0.02), Vector3(0.0, topo / 2.0, -profundidade / 2.0),
-		Color(0.85, 0.7, 0.75), FUNDO_ESTANTE)
-
-
-func _caixa(pai: Node3D, tamanho: Vector3, pos: Vector3, cor: Color, mat: Material = null) -> MeshInstance3D:
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = tamanho
-	mi.mesh = bm
-	if mat:
-		mi.material_override = mat
-	else:
-		mi.material_override = FELTRO
-		mi.set_instance_shader_parameter("tint", cor)
-	mi.position = pos
-	pai.add_child(mi)
-	return mi

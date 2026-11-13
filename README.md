@@ -87,6 +87,9 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] Materiais aplicados: fase da Alice (planeta de feltro, bule de cerâmica, cartas de papel, ponte de linha,
       carretel de madeira) e quarto (assoalho, parede de feltro, colcha de chita, estante de madeira, livros de veludo)
 - [x] Botão 3D de verdade (borda, centro côncavo, 4 furos e X de linha) nos botões-estrela
+- [x] Tela da estante no estilo do conceito: moldura de papelão kraft, título em remendo de jeans costurado,
+      estante alta e lotada (títulos nas lombadas, detalhes dourados), rastro de faíscas, Nino lendo desfocado,
+      barra "Selecionar" + etiqueta ‹ livro › (fonte Fredoka, OFL) — ver docs/referencias/tela_estante.png
 - [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

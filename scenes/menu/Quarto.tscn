@@ -1,54 +1,104 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/menu/quarto_menu.gd" id="1_menu"]
 [ext_resource type="PackedScene" path="res://scenes/player/NinoVisual.tscn" id="2_nino"]
 [ext_resource type="Script" path="res://scripts/ui/babble_voice.gd" id="3_voz"]
 [ext_resource type="Script" path="res://scripts/ui/babble_dialog.gd" id="4_dialogo"]
-[ext_resource type="Material" path="res://materials/feltro.tres" id="5_felt"]
-[ext_resource type="Script" path="res://scripts/ui/chapter_picker.gd" id="6_sumario"]
-[ext_resource type="Material" path="res://materials/pbr/assoalho.tres" id="pbr_1"]
-[ext_resource type="Material" path="res://materials/pbr/feltro_azul.tres" id="pbr_2"]
-[ext_resource type="Material" path="res://materials/pbr/chita.tres" id="pbr_3"]
-[ext_resource type="Material" path="res://materials/pbr/feltro_creme.tres" id="pbr_4"]
-[ext_resource type="Material" path="res://materials/pbr/madeira.tres" id="pbr_5"]
+[ext_resource type="Script" path="res://scripts/ui/chapter_picker.gd" id="5_sumario"]
+[ext_resource type="Script" path="res://scripts/menu/estante.gd" id="6_estante"]
+[ext_resource type="Script" path="res://scripts/menu/menu_ui.gd" id="7_ui"]
+[ext_resource type="Material" path="res://materials/pbr/assoalho.tres" id="8_assoalho"]
+[ext_resource type="Material" path="res://materials/pbr/feltro_azul.tres" id="9_parede"]
+[ext_resource type="Material" path="res://materials/pbr/madeira.tres" id="10_madeira"]
+[ext_resource type="Material" path="res://materials/pbr/chita.tres" id="11_chita"]
+[ext_resource type="Material" path="res://materials/pbr/feltro_creme.tres" id="12_travesseiro"]
+[ext_resource type="Material" path="res://materials/pbr/la_trico_creme.tres" id="13_tapete"]
+[ext_resource type="Material" path="res://materials/pbr/veludo_vermelho.tres" id="14_capa"]
+[ext_resource type="Material" path="res://materials/pbr/papel.tres" id="15_papel"]
 
 [sub_resource type="Environment" id="Env_quarto"]
 background_mode = 1
-background_color = Color(0.1, 0.08, 0.18, 1)
+background_color = Color(0.06, 0.05, 0.12, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.45, 0.4, 0.65, 1)
-ambient_light_energy = 0.5
+ambient_light_color = Color(0.5, 0.42, 0.62, 1)
+ambient_light_energy = 0.45
 tonemap_mode = 4
 ssao_enabled = true
-ssao_radius = 0.6
-ssao_intensity = 2.0
+ssao_radius = 0.5
+ssao_intensity = 1.8
 glow_enabled = true
+glow_intensity = 0.9
+glow_bloom = 0.15
 
 [sub_resource type="CameraAttributesPractical" id="Cam_attrs"]
 dof_blur_far_enabled = true
-dof_blur_far_distance = 2.3
-dof_blur_far_transition = 1.4
-dof_blur_amount = 0.12
+dof_blur_far_distance = 2.7
+dof_blur_far_transition = 1.2
+dof_blur_amount = 0.16
+
+[sub_resource type="StandardMaterial3D" id="Mat_lampada"]
+shading_mode = 0
+albedo_color = Color(1, 0.75, 0.42, 1)
+emission_enabled = true
+emission = Color(1, 0.62, 0.3, 1)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_janela"]
+albedo_color = Color(0.15, 0.25, 0.55, 1)
+emission_enabled = true
+emission = Color(0.25, 0.4, 0.85, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_lua"]
+albedo_color = Color(1, 0.96, 0.8, 1)
+emission_enabled = true
+emission = Color(1, 0.94, 0.75, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="Mesh_chao"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="Mesh_parede"]
+size = Vector3(10, 4, 0.1)
 
 [sub_resource type="BoxMesh" id="Mesh_cama"]
 size = Vector3(1.3, 0.45, 2.1)
 
+[sub_resource type="BoxMesh" id="Mesh_cabeceira"]
+size = Vector3(1.3, 1.1, 0.08)
+
 [sub_resource type="BoxMesh" id="Mesh_colcha"]
-size = Vector3(1.34, 0.08, 1.4)
+size = Vector3(1.36, 0.1, 1.5)
 
 [sub_resource type="CapsuleMesh" id="Mesh_travesseiro"]
-radius = 0.18
-height = 0.9
+radius = 0.2
+height = 1.0
 
-[sub_resource type="BoxMesh" id="Mesh_chao"]
-size = Vector3(8, 0.1, 8)
+[sub_resource type="CylinderMesh" id="Mesh_tapete"]
+top_radius = 1.2
+bottom_radius = 1.2
+height = 0.02
 
-[sub_resource type="BoxMesh" id="Mesh_parede"]
-size = Vector3(8, 4, 0.1)
+[sub_resource type="SphereMesh" id="Mesh_bolinha"]
+radius = 0.035
+height = 0.07
 
-[sub_resource type="SphereMesh" id="Mesh_luna"]
+[sub_resource type="SphereMesh" id="Mesh_lampada"]
 radius = 0.12
 height = 0.24
+
+[sub_resource type="BoxMesh" id="Mesh_capa_aberta"]
+size = Vector3(0.24, 0.012, 0.17)
+
+[sub_resource type="BoxMesh" id="Mesh_paginas"]
+size = Vector3(0.112, 0.022, 0.158)
+
+[sub_resource type="QuadMesh" id="Mesh_janela"]
+size = Vector2(1.1, 1.3)
+
+[sub_resource type="SphereMesh" id="Mesh_lua"]
+radius = 0.14
+height = 0.28
 
 [node name="Quarto" type="Node3D"]
 script = ExtResource("1_menu")
@@ -57,85 +107,151 @@ script = ExtResource("1_menu")
 environment = SubResource("Env_quarto")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.05, 1.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 1.2, 2.25)
 attributes = SubResource("Cam_attrs")
 fov = 50.0
 
-[node name="Abajur" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.4, -2.8)
-light_color = Color(1, 0.78, 0.5, 1)
-light_energy = 2.2
-shadow_enabled = true
-omni_range = 5.0
+[node name="AlvoCamera" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 1.05, 0)
 
-[node name="LuzDaJanela" type="DirectionalLight3D" parent="."]
+[node name="Luar" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707, -0.5, 0.5, 0, 0.707, 0.707, -0.707, -0.5, 0.5, 0, 3, 0)
-light_color = Color(0.6, 0.65, 1, 1)
-light_energy = 0.35
+light_color = Color(0.55, 0.62, 1, 1)
+light_energy = 0.25
 shadow_enabled = true
 
 [node name="LuzDaEstante" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707, 0.707, 0, -0.707, 0.707, 0, 1.6, 1.2)
-light_color = Color(1, 0.9, 0.75, 1)
-light_energy = 1.5
-spot_range = 4.0
-spot_angle = 35.0
+transform = Transform3D(0.94, 0.17, -0.3, 0, 0.87, 0.5, 0.34, -0.47, 0.82, -0.3, 2.4, 1.6)
+light_color = Color(1, 0.86, 0.66, 1)
+light_energy = 2.2
+shadow_enabled = true
+spot_range = 5.0
+spot_angle = 32.0
+
+[node name="Abajur" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.95, -2.3)
+light_color = Color(1, 0.68, 0.38, 1)
+light_energy = 2.5
+shadow_enabled = true
+omni_range = 4.5
+
+[node name="Lampada" type="MeshInstance3D" parent="Abajur"]
+mesh = SubResource("Mesh_lampada")
+surface_material_override/0 = SubResource("Mat_lampada")
 
 [node name="Chao" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -1.5)
 mesh = SubResource("Mesh_chao")
-surface_material_override/0 = ExtResource("pbr_1")
+surface_material_override/0 = ExtResource("8_assoalho")
+
+[node name="Tapete" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.01, -0.9)
+mesh = SubResource("Mesh_tapete")
+surface_material_override/0 = ExtResource("13_tapete")
 
 [node name="Parede" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -3.75)
 mesh = SubResource("Mesh_parede")
-surface_material_override/0 = ExtResource("pbr_2")
+surface_material_override/0 = ExtResource("9_parede")
 
-[node name="Cama" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, 1.75, 0.225, -3.3)
-mesh = SubResource("Mesh_cama")
-surface_material_override/0 = ExtResource("pbr_5")
-
-[node name="Colcha" type="MeshInstance3D" parent="Cama"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.3)
-mesh = SubResource("Mesh_colcha")
-surface_material_override/0 = ExtResource("pbr_3")
-
-[node name="Travesseiro" type="MeshInstance3D" parent="Cama"]
-transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.32, -0.8)
-mesh = SubResource("Mesh_travesseiro")
-surface_material_override/0 = ExtResource("pbr_4")
+[node name="Janela" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 1.7, -3.69)
+mesh = SubResource("Mesh_janela")
+surface_material_override/0 = SubResource("Mat_janela")
 
 [node name="LunaNaParede" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.4, -2.8)
-mesh = SubResource("Mesh_luna")
-surface_material_override/0 = ExtResource("5_felt")
-instance_shader_parameters/tint = Color(1, 0.96, 0.75, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, -3.62)
+mesh = SubResource("Mesh_lua")
+surface_material_override/0 = SubResource("Mat_lua")
+
+[node name="Varal" type="Node3D" parent="."]
+
+[node name="Luz1" type="MeshInstance3D" parent="Varal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 2.3, -3.6)
+mesh = SubResource("Mesh_bolinha")
+surface_material_override/0 = SubResource("Mat_lampada")
+
+[node name="Luz2" type="MeshInstance3D" parent="Varal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 2.15, -3.6)
+mesh = SubResource("Mesh_bolinha")
+surface_material_override/0 = SubResource("Mat_lampada")
+
+[node name="Luz3" type="MeshInstance3D" parent="Varal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 2.08, -3.6)
+mesh = SubResource("Mesh_bolinha")
+surface_material_override/0 = SubResource("Mat_lampada")
+
+[node name="Luz4" type="MeshInstance3D" parent="Varal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 2.1, -3.6)
+mesh = SubResource("Mesh_bolinha")
+surface_material_override/0 = SubResource("Mat_lampada")
+
+[node name="Luz5" type="MeshInstance3D" parent="Varal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 2.2, -3.6)
+mesh = SubResource("Mesh_bolinha")
+surface_material_override/0 = SubResource("Mat_lampada")
+
+[node name="Luz6" type="MeshInstance3D" parent="Varal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 2.35, -3.6)
+mesh = SubResource("Mesh_bolinha")
+surface_material_override/0 = SubResource("Mat_lampada")
+
+[node name="Cama" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.94, 0, 0.342, 0, 1, 0, -0.342, 0, 0.94, -1.25, 0.225, -1.55)
+mesh = SubResource("Mesh_cama")
+surface_material_override/0 = ExtResource("10_madeira")
+
+[node name="Cabeceira" type="MeshInstance3D" parent="Cama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, -1.05)
+mesh = SubResource("Mesh_cabeceira")
+surface_material_override/0 = ExtResource("10_madeira")
+
+[node name="Colcha" type="MeshInstance3D" parent="Cama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0.3)
+mesh = SubResource("Mesh_colcha")
+surface_material_override/0 = ExtResource("11_chita")
+
+[node name="Travesseiro" type="MeshInstance3D" parent="Cama"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0.36, -0.78)
+mesh = SubResource("Mesh_travesseiro")
+surface_material_override/0 = ExtResource("12_travesseiro")
 
 [node name="Nino" parent="." instance=ExtResource("2_nino")]
-transform = Transform3D(-0.94, 0, -0.342, 0, 1, 0, 0.342, 0, -0.94, 1.72, 0.2, -3.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.93, 0.3, -0.68)
 modo_fixo = &"ual/Sitting_Idle"
 
 [node name="MaosDoNino" type="Marker3D" parent="Nino"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, -0.38)
+
+[node name="LivroNoColo" type="Node3D" parent="Nino"]
+transform = Transform3D(1, 0, 0, 0, 0.766, -0.643, 0, 0.643, 0.766, 0, 0.36, -0.27)
+
+[node name="Capa" type="MeshInstance3D" parent="Nino/LivroNoColo"]
+mesh = SubResource("Mesh_capa_aberta")
+surface_material_override/0 = ExtResource("14_capa")
+
+[node name="PaginasE" type="MeshInstance3D" parent="Nino/LivroNoColo"]
+transform = Transform3D(0.99, -0.14, 0, 0.14, 0.99, 0, 0, 0, 1, -0.058, 0.016, 0)
+mesh = SubResource("Mesh_paginas")
+surface_material_override/0 = ExtResource("15_papel")
+
+[node name="PaginasD" type="MeshInstance3D" parent="Nino/LivroNoColo"]
+transform = Transform3D(0.99, 0.14, 0, -0.14, 0.99, 0, 0, 0, 1, 0.058, 0.016, 0)
+mesh = SubResource("Mesh_paginas")
+surface_material_override/0 = ExtResource("15_papel")
 
 [node name="Estante" type="Node3D" parent="."]
-
-[node name="TituloLivro" type="Label3D" parent="."]
-pixel_size = 0.0018
-billboard = 1
-no_depth_test = true
-modulate = Color(1, 0.96, 0.85, 1)
-outline_modulate = Color(0.3, 0.2, 0.4, 1)
-font_size = 48
-outline_size = 14
+transform = Transform3D(0.97, 0, -0.242, 0, 1, 0, 0.242, 0, 0.97, 0.7, 0, 0.1)
+script = ExtResource("6_estante")
 
 [node name="VozDoNino" type="AudioStreamPlayer" parent="."]
 script = ExtResource("3_voz")
-tom_base = 340.0
 
 [node name="Dialogo" type="CanvasLayer" parent="."]
 script = ExtResource("4_dialogo")
 
 [node name="Sumario" type="CanvasLayer" parent="."]
-script = ExtResource("6_sumario")
+script = ExtResource("5_sumario")
+
+[node name="Interface" type="CanvasLayer" parent="."]
+script = ExtResource("7_ui")
