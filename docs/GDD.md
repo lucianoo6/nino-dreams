@@ -1,4 +1,6 @@
-# Sonhos — Documento de Design (rascunho v0.1)
+# Once Upon a Pillow: Nino & Mel — Documento de Design (rascunho v0.1)
+
+> Título em português: **Era Uma Vez um Sonho**. Repositório: `nino-dreams`.
 
 > Documento vivo para discussão. Tudo marcado com **❓** é decisão em aberto.
 
@@ -150,6 +152,7 @@ Sensação: *coyote time*, *jump buffer*, pulo curto ao soltar, rodopio 1× por 
 
 ## 10. Decisões em aberto (para discutirmos)
 
+- ✅ Título: **Once Upon a Pillow: Nino & Mel** (PT-BR: **Era Uma Vez um Sonho**).
 - ✅ Nomes: **Nino** com a luz **Luna**, e a irmãzinha **Mel** com a **Estrelinha**.
 - ✅ Plataformas: **PC/Steam (Steam Deck) + todos os consoles** — ver `PLATAFORMAS.md`.
 - ✅ Linguagem: **GDScript tipado** (C# não roda em PS5 pelos parceiros de port).

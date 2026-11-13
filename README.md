@@ -1,4 +1,6 @@
-# 🌙 Sonhos
+# 🌙 Once Upon a Pillow: Nino & Mel
+
+*Em português: **Era Uma Vez um Sonho***
 
 Jogo de plataforma 3D fofo e dinâmico feito em **Godot 4.7** com **GDScript** (tipado).
 
