@@ -82,6 +82,8 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] Capítulos: cada noite é um capítulo do livro; marcador de página salvo; "continua…" e "e FIM" só no último
 - [x] +40 animações CC0 (Quaternius UAL) retargetadas para Nino e Mel: pulo em 3 fases, andar/correr/disparar,
       agachado no pesadelo, segurar a luz, chamar a irmã, ler em voz alta sentado, acordar no sonho, comemorar
+- [x] Gerador procedural de materiais PBR (tools/materiais): feltro, tricô, cotelê, jeans, chita, cerâmica,
+      vidro, botões de plástico, madeira e madrepérola — 24 materiais prontos em materials/pbr/
 - [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

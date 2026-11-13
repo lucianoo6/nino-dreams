@@ -1,0 +1,27 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/materiais/vidro/albedo.png" id="1_albedo"]
+[ext_resource type="Texture2D" path="res://assets/materiais/vidro/normal.png" id="2_normal"]
+[ext_resource type="Texture2D" path="res://assets/materiais/vidro/roughness.png" id="3_rough"]
+[ext_resource type="Texture2D" path="res://assets/materiais/vidro/ao.png" id="4_ao"]
+
+[resource]
+resource_name = "vidro_claro"
+texture_filter = 5
+albedo_color = Color(0.95, 0.98, 1.0, 0.18)
+albedo_texture = ExtResource("1_albedo")
+roughness_texture = ExtResource("3_rough")
+normal_enabled = true
+normal_texture = ExtResource("2_normal")
+ao_enabled = true
+ao_texture = ExtResource("4_ao")
+uv1_triplanar = true
+uv1_scale = Vector3(1, 1, 1)
+transparency = 1
+metallic_specular = 0.9
+refraction_enabled = true
+refraction_scale = 0.07
+refraction_texture = ExtResource("3_rough")
+rim_enabled = true
+rim = 0.4
+rim_tint = 1.0

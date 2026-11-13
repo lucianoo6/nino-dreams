@@ -9,3 +9,12 @@ godot --headless --path . res://tools/debug/TesteAnim.tscn
 SHOTS=/tmp/fotos xvfb-run -a godot --rendering-driver opengl3 --path . res://tools/debug/TesteAnim.tscn
 CENA=res://scenes/menu/Quarto.tscn SHOTS=/tmp/fotos xvfb-run -a godot --rendering-driver opengl3 --path . res://tools/debug/FotoCena.tscn
 ```
+
+- `VitrineMateriais.tscn`: todos os materiais de `materials/pbr/` em esferas, sobre fundo de chita.
+
+Para renderizar com **Forward+** (igual ao PC, com refração/clearcoat) sem GPU, use o Vulkan por software (lavapipe):
+```bash
+sudo apt-get install -y mesa-vulkan-drivers xvfb
+VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json CENA=res://tools/debug/VitrineMateriais.tscn SHOTS=/tmp/f \
+  xvfb-run -a godot --rendering-driver vulkan --path . res://tools/debug/FotoCena.tscn
+```
