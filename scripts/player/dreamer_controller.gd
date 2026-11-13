@@ -27,6 +27,12 @@ extends CharacterBody3D
 ## Sem gravidade nenhuma (fora de todos os planetas) por este tempo = volta ao último chão seguro.
 @export var tempo_no_vazio: float = 1.2
 
+@export_group("Som")
+@export var som_passo: AudioStream = preload("res://assets/audio/sfx/passo_feltro.mp3")
+@export var som_pouso: AudioStream = preload("res://assets/audio/sfx/pouso_feltro.mp3")
+## Tom base dos sons (a Mel usa mais agudo).
+@export var tom_sons: float = 1.0
+
 @export_group("Input")
 ## Câmera usada como referência de direção. Vazio = procura no grupo "camera_sonho".
 @export var camera_rig_path: NodePath = ^"CameraRig"
@@ -43,6 +49,9 @@ var _jump_buffer_t: float = 0.0
 var _spin_available: bool = true
 var _spin_timer: float = 0.0
 var _launching: bool = false
+var _audio: AudioStreamPlayer3D
+var _tempo_passo: float = 0.0
+var _queda: float = 0.0
 var _anim_override: StringName = &""
 var _anim_override_timer: float = 0.0
 var _launch_a: Vector3
@@ -57,6 +66,10 @@ func _ready() -> void:
 	add_to_group("sonhador")
 	floor_snap_length = 0.4
 	_last_safe_position = global_position
+	_audio = AudioStreamPlayer3D.new()
+	_audio.max_polyphony = 3
+	_audio.unit_size = 6.0
+	add_child(_audio)
 
 
 func get_dream_camera() -> DreamCamera:
@@ -132,13 +145,42 @@ func _physics_process(delta: float) -> void:
 			_spin_available = false
 
 	velocity = lateral + up * vertical
+	var estava_no_chao: bool = on_floor
+	if not on_floor:
+		_queda = maxf(_queda, -vertical)
 	move_and_slide()
+	_sons_e_poeira(estava_no_chao, lateral.length(), delta)
 	if is_on_floor():
 		_last_safe_position = global_position
 		_last_safe_up = up
 
 	# 6) Orientar o corpo: em pé no planeta e virado para onde anda.
 	_orient_body(up, wish, delta)
+
+
+## Passinhos no feltro enquanto anda e um "puf" de fiapos ao pousar de uma queda.
+func _sons_e_poeira(estava_no_chao: bool, rapidez: float, delta: float) -> void:
+	if is_on_floor() and not estava_no_chao:
+		if _queda > 5.0:
+			_tocar(som_pouso, 0.9 + randf() * 0.2, -4.0)
+			Efeitos.fiapos(get_tree().current_scene, global_position, up_direction)
+		_queda = 0.0
+	if is_on_floor() and rapidez > 0.8:
+		_tempo_passo -= delta * rapidez
+		if _tempo_passo <= 0.0:
+			_tempo_passo = 2.2
+			_tocar(som_passo, 0.85 + randf() * 0.3, -10.0)
+	else:
+		_tempo_passo = 0.0
+
+
+func _tocar(som: AudioStream, tom: float, volume_db: float) -> void:
+	if som == null or _audio == null:
+		return
+	_audio.stream = som
+	_audio.pitch_scale = tom * tom_sons
+	_audio.volume_db = volume_db
+	_audio.play()
 
 
 ## Volta ao último chão seguro (TODO: puf de fiapos + som fofo).

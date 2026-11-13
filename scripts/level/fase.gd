@@ -7,9 +7,12 @@ extends Node3D
 @export var subtitulo: String = ""
 @export var atraso: float = 1.2
 @export var duracao: float = 3.0
+@export var musica: AudioStream
+@export_range(-40.0, 6.0) var volume_musica_db: float = -8.0
 
 
 func _ready() -> void:
+	_tocar_musica()
 	if GameState.livro_atual and GameState.capitulo_atual:
 		titulo = GameState.livro_atual.titulo
 		subtitulo = GameState.capitulo_atual.rotulo()
@@ -46,3 +49,17 @@ func _rotulo(texto: String, tamanho: int) -> Label:
 	l.add_theme_color_override("font_outline_color", Color(0.35, 0.25, 0.5))
 	l.add_theme_constant_override("outline_size", 16)
 	return l
+
+
+func _tocar_musica() -> void:
+	if musica == null:
+		return
+	var mp3 := musica as AudioStreamMP3
+	if mp3:
+		mp3.loop = true
+	var player := AudioStreamPlayer.new()
+	player.stream = musica
+	player.volume_db = -40.0
+	add_child(player)
+	player.play()
+	create_tween().tween_property(player, "volume_db", volume_musica_db, 3.0)

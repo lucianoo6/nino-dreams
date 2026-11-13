@@ -354,6 +354,47 @@ def madeira_verniz(n):
                 forca_normal=0.8, tingivel=False, ceramica=True)
 
 
+@material("porcelana_florida")
+def porcelana_florida(n):
+    """Porcelana branca pintada à mão com flores e ramos azuis (estilo louça antiga), esmalte brilhante."""
+    r = rng(160)
+    img = Image.new("RGB", (n, n), (246, 244, 238))
+    d = ImageDraw.Draw(img)
+    azul, azul_claro = (46, 78, 160), (120, 150, 210)
+
+    def em_todo_lugar(fn):
+        for ox in (-n, 0, n):
+            for oy in (-n, 0, n):
+                fn(ox, oy)
+
+    for _ in range(9):  # flores grandes de 5 pétalas com folhas em ramo
+        cx, cy, rr = r.random() * n, r.random() * n, n * (0.045 + 0.02 * r.random())
+        ang0 = r.random() * 2 * np.pi
+        def flor(ox, oy, cx=cx, cy=cy, rr=rr, ang0=ang0):
+            for k in range(3):
+                a = ang0 + k * 2.1
+                lx, ly = cx + ox + np.cos(a) * rr * 2.2, cy + oy + np.sin(a) * rr * 2.2
+                d.line([(cx + ox, cy + oy), (lx, ly)], fill=azul, width=max(2, n // 400))
+                d.ellipse([lx - rr * 0.5, ly - rr * 0.25, lx + rr * 0.5, ly + rr * 0.25], fill=azul_claro, outline=azul)
+            for k in range(5):
+                a = ang0 + k * 2 * np.pi / 5
+                px, py = cx + ox + np.cos(a) * rr * 0.7, cy + oy + np.sin(a) * rr * 0.7
+                d.ellipse([px - rr * 0.5, py - rr * 0.5, px + rr * 0.5, py + rr * 0.5], fill=azul_claro, outline=azul,
+                          width=max(2, n // 500))
+            d.ellipse([cx + ox - rr * 0.25, cy + oy - rr * 0.25, cx + ox + rr * 0.25, cy + oy + rr * 0.25], fill=azul)
+        em_todo_lugar(flor)
+    for _ in range(60):  # pontinhos e florzinhas
+        cx, cy, rr = r.random() * n, r.random() * n, n * 0.006
+        em_todo_lugar(lambda ox, oy, cx=cx, cy=cy, rr=rr: d.ellipse(
+            [cx + ox - rr, cy + oy - rr, cx + ox + rr, cy + oy + rr], fill=azul))
+    pintura = np.asarray(img, dtype=np.float32) / 255.0
+    esmalte = campo(n, beta=3.0, fmin=1, seed=161)
+    albedo = pintura * (0.96 + 0.04 * esmalte[..., None])
+    tinta = 1 - pintura.mean(-1)
+    return dict(albedo=albedo, altura=0.5 + tinta * 0.02 + esmalte * 0.01, rough=0.08 + 0.05 * esmalte,
+                forca_normal=1.0, tingivel=False, ceramica=True)
+
+
 # ---------------------------------------------------------------- SAÍDA
 
 VARIANTES = {
@@ -373,7 +414,7 @@ VARIANTES = {
 
 ESCALA_UV = {"feltro": 2, "la_trico": 1.5, "cotele": 3, "jeans": 3, "chita": 1, "ceramica": 1, "vidro": 1,
              "botao_plastico": 1, "madeira": 2.5, "madreperola": 1,
-             "tule": 3, "veludo": 2, "lantejoula": 3, "linha": 2, "papel": 1, "assoalho": 0.35, "madeira_verniz": 1.5}
+             "tule": 3, "veludo": 2, "lantejoula": 3, "linha": 2, "papel": 1, "assoalho": 0.35, "madeira_verniz": 1.5, "porcelana_florida": 0.12}
 
 
 def salvar_png(caminho, arr):

@@ -13,6 +13,10 @@ height = 1.6
 radius = 1.4
 height = 2.8
 
+[sub_resource type="SphereMesh" id="Mesh_pinta"]
+radius = 0.18
+height = 0.12
+
 [sub_resource type="CylinderShape3D" id="Shape_chapeu"]
 radius = 1.35
 height = 0.5
@@ -41,3 +45,33 @@ shape = SubResource("Shape_chapeu")
 [node name="ColisaoCaule" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("Shape_caule")
+
+[node name="Pinta0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.000, 0.000, 0.000, 0.000, 1.000, 0.000, 0.000, 0.000, 1.000, 0.000, 2.270, 0.000)
+mesh = SubResource("Mesh_pinta")
+surface_material_override/0 = ExtResource("pbr_1")
+
+[node name="Pinta1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.960, 0.279, -0.012, -0.279, 0.956, -0.086, -0.012, 0.086, 0.996, 0.812, 2.155, 0.251)
+mesh = SubResource("Mesh_pinta")
+surface_material_override/0 = ExtResource("pbr_1")
+
+[node name="Pinta2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.000, -0.009, 0.001, 0.009, 0.956, -0.292, 0.001, 0.292, 0.956, -0.025, 2.155, 0.850)
+mesh = SubResource("Mesh_pinta")
+surface_material_override/0 = ExtResource("pbr_1")
+
+[node name="Pinta3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.959, -0.284, 0.010, 0.284, 0.956, -0.070, 0.010, 0.070, 0.998, -0.825, 2.155, 0.203)
+mesh = SubResource("Mesh_pinta")
+surface_material_override/0 = ExtResource("pbr_1")
+
+[node name="Pinta4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.990, -0.143, -0.019, 0.143, 0.956, 0.255, -0.019, -0.255, 0.967, -0.417, 2.155, -0.741)
+mesh = SubResource("Mesh_pinta")
+surface_material_override/0 = ExtResource("pbr_1")
+
+[node name="Pinta5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.987, 0.162, 0.020, -0.162, 0.956, 0.243, 0.020, -0.243, 0.970, 0.471, 2.155, -0.707)
+mesh = SubResource("Mesh_pinta")
+surface_material_override/0 = ExtResource("pbr_1")

@@ -35,6 +35,15 @@ const MASCARA_GRAVIDADE := 2 | 4
 	set(v):
 		material_superficie = v
 		_rebuild()
+## Desligue quando o visual do planeta for outra peça (ex.: o bule): a esfera some, a gravidade fica.
+@export var mostrar_malha: bool = true:
+	set(v):
+		mostrar_malha = v
+		_rebuild()
+@export var com_colisao: bool = true:
+	set(v):
+		com_colisao = v
+		_rebuild()
 ## Achatamento (1 = esfera). Útil para bule, almofada, botão gigante.
 @export_range(0.2, 2.0, 0.05) var achatamento: float = 1.0:
 	set(v):
@@ -82,6 +91,8 @@ func _rebuild() -> void:
 		_mesh.set_instance_shader_parameter("tint", cor)
 	_mesh.scale = Vector3(1.0, achatamento, 1.0)
 
+	_mesh.visible = mostrar_malha
+	_col.disabled = not com_colisao
 	var ss := SphereShape3D.new()
 	ss.radius = raio
 	_col.shape = ss

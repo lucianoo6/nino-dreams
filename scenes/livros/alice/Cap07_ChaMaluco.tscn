@@ -20,12 +20,18 @@
 [ext_resource type="Material" path="res://materials/pbr/papel.tres" id="pbr_6"]
 [ext_resource type="Material" path="res://materials/pbr/veludo_vermelho.tres" id="pbr_7"]
 [ext_resource type="Material" path="res://materials/pbr/linha_dourada.tres" id="pbr_8"]
+[ext_resource type="Script" path="res://scripts/level/prop_procedural.gd" id="pp_1"]
+[ext_resource type="AudioStream" path="res://assets/audio/musica/cha_maluco_a.mp3" id="pp_musica"]
+[ext_resource type="Script" path="res://scripts/level/costura_planeta.gd" id="pp_2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
-sky_top_color = Color(0.3, 0.42, 0.75, 1)
-sky_horizon_color = Color(0.95, 0.78, 0.88, 1)
-ground_bottom_color = Color(0.2, 0.18, 0.4, 1)
-ground_horizon_color = Color(0.95, 0.78, 0.88, 1)
+sky_top_color = Color(0.34, 0.33, 0.7, 1)
+sky_horizon_color = Color(1, 0.7, 0.5, 1)
+sky_curve = 0.22
+ground_bottom_color = Color(0.38, 0.32, 0.6, 1)
+ground_horizon_color = Color(1, 0.74, 0.6, 1)
+sun_angle_max = 20.0
+sun_curve = 0.08
 
 [sub_resource type="Sky" id="Sky_1"]
 sky_material = SubResource("Sky_mat")
@@ -34,15 +40,33 @@ sky_material = SubResource("Sky_mat")
 background_mode = 2
 sky = SubResource("Sky_1")
 ambient_light_source = 3
-ambient_light_energy = 0.8
+ambient_light_energy = 0.55
+reflected_light_source = 2
 tonemap_mode = 4
+tonemap_white = 1.2
 ssao_enabled = true
-ssao_radius = 1.5
-ssao_intensity = 2.5
+ssao_radius = 1.2
+ssao_intensity = 2.2
+ssil_enabled = true
 glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.12
 fog_enabled = true
-fog_light_color = Color(0.9, 0.75, 0.9, 1)
-fog_density = 0.003
+fog_light_color = Color(1, 0.78, 0.68, 1)
+fog_density = 0.0012
+fog_sky_affect = 0.05
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0015
+volumetric_fog_albedo = Color(1, 0.85, 0.75, 1)
+volumetric_fog_length = 80.0
+adjustment_enabled = true
+adjustment_saturation = 1.08
+
+[sub_resource type="CameraAttributesPractical" id="Cam_sonho"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 32.0
+dof_blur_far_transition = 30.0
+dof_blur_amount = 0.06
 
 [sub_resource type="SphereMesh" id="Mesh_tampa"]
 radius = 1.6
@@ -95,15 +119,19 @@ size = Vector3(0.9, 0.15, 2.4)
 script = ExtResource("1_fase")
 titulo = "Alice no País das Maravilhas"
 subtitulo = "Capítulo 7 — Um Chá Maluco"
+musica = ExtResource("pp_musica")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_alice")
+camera_attributes = SubResource("Cam_sonho")
 
 [node name="Sol" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 30, 0)
-light_color = Color(1, 0.93, 0.85, 1)
+transform = Transform3D(-0.8660, -0.2034, 0.4568, 0.0000, 0.9135, 0.4067, -0.5000, 0.3522, -0.7912, 0, 30, 0)
+light_color = Color(1, 0.78, 0.55, 1)
+light_energy = 2.3
+light_volumetric_fog_energy = 1.5
 shadow_enabled = true
-directional_shadow_max_distance = 120.0
+directional_shadow_max_distance = 140.0
 
 [node name="Jardim" type="StaticBody3D" parent="."]
 script = ExtResource("2_planeta")
@@ -200,31 +228,8 @@ prioridade = 1
 cor = Color(0.95, 0.93, 0.98, 1)
 achatamento = 0.85
 material_superficie = ExtResource("pbr_3")
-
-[node name="Tampa" type="StaticBody3D" parent="Bule"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.0, 0)
-
-[node name="Mesh" type="MeshInstance3D" parent="Bule/Tampa"]
-mesh = SubResource("Mesh_tampa")
-surface_material_override/0 = ExtResource("pbr_4")
-
-[node name="Colisao" type="CollisionShape3D" parent="Bule/Tampa"]
-shape = SubResource("Shape_tampa")
-
-[node name="Pegador" type="MeshInstance3D" parent="Bule/Tampa"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
-mesh = SubResource("Mesh_pegador")
-surface_material_override/0 = ExtResource("pbr_3")
-
-[node name="Bico" type="MeshInstance3D" parent="Bule"]
-transform = Transform3D(1, 0, 0, 0, 0.707, -0.707, 0, 0.707, 0.707, 0, 1.2, 6.3)
-mesh = SubResource("Mesh_bico")
-surface_material_override/0 = ExtResource("pbr_3")
-
-[node name="Alca" type="MeshInstance3D" parent="Bule"]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 6.4, 0.3, 0)
-mesh = SubResource("Mesh_alca")
-surface_material_override/0 = ExtResource("pbr_4")
+mostrar_malha = false
+com_colisao = false
 
 [node name="AncoraPousoBule" type="Node3D" parent="."]
 script = ExtResource("3_ancora")
@@ -332,22 +337,6 @@ transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
 mesh = SubResource("Mesh_naipe")
 surface_material_override/0 = ExtResource("pbr_7")
 
-[node name="Carta3" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -54)
-collision_mask = 0
-
-[node name="Mesh" type="MeshInstance3D" parent="Carta3"]
-mesh = SubResource("Mesh_carta")
-surface_material_override/0 = ExtResource("pbr_6")
-
-[node name="Colisao" type="CollisionShape3D" parent="Carta3"]
-shape = SubResource("Shape_carta")
-
-[node name="Naipe" type="MeshInstance3D" parent="Carta3"]
-transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
-mesh = SubResource("Mesh_naipe")
-surface_material_override/0 = ExtResource("pbr_7")
-
 [node name="DicaChamarMel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 13.2, -39)
 pixel_size = 0.004
@@ -421,3 +410,654 @@ shape = SubResource("Shape_fio")
 
 [node name="BotaoC" parent="." instance=ExtResource("9_botao")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.2, -56)
+
+[node name="BuleCasinha" type="Node3D" parent="Bule"]
+script = ExtResource("pp_1")
+tipo = 0
+tamanho = 6.0
+
+[node name="RelogioDeBolso" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 10.9, -54)
+script = ExtResource("pp_1")
+tipo = 2
+tamanho = 4.6
+
+[node name="CosturaJardim1" type="MultiMeshInstance3D" parent="."]
+script = ExtResource("pp_2")
+planeta = NodePath("../Jardim")
+eixo = Vector3(0.35, 1, 0.15)
+pontos = 70
+
+[node name="CosturaJardim2" type="MultiMeshInstance3D" parent="."]
+script = ExtResource("pp_2")
+planeta = NodePath("../Jardim")
+eixo = Vector3(1, 0.1, -0.6)
+pontos = 36
+arco = 0.45
+cor = Color(0.85, 0.82, 0.7, 1)
+
+[node name="AncoraFlor0" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.53, -0.43, -0.21)
+elevacao = -0.03
+giro = -124
+
+[node name="Flor" type="Node3D" parent="AncoraFlor0"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.19
+cor = Color(0.94, 0.9, 0.5, 1)
+
+[node name="AncoraFlor1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.10, -0.14, 0.98)
+elevacao = -0.03
+giro = -159
+
+[node name="Flor" type="Node3D" parent="AncoraFlor1"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.24
+cor = Color(0.75, 0.65, 1, 1)
+
+[node name="AncoraFlor2" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.45, -0.32, -0.79)
+elevacao = -0.03
+giro = -103
+
+[node name="Flor" type="Node3D" parent="AncoraFlor2"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.29
+cor = Color(0.75, 0.65, 1, 1)
+
+[node name="AncoraFlor3" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.60, -0.29, -0.38)
+elevacao = -0.03
+giro = 46
+
+[node name="Flor" type="Node3D" parent="AncoraFlor3"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.27
+cor = Color(0.75, 0.65, 1, 1)
+
+[node name="AncoraFlor4" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.83, 0.37, 0.34)
+elevacao = -0.03
+giro = 2
+
+[node name="Flor" type="Node3D" parent="AncoraFlor4"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.2
+cor = Color(0.94, 0.9, 0.5, 1)
+
+[node name="AncoraFlor5" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.44, 0.91, 0.64)
+elevacao = -0.03
+giro = 159
+
+[node name="Flor" type="Node3D" parent="AncoraFlor5"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.28
+cor = Color(0.98, 0.97, 0.93, 1)
+
+[node name="AncoraFlor6" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.82, 0.32, 0.76)
+elevacao = -0.03
+giro = 125
+
+[node name="Flor" type="Node3D" parent="AncoraFlor6"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.24
+cor = Color(0.94, 0.9, 0.5, 1)
+
+[node name="AncoraFlor7" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.15, -0.14, -0.10)
+elevacao = -0.03
+giro = -96
+
+[node name="Flor" type="Node3D" parent="AncoraFlor7"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.21
+cor = Color(0.98, 0.97, 0.93, 1)
+
+[node name="AncoraFlor8" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.84, 0.14, 0.99)
+elevacao = -0.03
+giro = 7
+
+[node name="Flor" type="Node3D" parent="AncoraFlor8"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.26
+cor = Color(0.75, 0.65, 1, 1)
+
+[node name="AncoraFlor9" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.71, 0.48, -0.87)
+elevacao = -0.03
+giro = 149
+
+[node name="Flor" type="Node3D" parent="AncoraFlor9"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.26
+cor = Color(0.94, 0.9, 0.5, 1)
+
+[node name="AncoraFlor10" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.45, -0.03, 0.49)
+elevacao = -0.03
+giro = -65
+
+[node name="Flor" type="Node3D" parent="AncoraFlor10"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.25
+cor = Color(0.75, 0.65, 1, 1)
+
+[node name="AncoraFlor11" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.80, -0.50, -0.54)
+elevacao = -0.03
+giro = 95
+
+[node name="Flor" type="Node3D" parent="AncoraFlor11"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.25
+cor = Color(0.94, 0.7, 0.8, 1)
+
+[node name="AncoraFlor12" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.76, 0.90, -0.42)
+elevacao = -0.03
+giro = -171
+
+[node name="Flor" type="Node3D" parent="AncoraFlor12"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.22
+cor = Color(0.98, 0.97, 0.93, 1)
+
+[node name="AncoraFlor13" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.79, 0.93, 0.47)
+elevacao = -0.03
+giro = 166
+
+[node name="Flor" type="Node3D" parent="AncoraFlor13"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.18
+cor = Color(0.75, 0.65, 1, 1)
+
+[node name="AncoraFlor14" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.36, -0.36, 0.30)
+elevacao = -0.03
+giro = 130
+
+[node name="Flor" type="Node3D" parent="AncoraFlor14"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.28
+cor = Color(0.98, 0.97, 0.93, 1)
+
+[node name="AncoraFlor15" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.41, -0.29, -0.11)
+elevacao = -0.03
+giro = -131
+
+[node name="Flor" type="Node3D" parent="AncoraFlor15"]
+script = ExtResource("pp_1")
+tipo = 4
+tamanho = 0.23
+cor = Color(0.94, 0.7, 0.8, 1)
+
+[node name="AncoraBotaoDecor0" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.7, 0.4, 0.6)
+elevacao = -0.12
+giro = 0
+
+[node name="Botao" type="Node3D" parent="AncoraBotaoDecor0"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0, 0, 0)
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.7
+cor = Color(0.3, 0.5, 0.9, 1)
+
+[node name="AncoraBotaoDecor1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.8, -0.2, 0.5)
+elevacao = -0.12
+giro = 50
+
+[node name="Botao" type="Node3D" parent="AncoraBotaoDecor1"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0, 0, 0)
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 0.85
+cor = Color(0.85, 0.65, 0.4, 1)
+
+[node name="AncoraBotaoDecor2" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.2, -0.5, -0.85)
+elevacao = -0.12
+giro = 100
+
+[node name="Botao" type="Node3D" parent="AncoraBotaoDecor2"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0, 0, 0)
+script = ExtResource("pp_1")
+tipo = 5
+tamanho = 1.0
+cor = Color(0.9, 0.3, 0.3, 1)
+
+[node name="Nuvem0" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9, -6.3, -73.4)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 6.5
+semente = 0
+cor = Color(0.94, 0.90, 0.96, 1)
+
+[node name="Nuvem1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.8, -21.0, -23.5)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 5.5
+semente = 1
+cor = Color(0.94, 0.90, 0.95, 1)
+
+[node name="Nuvem2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.4, -2.4, -3.0)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 3.6
+semente = 2
+cor = Color(0.94, 0.92, 0.93, 1)
+
+[node name="Nuvem3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.7, 21.2, -19.1)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 6.1
+semente = 3
+cor = Color(0.94, 0.93, 0.98, 1)
+
+[node name="Nuvem4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.8, -10.4, -9.1)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 5.9
+semente = 4
+cor = Color(0.94, 0.93, 0.93, 1)
+
+[node name="Nuvem5" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.7, -14.5, -56.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 6.2
+semente = 5
+cor = Color(0.94, 0.91, 0.99, 1)
+
+[node name="Nuvem6" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56.7, -22.3, -44.5)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 5.0
+semente = 6
+cor = Color(0.94, 0.90, 0.95, 1)
+
+[node name="Nuvem7" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.7, -19.4, -18.4)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 3.5
+semente = 7
+cor = Color(0.94, 0.94, 0.99, 1)
+
+[node name="Nuvem8" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.7, -24.6, -80.0)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 5.2
+semente = 8
+cor = Color(0.94, 0.90, 0.93, 1)
+
+[node name="Nuvem9" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.6, 21.0, -39.6)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 4.6
+semente = 9
+cor = Color(0.94, 0.94, 0.93, 1)
+
+[node name="Nuvem10" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.8, -16.4, -16.9)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 6.8
+semente = 10
+cor = Color(0.94, 0.90, 0.96, 1)
+
+[node name="Nuvem11" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.7, -17.5, -57.8)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 7.0
+semente = 11
+cor = Color(0.94, 0.97, 0.93, 1)
+
+[node name="Nuvem12" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.6, 22.5, -61.6)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 5.4
+semente = 12
+cor = Color(0.94, 0.90, 0.95, 1)
+
+[node name="Nuvem13" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.2, 4.5, 3.0)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 3.3
+semente = 13
+cor = Color(0.94, 0.92, 0.99, 1)
+
+[node name="Nuvem14" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.3, -2.4, -41.7)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 6.9
+semente = 14
+cor = Color(0.94, 0.94, 0.92, 1)
+
+[node name="Nuvem15" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 47.9, -8.6, -38.0)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 3.9
+semente = 15
+cor = Color(0.94, 0.93, 0.95, 1)
+
+[node name="XicaraFlutuante0" type="Node3D" parent="."]
+transform = Transform3D(0.97, 0, 0.24, 0, 1, 0, -0.24, 0, 0.97, -18, 10, -14)
+script = ExtResource("pp_1")
+tipo = 1
+tamanho = 1.4
+semente = 0
+com_colisao = false
+
+[node name="XicaraFlutuante1" type="Node3D" parent="."]
+transform = Transform3D(0.97, 0, 0.24, 0, 1, 0, -0.24, 0, 0.97, 14, 26, 14)
+script = ExtResource("pp_1")
+tipo = 1
+tamanho = 1.8
+semente = 1
+com_colisao = false
+
+[node name="XicaraFlutuante2" type="Node3D" parent="."]
+transform = Transform3D(0.97, 0, 0.24, 0, 1, 0, -0.24, 0, 0.97, 46, 8, -30)
+script = ExtResource("pp_1")
+tipo = 1
+tamanho = 2.2
+semente = 2
+com_colisao = false
+
+[node name="XicaraFlutuante3" type="Node3D" parent="."]
+transform = Transform3D(0.97, 0, 0.24, 0, 1, 0, -0.24, 0, 0.97, -10, -14, -30)
+script = ExtResource("pp_1")
+tipo = 1
+tamanho = 1.4
+semente = 3
+com_colisao = false
+
+[node name="XicaraFlutuante4" type="Node3D" parent="."]
+transform = Transform3D(0.97, 0, 0.24, 0, 1, 0, -0.24, 0, 0.97, 52, 22, -62)
+script = ExtResource("pp_1")
+tipo = 1
+tamanho = 1.8
+semente = 4
+com_colisao = false
+
+[node name="MarDeNuvens0" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.6, -24.4, -3.4)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 10.9
+semente = 100
+cor = Color(0.94, 0.88, 0.93, 1)
+
+[node name="MarDeNuvens1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.0, -25.9, -28.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.4
+semente = 101
+cor = Color(0.94, 0.86, 0.89, 1)
+
+[node name="MarDeNuvens2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.1, -22.5, -90.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.4
+semente = 102
+cor = Color(0.94, 0.88, 0.85, 1)
+
+[node name="MarDeNuvens3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 79.7, -21.5, 3.4)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 11.7
+semente = 103
+cor = Color(0.94, 0.86, 0.88, 1)
+
+[node name="MarDeNuvens4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.7, -20.6, -83.8)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 10.2
+semente = 104
+cor = Color(0.94, 0.87, 0.93, 1)
+
+[node name="MarDeNuvens5" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.8, -26.6, 29.9)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 11.3
+semente = 105
+cor = Color(0.94, 0.89, 0.90, 1)
+
+[node name="MarDeNuvens6" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.7, -21.6, -94.8)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.4
+semente = 106
+cor = Color(0.94, 0.92, 0.87, 1)
+
+[node name="MarDeNuvens7" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.9, -22.9, 25.2)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 12.6
+semente = 107
+cor = Color(0.94, 0.91, 0.92, 1)
+
+[node name="MarDeNuvens8" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.1, -22.1, -33.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.2
+semente = 108
+cor = Color(0.94, 0.93, 0.94, 1)
+
+[node name="MarDeNuvens9" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, -26.6, -48.9)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 10.3
+semente = 109
+cor = Color(0.94, 0.94, 0.89, 1)
+
+[node name="MarDeNuvens10" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.5, -23.4, -86.9)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 14.0
+semente = 110
+cor = Color(0.94, 0.90, 0.90, 1)
+
+[node name="MarDeNuvens11" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6, -29.3, 4.7)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 11.7
+semente = 111
+cor = Color(0.94, 0.90, 0.91, 1)
+
+[node name="MarDeNuvens12" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5, -27.8, -76.2)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 13.6
+semente = 112
+cor = Color(0.94, 0.89, 0.91, 1)
+
+[node name="MarDeNuvens13" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.1, -31.2, -85.5)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 12.9
+semente = 113
+cor = Color(0.94, 0.92, 0.89, 1)
+
+[node name="MarDeNuvens14" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.8, -21.2, -5.4)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 13.7
+semente = 114
+cor = Color(0.94, 0.89, 0.95, 1)
+
+[node name="MarDeNuvens15" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.0, -21.4, -17.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 10.9
+semente = 115
+cor = Color(0.94, 0.89, 0.87, 1)
+
+[node name="MarDeNuvens16" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63.9, -31.2, -77.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 12.8
+semente = 116
+cor = Color(0.94, 0.92, 0.90, 1)
+
+[node name="MarDeNuvens17" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.8, -28.9, -92.7)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.7
+semente = 117
+cor = Color(0.94, 0.89, 0.87, 1)
+
+[node name="MarDeNuvens18" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.0, -21.2, -52.7)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 13.9
+semente = 118
+cor = Color(0.94, 0.92, 0.90, 1)
+
+[node name="MarDeNuvens19" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.2, -25.7, 34.2)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 12.4
+semente = 119
+cor = Color(0.94, 0.86, 0.87, 1)
+
+[node name="MarDeNuvens20" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59.0, -21.4, 11.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 11.6
+semente = 120
+cor = Color(0.94, 0.89, 0.91, 1)
+
+[node name="MarDeNuvens21" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60.4, -25.6, -56.9)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.7
+semente = 121
+cor = Color(0.94, 0.92, 0.85, 1)
+
+[node name="MarDeNuvens22" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.1, -31.7, 33.6)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 11.6
+semente = 122
+cor = Color(0.94, 0.91, 0.94, 1)
+
+[node name="MarDeNuvens23" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.0, -27.1, -64.0)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 13.8
+semente = 123
+cor = Color(0.94, 0.93, 0.86, 1)
+
+[node name="MarDeNuvens24" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.7, -31.7, -86.8)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 10.7
+semente = 124
+cor = Color(0.94, 0.87, 0.94, 1)
+
+[node name="MarDeNuvens25" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.2, -25.5, -82.3)
+script = ExtResource("pp_1")
+tipo = 3
+tamanho = 9.9
+semente = 125
+cor = Color(0.94, 0.90, 0.87, 1)

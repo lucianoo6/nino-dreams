@@ -85,7 +85,21 @@ A última linha fica em `BookData.ultima_linha` — **tradução nossa** do orig
   - **Agulha-gancho** (talvez) — enganchar em ilhoses para balançar.
   - **Retalho solto** — plataforma que cai se você ficar muito tempo.
 
-## 3.1 Alice — Capítulo 7: "Um Chá Maluco" (greybox implementado)
+## 3.1 Alice — Capítulo 7: "Um Chá Maluco" — fatia vertical (padrão de qualidade)
+
+Alvo visual: `docs/referencias/conceitos/cap07_a.png` (arte conceitual gerada). Estado atual:
+`docs/referencias/cap07_jogo_*.png`, `cap07_bule.png`, `cap07_relogio.png`.
+
+- Céu de entardecer lilás/pêssego, sol baixo dourado, névoa volumétrica leve, desfoque tilt-shift de longe.
+- Mar de nuvens de algodão embaixo, nuvens soltas e xícaras flutuantes com arvorezinhas (decoração).
+- Jardim de feltro com costura em ponto cruz, florzinhas, botões meio enterrados, cogumelos com bolinhas.
+- Bule-casinha de porcelana pintada (flores azuis), com porta, janelas acesas e vapor de tule.
+- Trilha de cartas de papel até um relógio de bolso dourado (substituiu a 3ª carta).
+- Som: trilha de caixinha de música em valsa (loop), passinhos no feltro, "puf" de pouso; efeitos de fiapos
+  ao pousar e estrelinhas ao pegar botão.
+- Peças procedurais reutilizáveis: `PropProcedural` (bule, xícara, relógio, nuvem, flor, botão) e `CosturaPlaneta`.
+
+### (histórico) greybox
 
 `scenes/livros/alice/Cap07_ChaMaluco.tscn` — missão ENCONTRAR 3 botões do colete do Coelho.
 

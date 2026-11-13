@@ -90,6 +90,8 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] Tela da estante no estilo do conceito: moldura de papelão kraft, título em remendo de jeans costurado,
       estante alta e lotada (títulos nas lombadas, detalhes dourados), rastro de faíscas, Nino lendo desfocado,
       barra "Selecionar" + etiqueta ‹ livro › (fonte Fredoka, OFL) — ver docs/referencias/tela_estante.png
+- [x] Fatia vertical do Cap. 7 (Chá Maluco): céu de entardecer, mar de nuvens, bule-casinha de porcelana pintada,
+      relógio de bolso, costuras/flores/botões no planeta, música (ElevenLabs), passos e pouso com fiapos
 - [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

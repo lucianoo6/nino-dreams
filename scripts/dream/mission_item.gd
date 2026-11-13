@@ -37,6 +37,7 @@ func _on_body_entered(body: Node3D) -> void:
 	else:
 		GameState.coletar_item()
 	_tocar_som()
+	Efeitos.estrelinhas(get_parent(), global_position + global_basis.y * 0.5)
 	# TODO: partículas de fiapos/purpurina.
 	queue_free()
 
