@@ -64,7 +64,7 @@ func chamar() -> void:
 func _think_ai(delta: float) -> void:
 	var dist: float = global_position.distance_to(_nino.global_position)
 
-	if dist > teleport_distance:
+	if dist > teleport_distance and not _nino.is_launching() and _nino.is_on_floor():
 		# Ela "aparece" perto do irmão (TODO: puf de fiapos + risadinha).
 		global_position = _nino.global_position + _nino.global_basis.z * 1.5 + _nino.up_direction * 0.5
 		velocity = Vector3.ZERO

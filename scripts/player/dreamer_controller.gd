@@ -23,6 +23,10 @@ extends CharacterBody3D
 @export_group("Gravidade")
 @export var up_align_speed: float = 10.0
 
+@export_group("Vazio")
+## Sem gravidade nenhuma (fora de todos os planetas) por este tempo = volta ao último chão seguro.
+@export var tempo_no_vazio: float = 1.2
+
 @export_group("Input")
 ## Câmera usada como referência de direção. Vazio = procura no grupo "camera_sonho".
 @export var camera_rig_path: NodePath = ^"CameraRig"
@@ -38,11 +42,19 @@ var _coyote: float = 0.0
 var _jump_buffer_t: float = 0.0
 var _spin_available: bool = true
 var _spin_timer: float = 0.0
+var _launching: bool = false
+var _launch_a: Vector3
+var _launch_b: Vector3
+var _launch_c: Vector3
+var _void_timer: float = 0.0
+var _last_safe_position: Vector3
+var _last_safe_up: Vector3 = Vector3.UP
 
 
 func _ready() -> void:
 	add_to_group("sonhador")
 	floor_snap_length = 0.4
+	_last_safe_position = global_position
 
 
 func get_dream_camera() -> DreamCamera:
@@ -55,8 +67,19 @@ func get_dream_camera() -> DreamCamera:
 
 
 func _physics_process(delta: float) -> void:
+	if _launching:
+		return
 	var gravity: Vector3 = get_gravity()
 	var g_len: float = gravity.length()
+
+	# 0) Caiu no vazio (gravidade padrão do projeto é zero): volta ao último chão seguro.
+	if g_len < 0.01:
+		_void_timer += delta
+		if _void_timer > tempo_no_vazio:
+			respawn()
+			return
+	else:
+		_void_timer = 0.0
 
 	# 1) Alinhar "para cima" com o oposto da gravidade do planeta atual.
 	if g_len > 0.001:
@@ -108,9 +131,42 @@ func _physics_process(delta: float) -> void:
 
 	velocity = lateral + up * vertical
 	move_and_slide()
+	if is_on_floor():
+		_last_safe_position = global_position
+		_last_safe_up = up
 
 	# 6) Orientar o corpo: em pé no planeta e virado para onde anda.
 	_orient_body(up, wish, delta)
+
+
+## Volta ao último chão seguro (TODO: puf de fiapos + som fofo).
+func respawn() -> void:
+	global_position = _last_safe_position + _last_safe_up * 0.6
+	up_direction = _last_safe_up
+	velocity = Vector3.ZERO
+	_void_timer = 0.0
+
+
+## Arremesso em arco (carretel-lançador). Ignora a física durante o voo.
+func launch_to(destino: Vector3, altura: float, duracao: float) -> void:
+	if _launching:
+		return
+	_launching = true
+	velocity = Vector3.ZERO
+	_launch_a = global_position
+	_launch_c = destino
+	_launch_b = (_launch_a + destino) / 2.0 + up_direction * altura
+	var tw := create_tween()
+	tw.tween_method(_launch_step, 0.0, 1.0, duracao).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.finished.connect(func() -> void: _launching = false)
+
+
+func _launch_step(t: float) -> void:
+	global_position = _launch_a.lerp(_launch_b, t).lerp(_launch_b.lerp(_launch_c, t), t)
+
+
+func is_launching() -> bool:
+	return _launching
 
 
 # ---- Input virtual: a Mel sobrescreve isto quando é controlada pela IA. ----

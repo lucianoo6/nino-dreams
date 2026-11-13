@@ -1,0 +1,429 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/level/fase.gd" id="1_fase"]
+[ext_resource type="Script" path="res://scripts/level/planetoid.gd" id="2_planeta"]
+[ext_resource type="Script" path="res://scripts/level/ancora_planeta.gd" id="3_ancora"]
+[ext_resource type="Script" path="res://scripts/level/camera_zone.gd" id="4_zona"]
+[ext_resource type="Script" path="res://scripts/world/distraction.gd" id="5_distr"]
+[ext_resource type="Script" path="res://scripts/world/star_revealable.gd" id="6_revela"]
+[ext_resource type="PackedScene" path="res://scenes/player/Sonhador.tscn" id="7_nino"]
+[ext_resource type="PackedScene" path="res://scenes/player/Mel.tscn" id="8_mel"]
+[ext_resource type="PackedScene" path="res://scenes/dream/BotaoEstrela.tscn" id="9_botao"]
+[ext_resource type="PackedScene" path="res://scenes/level/Carretel.tscn" id="10_carretel"]
+[ext_resource type="PackedScene" path="res://scenes/level/Cogumelo.tscn" id="11_cogumelo"]
+[ext_resource type="Material" path="res://materials/feltro.tres" id="12_felt"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+sky_top_color = Color(0.3, 0.42, 0.75, 1)
+sky_horizon_color = Color(0.95, 0.78, 0.88, 1)
+ground_bottom_color = Color(0.2, 0.18, 0.4, 1)
+ground_horizon_color = Color(0.95, 0.78, 0.88, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_alice"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_energy = 0.8
+tonemap_mode = 4
+ssao_enabled = true
+ssao_radius = 1.5
+ssao_intensity = 2.5
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.9, 0.75, 0.9, 1)
+fog_density = 0.003
+
+[sub_resource type="SphereMesh" id="Mesh_tampa"]
+radius = 1.6
+height = 1.6
+is_hemisphere = true
+
+[sub_resource type="SphereShape3D" id="Shape_tampa"]
+radius = 1.4
+
+[sub_resource type="SphereMesh" id="Mesh_pegador"]
+radius = 0.35
+height = 0.7
+
+[sub_resource type="CylinderMesh" id="Mesh_bico"]
+top_radius = 0.35
+bottom_radius = 0.9
+height = 4.0
+
+[sub_resource type="TorusMesh" id="Mesh_alca"]
+inner_radius = 1.5
+outer_radius = 2.1
+
+[sub_resource type="PrismMesh" id="Mesh_borboleta"]
+size = Vector3(0.5, 0.3, 0.05)
+
+[sub_resource type="CylinderMesh" id="Mesh_xicara"]
+top_radius = 0.45
+bottom_radius = 0.3
+height = 0.5
+
+[sub_resource type="BoxMesh" id="Mesh_carta"]
+size = Vector3(6, 0.25, 9)
+
+[sub_resource type="BoxShape3D" id="Shape_carta"]
+size = Vector3(6, 0.25, 9)
+
+[sub_resource type="BoxMesh" id="Mesh_naipe"]
+size = Vector3(1.1, 0.02, 1.1)
+
+[sub_resource type="BoxShape3D" id="Shape_grav_cartas"]
+size = Vector3(14, 12, 44)
+
+[sub_resource type="BoxMesh" id="Mesh_fio"]
+size = Vector3(0.9, 0.15, 2.4)
+
+[sub_resource type="BoxShape3D" id="Shape_fio"]
+size = Vector3(0.9, 0.15, 2.4)
+
+[node name="AliceCapitulo1" type="Node3D"]
+script = ExtResource("1_fase")
+titulo = "Alice no País das Maravilhas"
+subtitulo = "Capítulo 1 — Os botões do Coelho Branco"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_alice")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 30, 0)
+light_color = Color(1, 0.93, 0.85, 1)
+shadow_enabled = true
+directional_shadow_max_distance = 120.0
+
+[node name="Jardim" type="StaticBody3D" parent="."]
+script = ExtResource("2_planeta")
+raio = 8.0
+alcance_gravidade = 6.0
+cor = Color(0.55, 0.8, 0.5, 1)
+
+[node name="Nino" parent="." instance=ExtResource("7_nino")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.6, 0)
+
+[node name="Mel" parent="." instance=ExtResource("8_mel")]
+transform = Transform3D(0.9957, 0.0931, 0, -0.0931, 0.9957, 0, 0, 0, 1, 0.8, 8.56, 0)
+
+[node name="AncoraCogumelo1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-0.5, 1, 0.5)
+elevacao = 0.0
+giro = 0
+
+[node name="Cogumelo" parent="AncoraCogumelo1" instance=ExtResource("11_cogumelo")]
+
+[node name="AncoraCogumelo2" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.4, 0.25, 1)
+elevacao = 0.0
+giro = 40
+
+[node name="Cogumelo" parent="AncoraCogumelo2" instance=ExtResource("11_cogumelo")]
+
+[node name="AncoraCogumelo3" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(-1, 0.15, -0.3)
+elevacao = 0.0
+giro = 80
+
+[node name="Cogumelo" parent="AncoraCogumelo3" instance=ExtResource("11_cogumelo")]
+
+[node name="AncoraCogumelo4" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0.2, -0.4, -1)
+elevacao = 0.0
+giro = 10
+
+[node name="Cogumelo" parent="AncoraCogumelo4" instance=ExtResource("11_cogumelo")]
+
+[node name="AncoraBotaoA" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0, -1, 0.2)
+elevacao = 0.2
+giro = 0.0
+
+[node name="BotaoA" parent="AncoraBotaoA" instance=ExtResource("9_botao")]
+
+[node name="AncoraBorboleta" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(0, 1, -0.6)
+elevacao = 0.0
+giro = 0.0
+
+[node name="Borboleta" type="Node3D" parent="AncoraBorboleta"]
+script = ExtResource("5_distr")
+descricao = "borboleta de feltro"
+
+[node name="Visual" type="MeshInstance3D" parent="AncoraBorboleta/Borboleta"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("Mesh_borboleta")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.6, 0.4, 0.95, 1)
+
+[node name="AncoraCarretel1" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Jardim")
+direcao = Vector3(1, 0.6, 0)
+elevacao = 0.0
+giro = 0.0
+
+[node name="Carretel1" parent="AncoraCarretel1" instance=ExtResource("10_carretel")]
+destino = NodePath("../../AncoraPousoBule/Pouso")
+altura_arco = 12.0
+duracao = 1.8
+
+[node name="Bule" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 14, 0)
+script = ExtResource("2_planeta")
+raio = 6.0
+alcance_gravidade = 5.0
+prioridade = 1
+cor = Color(0.95, 0.93, 0.98, 1)
+achatamento = 0.85
+
+[node name="Tampa" type="StaticBody3D" parent="Bule"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Bule/Tampa"]
+mesh = SubResource("Mesh_tampa")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.45, 0.6, 0.9, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="Bule/Tampa"]
+shape = SubResource("Shape_tampa")
+
+[node name="Pegador" type="MeshInstance3D" parent="Bule/Tampa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+mesh = SubResource("Mesh_pegador")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(1, 0.82, 0.3, 1)
+
+[node name="Bico" type="MeshInstance3D" parent="Bule"]
+transform = Transform3D(1, 0, 0, 0, 0.707, -0.707, 0, 0.707, 0.707, 0, 1.2, 6.3)
+mesh = SubResource("Mesh_bico")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.95, 0.93, 0.98, 1)
+
+[node name="Alca" type="MeshInstance3D" parent="Bule"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 6.4, 0.3, 0)
+mesh = SubResource("Mesh_alca")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.45, 0.6, 0.9, 1)
+
+[node name="AncoraPousoBule" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Bule")
+direcao = Vector3(-1, 1, 0.3)
+elevacao = 0.8
+giro = 0.0
+
+[node name="Pouso" type="Marker3D" parent="AncoraPousoBule"]
+
+[node name="AncoraBotaoB" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Bule")
+direcao = Vector3(0.3, -1, 0.2)
+elevacao = 0.2
+giro = 0.0
+
+[node name="BotaoB" parent="AncoraBotaoB" instance=ExtResource("9_botao")]
+
+[node name="AncoraXicara" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Bule")
+direcao = Vector3(-1, 0.2, -0.6)
+elevacao = 0.0
+giro = 0.0
+
+[node name="Xicara" type="Node3D" parent="AncoraXicara"]
+script = ExtResource("5_distr")
+descricao = "xicrinha de chá"
+
+[node name="Visual" type="MeshInstance3D" parent="AncoraXicara/Xicara"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("Mesh_xicara")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(1, 0.7, 0.8, 1)
+
+[node name="AncoraCarretel2" type="Node3D" parent="."]
+script = ExtResource("3_ancora")
+planeta = NodePath("../Bule")
+direcao = Vector3(0, 0.25, -1)
+elevacao = 0.0
+giro = 0.0
+
+[node name="Carretel2" parent="AncoraCarretel2" instance=ExtResource("10_carretel")]
+destino = NodePath("../../PousoCartas")
+altura_arco = 9.0
+duracao = 1.6
+
+[node name="PousoCartas" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.7, -24)
+
+[node name="GravidadeCartas" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 14, -40)
+collision_layer = 0
+collision_mask = 6
+monitorable = false
+gravity_space_override = 3
+gravity_direction = Vector3(0, -1, 0)
+gravity = 25.0
+
+[node name="Forma" type="CollisionShape3D" parent="GravidadeCartas"]
+shape = SubResource("Shape_grav_cartas")
+
+[node name="ZonaCameraCartas" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 14, -40)
+script = ExtResource("4_zona")
+comprimento = 9.0
+inclinacao_graus = -34.0
+olhar_para = NodePath("../FimCartas")
+
+[node name="Forma" type="CollisionShape3D" parent="ZonaCameraCartas"]
+shape = SubResource("Shape_grav_cartas")
+
+[node name="FimCartas" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -62)
+
+[node name="Carta1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -26)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Carta1"]
+mesh = SubResource("Mesh_carta")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.98, 0.96, 0.92, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="Carta1"]
+shape = SubResource("Shape_carta")
+
+[node name="Naipe" type="MeshInstance3D" parent="Carta1"]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
+mesh = SubResource("Mesh_naipe")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.9, 0.25, 0.3, 1)
+
+[node name="Carta2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -36)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Carta2"]
+mesh = SubResource("Mesh_carta")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.98, 0.96, 0.92, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="Carta2"]
+shape = SubResource("Shape_carta")
+
+[node name="Naipe" type="MeshInstance3D" parent="Carta2"]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
+mesh = SubResource("Mesh_naipe")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.15, 0.12, 0.2, 1)
+
+[node name="Carta3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11, -54)
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="Carta3"]
+mesh = SubResource("Mesh_carta")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.98, 0.96, 0.92, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="Carta3"]
+shape = SubResource("Shape_carta")
+
+[node name="Naipe" type="MeshInstance3D" parent="Carta3"]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 0, 0.14, 0)
+mesh = SubResource("Mesh_naipe")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(0.9, 0.25, 0.3, 1)
+
+[node name="DicaChamarMel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 13.2, -39)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.95, 0.75, 1)
+outline_modulate = Color(0.35, 0.25, 0.5, 1)
+text = "A Estrelinha da Mel mostra o caminho ✨
+Chame a Mel: C / Y"
+font_size = 48
+outline_size = 14
+
+[node name="PonteFio1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.05, -41.7)
+script = ExtResource("6_revela")
+stay_revealed = true
+
+[node name="Corpo" type="StaticBody3D" parent="PonteFio1"]
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="PonteFio1/Corpo"]
+mesh = SubResource("Mesh_fio")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="PonteFio1/Corpo"]
+shape = SubResource("Shape_fio")
+
+[node name="PonteFio2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.05, -44.1)
+script = ExtResource("6_revela")
+stay_revealed = true
+
+[node name="Corpo" type="StaticBody3D" parent="PonteFio2"]
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="PonteFio2/Corpo"]
+mesh = SubResource("Mesh_fio")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="PonteFio2/Corpo"]
+shape = SubResource("Shape_fio")
+
+[node name="PonteFio3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.05, -46.5)
+script = ExtResource("6_revela")
+stay_revealed = true
+
+[node name="Corpo" type="StaticBody3D" parent="PonteFio3"]
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="PonteFio3/Corpo"]
+mesh = SubResource("Mesh_fio")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="PonteFio3/Corpo"]
+shape = SubResource("Shape_fio")
+
+[node name="PonteFio4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.05, -48.9)
+script = ExtResource("6_revela")
+stay_revealed = true
+
+[node name="Corpo" type="StaticBody3D" parent="PonteFio4"]
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="PonteFio4/Corpo"]
+mesh = SubResource("Mesh_fio")
+surface_material_override/0 = ExtResource("12_felt")
+instance_shader_parameters/tint = Color(1, 0.82, 0.35, 1)
+
+[node name="Colisao" type="CollisionShape3D" parent="PonteFio4/Corpo"]
+shape = SubResource("Shape_fio")
+
+[node name="BotaoC" parent="." instance=ExtResource("9_botao")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 11.2, -56)

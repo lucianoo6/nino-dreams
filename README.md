@@ -41,13 +41,15 @@ scripts/
   player/        dreamer_controller.gd (Nino) e mel_controller.gd (Mel: IA distraída / jogador 2)
   camera/        dream_camera.gd — câmera que se alinha ao "para cima" do jogador
   dream/         mission_item.gd — itens de missão / saída
+  level/         planetoid.gd (planeta @tool), ancora_planeta.gd (gruda coisas na superfície), spool_launcher.gd,
+                 camera_zone.gd, fase.gd (título do capítulo)
   menu/          quarto_menu.gd (estante, rack focus, leitura, "e FIM"), shelf_book.gd (livro que pula)
   ui/            babble_voice.gd (voz balbuciada sintetizada), babble_dialog.gd (balão + "e FIM")
   nightmare/     moon_lamp.gd (Luna), star_light.gd (Estrelinha), shadow_creature.gd (sombras/vilões)
   world/         distraction.gd (o que distrai a Mel), star_revealable.gd (só aparece na luz da Estrelinha)
 shaders/         feltro.gdshader (tecido), nuvens.gdshader (transição)
 materials/       feltro.tres — 1 material, cor por instância (instance uniform `tint`)
-scenes/          menu/ (Quarto), player/ (Sonhador, NinoVisual, Mel), dream/, nightmare/, dev/
+scenes/          livros/alice/Capitulo1, level/ (Carretel, Cogumelo), menu/ (Quarto), player/ (Sonhador, NinoVisual, Mel), dream/, nightmare/, dev/
 data/livros/     um .tres de BookData por livro
 assets/          modelos, texturas, áudio, fontes (via Git LFS)
 ```
@@ -72,6 +74,9 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
 - [x] Estante: livros que pulam, rack focus, leitura balbuciada da última linha, "e FIM"
 - [x] Transição de nuvens: dormir → câmera desce das nuvens → acordar de volta na estante
 - [ ] Quarto explorável (hub) além da estante
-- [ ] Carretel-lançador, linhas de gravidade, zíperes
+- [x] Alice — Capítulo 1 (greybox): Jardim → Bule do Chá Maluco → trilha de cartas com ponte de fio que só a Estrelinha revela
+- [x] Carretel-lançador (leva a Mel junto), zonas de câmera, gravidade direcional, volta ao chão ao cair no vazio
+- [x] Primeiros sons (ElevenLabs): "plim" do botão e "boing" do carretel
+- [ ] Linhas de gravidade, zíperes
 - [ ] Capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

@@ -6,6 +6,8 @@ extends Area3D
 @export var is_exit: bool = false
 @export var bob_height: float = 0.25
 @export var spin_speed: float = 1.5
+## Som ao coletar (ex.: "plim" de botão).
+@export var som: AudioStream
 
 var _visual: Node3D
 var _base_local: Vector3
@@ -34,5 +36,18 @@ func _on_body_entered(body: Node3D) -> void:
 		GameState.completar_missao()
 	else:
 		GameState.coletar_item()
-	# TODO: partículas de fiapos/purpurina + som de "plim" de botão.
+	_tocar_som()
+	# TODO: partículas de fiapos/purpurina.
 	queue_free()
+
+
+func _tocar_som() -> void:
+	if som == null:
+		return
+	# O item some, então o som vai num player solto que se apaga sozinho.
+	var player := AudioStreamPlayer3D.new()
+	player.stream = som
+	get_parent().add_child(player)
+	player.global_position = global_position
+	player.finished.connect(player.queue_free)
+	player.play()

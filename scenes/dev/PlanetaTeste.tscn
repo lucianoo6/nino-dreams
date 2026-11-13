@@ -81,7 +81,7 @@ instance_shader_parameters/tint = Color(0.55, 0.8, 0.5, 1)
 
 [node name="Gravidade" type="Area3D" parent="Planeta"]
 collision_layer = 0
-collision_mask = 0
+collision_mask = 6
 gravity_space_override = 3
 gravity_point = true
 gravity_point_center = Vector3(0, 0, 0)
@@ -105,7 +105,7 @@ instance_shader_parameters/tint = Color(0.95, 0.75, 0.85, 1)
 
 [node name="Gravidade" type="Area3D" parent="Luazinha"]
 collision_layer = 0
-collision_mask = 0
+collision_mask = 6
 priority = 1
 gravity_space_override = 3
 gravity_point = true

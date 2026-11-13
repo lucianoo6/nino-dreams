@@ -1,4 +1,5 @@
 [gd_scene load_steps=5 format=3]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/botao_plim_a.mp3" id="3_som"]
 
 [ext_resource type="Script" path="res://scripts/dream/mission_item.gd" id="1_item"]
 [ext_resource type="Material" path="res://materials/feltro.tres" id="2_felt"]
@@ -16,6 +17,7 @@ radial_segments = 24
 collision_layer = 8
 collision_mask = 2
 script = ExtResource("1_item")
+som = ExtResource("3_som")
 
 [node name="Colisao" type="CollisionShape3D" parent="."]
 shape = SubResource("Shape_botao")

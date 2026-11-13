@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=3]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/carretel_boing_a.mp3" id="3_som"]
+
+[ext_resource type="Script" path="res://scripts/level/spool_launcher.gd" id="1_spool"]
+[ext_resource type="Material" path="res://materials/feltro.tres" id="2_felt"]
+
+[sub_resource type="CylinderShape3D" id="Shape_pisar"]
+radius = 0.8
+height = 0.8
+
+[sub_resource type="CylinderMesh" id="Mesh_miolo"]
+top_radius = 0.45
+bottom_radius = 0.45
+height = 0.7
+
+[sub_resource type="CylinderMesh" id="Mesh_disco"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.12
+radial_segments = 32
+
+[sub_resource type="CylinderMesh" id="Mesh_linha"]
+top_radius = 0.56
+bottom_radius = 0.56
+height = 0.46
+radial_segments = 32
+
+[node name="Carretel" type="Area3D"]
+script = ExtResource("1_spool")
+som = ExtResource("3_som")
+
+[node name="Colisao" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("Shape_pisar")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Miolo" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41, 0)
+mesh = SubResource("Mesh_miolo")
+surface_material_override/0 = ExtResource("2_felt")
+instance_shader_parameters/tint = Color(0.8, 0.62, 0.42, 1)
+
+[node name="DiscoBaixo" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("Mesh_disco")
+surface_material_override/0 = ExtResource("2_felt")
+instance_shader_parameters/tint = Color(0.72, 0.52, 0.35, 1)
+
+[node name="DiscoCima" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76, 0)
+mesh = SubResource("Mesh_disco")
+surface_material_override/0 = ExtResource("2_felt")
+instance_shader_parameters/tint = Color(0.72, 0.52, 0.35, 1)
+
+[node name="Linha" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41, 0)
+mesh = SubResource("Mesh_linha")
+surface_material_override/0 = ExtResource("2_felt")
+instance_shader_parameters/tint = Color(0.9, 0.3, 0.35, 1)

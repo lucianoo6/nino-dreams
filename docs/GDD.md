@@ -66,6 +66,24 @@ A última linha fica em `BookData.ultima_linha` — **tradução nossa** do orig
   - **Agulha-gancho** (talvez) — enganchar em ilhoses para balançar.
   - **Retalho solto** — plataforma que cai se você ficar muito tempo.
 
+## 3.1 Alice — Capítulo 1: "Os botões do Coelho Branco" (greybox implementado)
+
+`scenes/livros/alice/Capitulo1.tscn` — missão ENCONTRAR 3 botões.
+
+1. **Jardim de Retalhos** (planeta r=8): início; cogumelos-plataforma; botão A escondido embaixo do planeta;
+   borboleta de feltro para a Mel se distrair. **Carretel 1** lança para o Bule.
+2. **Bule do Chá Maluco** (planeta achatado com tampa, bico e alça): botão B na parte de baixo;
+   xicrinha que distrai a Mel. **Carretel 2** lança para a trilha de cartas.
+3. **Trilha de Cartas** (gravidade para baixo + zona de câmera que mostra o caminho): o vão entre a 2ª e a 3ª carta
+   só se atravessa pela **ponte de fio dourado que a Estrelinha da Mel revela**, segmento por segmento —
+   a Mel precisa estar junto (placa: "Chame a Mel"). Botão C no fim da última carta.
+
+Cair no vazio leva de volta ao último chão seguro. Pegar os 3 botões → nuvens → volta para a estante.
+
+**Como montar fases:** `Planetoid` (raio, cor, gravidade, achatamento — atualiza no editor) e `AncoraPlaneta`
+(escolha planeta + direção e o objeto fica em pé na superfície). A gravidade padrão do projeto é **zero**:
+só há gravidade dentro de planetas e áreas.
+
 ## 4. Sonhos — missões
 
 | Tipo | Exemplo | Status |
