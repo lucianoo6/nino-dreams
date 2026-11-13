@@ -18,6 +18,9 @@ const ANO_LIMITE_DOMINIO_PUBLICO := 1925
 ## Ano de morte do autor (0 = tradição oral/anônimo).
 @export var ano_morte_autor: int = 0
 @export_multiline var sinopse: String = ""
+## Última linha da história — o Nino lê (balbuciando) antes do "e FIM".
+## Tradução feita pela equipe a partir do original em domínio público.
+@export_multiline var ultima_linha: String = ""
 
 @export var tipo: DreamKind = DreamKind.SONHO
 @export var missao: MissionKind = MissionKind.ENCONTRAR

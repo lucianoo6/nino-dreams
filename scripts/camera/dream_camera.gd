@@ -9,6 +9,12 @@ extends Node3D
 @export var yaw_speed: float = 2.5
 @export var mouse_sensitivity: float = 0.004
 
+@export_group("Intro das nuvens")
+## Ao chegar da estante, a câmera começa lá no alto, entre as nuvens, e desce até o Nino.
+@export var intro_distancia: float = 42.0
+@export var intro_inclinacao_graus: float = -72.0
+@export var intro_duracao: float = 3.5
+
 var _target: CharacterBody3D
 var _mouse_yaw: float = 0.0
 
@@ -18,6 +24,29 @@ func _ready() -> void:
 	add_to_group("camera_sonho")
 	top_level = true
 	global_transform = _target.global_transform
+	if GameState.consumir_intro_das_nuvens():
+		_intro_das_nuvens()
+
+
+func _intro_das_nuvens() -> void:
+	var arm := get_node_or_null("SpringArm3D") as SpringArm3D
+	if arm == null:
+		Transicao.descobrir()
+		return
+	GameState.cutscene = true
+	var comprimento_final: float = arm.spring_length
+	var inclinacao_final: float = arm.rotation.x
+	arm.spring_length = intro_distancia
+	arm.rotation.x = deg_to_rad(intro_inclinacao_graus)
+	Transicao.definir(1.0)
+
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(arm, "spring_length", comprimento_final, intro_duracao) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(arm, "rotation:x", inclinacao_final, intro_duracao) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	Transicao.descobrir(intro_duracao * 0.75)
+	tw.finished.connect(func() -> void: GameState.cutscene = false)
 
 
 func _unhandled_input(event: InputEvent) -> void:

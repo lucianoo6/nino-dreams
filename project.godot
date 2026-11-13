@@ -7,12 +7,13 @@ config_version=5
 
 config/name="Sonhos"
 config/description="Um menino sonha com o livro que leu antes de dormir. Mundos de feltro, lã e retalhos."
-run/main_scene="res://scenes/dev/PlanetaTeste.tscn"
+run/main_scene="res://scenes/menu/Quarto.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
 [autoload]
 
 GameState="*res://scripts/core/game_state.gd"
+Transicao="*res://scripts/core/transicao.gd"
 
 [debug]
 

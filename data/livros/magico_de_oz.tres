@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+
+[resource]
+script = ExtResource("1_book")
+id = "magico_de_oz"
+titulo = "O Mágico de Oz"
+autor = "L. Frank Baum"
+ano_publicacao = 1900
+ano_morte_autor = 1919
+sinopse = "Seguir a estrada de tijolos amarelos de tricô até a Cidade das Esmeraldas."
+ultima_linha = "— E, ah, Tia Em! Estou tão feliz de estar em casa de novo!"
+tipo = 0
+missao = 1
+itens_necessarios = 0
+cena_do_sonho = ""
+cor_da_capa = Color(0.3, 0.65, 0.4, 1)

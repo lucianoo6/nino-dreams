@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+
+[resource]
+script = ExtResource("1_book")
+id = "joao_e_maria"
+titulo = "João e Maria"
+autor = "Irmãos Grimm"
+ano_publicacao = 1812
+ano_morte_autor = 1863
+sinopse = "Dois irmãos, uma floresta de lã e uma casa de doces de feltro que não é o que parece."
+ultima_linha = "Minha história acabou, lá vai um camundongo; quem pegar pode fazer com ele um gorro de pele bem grandão."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena_do_sonho = ""
+cor_da_capa = Color(0.55, 0.35, 0.25, 1)

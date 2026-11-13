@@ -4,7 +4,9 @@ extends Node
 signal mission_progress(atual: int, total: int)
 signal mission_completed
 
-const QUARTO_SCENE := "res://scenes/dev/PlanetaTeste.tscn" # TODO: trocar pelo Quarto (hub) quando existir
+const QUARTO_SCENE := "res://scenes/menu/Quarto.tscn"
+## Livros sem fase própria ainda caem na fase de protótipo.
+const CENA_PROTOTIPO := "res://scenes/dev/PlanetaTeste.tscn"
 ## Teclado/mouse valem para qualquer dispositivo; controles são separados por device (0 = Nino, 1 = Mel).
 const ALL_DEVICES := -1
 
@@ -12,10 +14,14 @@ var livro_atual: BookData
 var itens_coletados: int = 0
 ## Coop drop-in: o 2º jogador entra apertando pular/luz no controle dele e sai com "p2_leave".
 var player_two_joined: bool = false
+## Enquanto true, os jogadores não se mexem (intro das nuvens, falas, transições).
+var cutscene: bool = false
 
 var itens_necessarios: int:
 	get:
 		return livro_atual.itens_necessarios if livro_atual else 3
+
+var _intro_das_nuvens: bool = false
 
 
 func _ready() -> void:
@@ -36,8 +42,16 @@ func _unhandled_input(event: InputEvent) -> void:
 func entrar_no_livro(livro: BookData) -> void:
 	livro_atual = livro
 	itens_coletados = 0
-	if not livro.cena_do_sonho.is_empty():
-		get_tree().change_scene_to_file.call_deferred(livro.cena_do_sonho)
+	_intro_das_nuvens = true
+	var cena: String = livro.cena_do_sonho if not livro.cena_do_sonho.is_empty() else CENA_PROTOTIPO
+	get_tree().change_scene_to_file.call_deferred(cena)
+
+
+## A câmera do sonho chama isto: true uma única vez, logo depois de sair da estante.
+func consumir_intro_das_nuvens() -> bool:
+	var tinha: bool = _intro_das_nuvens
+	_intro_das_nuvens = false
+	return tinha
 
 
 func coletar_item() -> void:
@@ -50,11 +64,18 @@ func coletar_item() -> void:
 func completar_missao() -> void:
 	mission_completed.emit()
 	print("✨ Missão completa! Hora de acordar.")
-	# TODO: transição de "acordar" (cortina de tecido fechando) e volta ao quarto.
+	cutscene = true
+	# TODO: comemoração (estrelinhas, Nino e Mel pulando) antes das nuvens.
+	get_tree().create_timer(1.5).timeout.connect(_acordar_com_nuvens)
+
+
+func _acordar_com_nuvens() -> void:
+	Transicao.cobrir(1.5).finished.connect(acordar)
 
 
 func acordar() -> void:
 	livro_atual = null
+	cutscene = false
 	get_tree().change_scene_to_file.call_deferred(QUARTO_SCENE)
 
 

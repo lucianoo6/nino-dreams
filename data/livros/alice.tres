@@ -10,6 +10,7 @@ autor = "Lewis Carroll"
 ano_publicacao = 1865
 ano_morte_autor = 1898
 sinopse = "Seguir o Coelho Branco por planetinhas de chá, cartas e cogumelos. Missão: encontrar os 3 botões do colete do Coelho."
+ultima_linha = "…lembrando da sua própria infância e dos felizes dias de verão."
 tipo = 0
 missao = 0
 itens_necessarios = 3

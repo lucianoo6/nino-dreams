@@ -34,6 +34,24 @@ O quarto evolui com o progresso — é a "sala de troféus" e o menu ao mesmo te
 2. **Medidor de calma:** ações no quarto antes de dormir (ler um trecho assustador, deixar a luz da lua sem carga) aumentam a chance de pesadelo.
 3. **Mistura:** estrutura fixa (1) + "pesadelos surpresa" opcionais que dão recompensas raras.
 
+## 2.1 A estante (tela inicial / escolha de fase) — implementado
+
+Cena `scenes/menu/Quarto.tscn` (`quarto_menu.gd`):
+
+1. **Composição:** estante de livros de feltro em primeiro plano, nítida; **Nino na cama ao fundo, desfocado** (profundidade de campo), luz de abajur quente e luar azulado.
+2. **Escolher:** passar o mouse/direcional faz o livro **pular** (squash & stretch) e mostra título + autor. Funciona com mouse e controle.
+3. **Ao confirmar:** o foco da câmera **passa da estante para o Nino** (rack focus), o livro **voa até as mãos dele**.
+4. **Ele lê a última linha da história** — com **voz balbuciada** (sem dublagem!) e o texto aparecendo letra a letra.
+5. **"e FIM"** grande, pulando na tela.
+6. **Nuvens fofas** cobrem a tela → o sonho começa com a **câmera descendo das nuvens** até o Nino no planeta.
+
+**Truque da voz balbuciada** (`babble_voice.gd`): cada letra vira uma sílaba sintetizada com tom próprio — a mesma frase
+sempre soa igual, parece uma língua de verdade, e funciona em qualquer idioma de legenda. Zero custo de dublagem e de localização de áudio.
+Depois podemos trocar a síntese por sílabas gravadas de um ator ("ba", "mi", "nu"…) mantendo a mesma interface.
+Mel usa a mesma voz com tom mais agudo.
+
+A última linha fica em `BookData.ultima_linha` — **tradução nossa** do original em domínio público.
+
 ## 3. Mundos estilo "planetinhas"
 
 - Cada fase é um conjunto de **planetoides de tecido** com **gravidade própria** (já implementado: `Area3D` com *gravity point*; o personagem alinha o "para cima" com a gravidade).

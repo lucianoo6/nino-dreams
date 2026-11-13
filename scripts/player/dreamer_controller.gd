@@ -117,6 +117,8 @@ func _physics_process(delta: float) -> void:
 
 ## Direção desejada no mundo (plano tangente). Padrão: analógico relativo à câmera.
 func _compute_wish(up: Vector3) -> Vector3:
+	if GameState.cutscene:
+		return Vector3.ZERO
 	var cam := get_dream_camera()
 	if cam == null:
 		return Vector3.ZERO
@@ -130,7 +132,7 @@ func _compute_wish(up: Vector3) -> Vector3:
 
 
 func _read_jump_pressed() -> bool:
-	return Input.is_action_just_pressed(action_prefix + "jump")
+	return not GameState.cutscene and Input.is_action_just_pressed(action_prefix + "jump")
 
 
 func _read_jump_held() -> bool:
@@ -138,7 +140,7 @@ func _read_jump_held() -> bool:
 
 
 func _read_spin_pressed() -> bool:
-	return Input.is_action_just_pressed(action_prefix + "spin")
+	return not GameState.cutscene and Input.is_action_just_pressed(action_prefix + "spin")
 
 
 func _orient_body(up: Vector3, wish: Vector3, delta: float) -> void:

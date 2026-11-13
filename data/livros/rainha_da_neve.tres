@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+
+[resource]
+script = ExtResource("1_book")
+id = "rainha_da_neve"
+titulo = "A Rainha da Neve"
+autor = "Hans Christian Andersen"
+ano_publicacao = 1844
+ano_morte_autor = 1875
+sinopse = "Pesadelo no palácio de gelo de tule e lantejoulas."
+ultima_linha = "Ali estavam os dois, crescidos e ainda assim crianças, crianças no coração; e era verão, um verão quente e abençoado."
+tipo = 1
+missao = 2
+itens_necessarios = 0
+cena_do_sonho = ""
+cor_da_capa = Color(0.65, 0.82, 0.95, 1)

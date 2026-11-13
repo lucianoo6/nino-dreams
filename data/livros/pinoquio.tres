@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/book_data.gd" id="1_book"]
+
+[resource]
+script = ExtResource("1_book")
+id = "pinoquio"
+titulo = "As Aventuras de Pinóquio"
+autor = "Carlo Collodi"
+ano_publicacao = 1883
+ano_morte_autor = 1890
+sinopse = "Um boneco de madeira num teatro de marionetes de retalhos."
+ultima_linha = "Como eu era engraçado quando era um boneco! E como estou feliz agora que virei um menino de verdade!"
+tipo = 0
+missao = 0
+itens_necessarios = 3
+cena_do_sonho = ""
+cor_da_capa = Color(0.85, 0.55, 0.25, 1)
