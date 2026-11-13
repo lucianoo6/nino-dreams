@@ -1,0 +1,31 @@
+; Engine configuration file.
+; Godot 4.7 (.NET / C#)
+
+config_version=5
+
+[application]
+
+config/name="Sonhos"
+config/description="Um menino sonha com o livro que leu antes de dormir. Mundos de feltro, lã e retalhos."
+run/main_scene="res://scenes/dev/PlanetaTeste.tscn"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+
+[autoload]
+
+GameState="*res://scripts/Core/GameState.cs"
+
+[dotnet]
+
+project/assembly_name="Sonhos"
+
+[layer_names]
+
+3d_physics/layer_1="mundo"
+3d_physics/layer_2="sonhador"
+3d_physics/layer_3="criaturas"
+3d_physics/layer_4="coletaveis"
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=2
+environment/defaults/default_clear_color=Color(0.12, 0.1, 0.22, 1)

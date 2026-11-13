@@ -1,0 +1,28 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3]
+
+[ext_resource type="Shader" path="res://shaders/feltro.gdshader" id="1_shader"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_fibra"]
+noise_type = 3
+frequency = 0.05
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fibra"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_fibra")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/base_color = Color(1, 1, 1, 1)
+shader_parameter/fiber_noise = SubResource("NoiseTexture2D_fibra")
+shader_parameter/fiber_scale = 0.6
+shader_parameter/fiber_strength = 0.35
+shader_parameter/fiber_bump = 0.6
+shader_parameter/fuzz_rim = 0.7
+shader_parameter/fuzz_tint = 0.6
+shader_parameter/backlight_amount = 0.15
+shader_parameter/pesadelo = 0.0
+shader_parameter/pesadelo_tint = Color(0.35, 0.3, 0.55, 1)

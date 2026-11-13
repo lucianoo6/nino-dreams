@@ -1,0 +1,126 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/Sonhador.tscn" id="1_player"]
+[ext_resource type="Material" path="res://materials/feltro.tres" id="2_felt"]
+[ext_resource type="PackedScene" path="res://scenes/dream/BotaoEstrela.tscn" id="3_botao"]
+[ext_resource type="PackedScene" path="res://scenes/nightmare/SombraDeLa.tscn" id="4_sombra"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+sky_top_color = Color(0.2, 0.17, 0.4, 1)
+sky_horizon_color = Color(0.75, 0.6, 0.85, 1)
+ground_bottom_color = Color(0.12, 0.1, 0.25, 1)
+ground_horizon_color = Color(0.75, 0.6, 0.85, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_sonho"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_energy = 0.8
+tonemap_mode = 4
+ssao_enabled = true
+ssao_radius = 1.5
+ssao_intensity = 2.5
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.7, 0.6, 0.9, 1)
+fog_density = 0.004
+
+[sub_resource type="SphereShape3D" id="Shape_planeta"]
+radius = 8.0
+
+[sub_resource type="SphereMesh" id="Mesh_planeta"]
+radius = 8.0
+height = 16.0
+radial_segments = 64
+rings = 32
+
+[sub_resource type="SphereShape3D" id="Shape_grav_planeta"]
+radius = 16.0
+
+[sub_resource type="SphereShape3D" id="Shape_lua"]
+radius = 3.0
+
+[sub_resource type="SphereMesh" id="Mesh_lua"]
+radius = 3.0
+height = 6.0
+radial_segments = 48
+rings = 24
+
+[sub_resource type="SphereShape3D" id="Shape_grav_lua"]
+radius = 6.5
+
+[node name="PlanetaTeste" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_sonho")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 20, 0)
+light_color = Color(1, 0.93, 0.85, 1)
+shadow_enabled = true
+
+[node name="Planeta" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Colisao" type="CollisionShape3D" parent="Planeta"]
+shape = SubResource("Shape_planeta")
+
+[node name="Mesh" type="MeshInstance3D" parent="Planeta"]
+mesh = SubResource("Mesh_planeta")
+surface_material_override/0 = ExtResource("2_felt")
+instance_shader_parameters/tint = Color(0.55, 0.8, 0.5, 1)
+
+[node name="Gravidade" type="Area3D" parent="Planeta"]
+collision_layer = 0
+collision_mask = 0
+gravity_space_override = 3
+gravity_point = true
+gravity_point_center = Vector3(0, 0, 0)
+gravity = 25.0
+
+[node name="Forma" type="CollisionShape3D" parent="Planeta/Gravidade"]
+shape = SubResource("Shape_grav_planeta")
+
+[node name="Luazinha" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 10, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Colisao" type="CollisionShape3D" parent="Luazinha"]
+shape = SubResource("Shape_lua")
+
+[node name="Mesh" type="MeshInstance3D" parent="Luazinha"]
+mesh = SubResource("Mesh_lua")
+surface_material_override/0 = ExtResource("2_felt")
+instance_shader_parameters/tint = Color(0.95, 0.75, 0.85, 1)
+
+[node name="Gravidade" type="Area3D" parent="Luazinha"]
+collision_layer = 0
+collision_mask = 0
+priority = 1
+gravity_space_override = 3
+gravity_point = true
+gravity_point_center = Vector3(0, 0, 0)
+gravity = 25.0
+
+[node name="Forma" type="CollisionShape3D" parent="Luazinha/Gravidade"]
+shape = SubResource("Shape_grav_lua")
+
+[node name="Sonhador" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.6, 0)
+
+[node name="Botao1" parent="." instance=ExtResource("3_botao")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 8.2)
+
+[node name="Botao2" parent="." instance=ExtResource("3_botao")]
+transform = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, 0, -8.2, 0)
+
+[node name="Botao3" parent="." instance=ExtResource("3_botao")]
+transform = Transform3D(0.707, 0.707, 0, -0.707, 0.707, 0, 0, 0, 1, 12.26, 12.26, 0)
+
+[node name="Sombra" parent="." instance=ExtResource("4_sombra")]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -8.3, 0, 0)

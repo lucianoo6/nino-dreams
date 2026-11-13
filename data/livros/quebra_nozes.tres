@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BookData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/Core/BookData.cs" id="1_book"]
+
+[resource]
+script = ExtResource("1_book")
+Id = "quebra_nozes"
+Titulo = "O Quebra-Nozes e o Rei dos Camundongos"
+Autor = "E. T. A. Hoffmann"
+AnoPublicacao = 1816
+AnoMorteAutor = 1822
+Sinopse = "Pesadelo: o Rei dos Camundongos de sete cabeças invade a sala de brinquedos. Use a luz da lua para acalmá-lo."
+Tipo = 1
+Missao = 2
+ItensNecessarios = 0
+CenaDoSonho = ""
+CorDaCapa = Color(0.7, 0.2, 0.25, 1)
