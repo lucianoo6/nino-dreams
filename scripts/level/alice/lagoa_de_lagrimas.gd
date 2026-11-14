@@ -29,6 +29,8 @@ const LAGRIMAS_Z := Vector2(26.0, 70.0)
 var _boiando: Array[Dictionary] = []  # {no, base, fase, amplitude}
 var _tempo: float = 0.0
 var _relogio_lagrima: float = 2.0
+## Coisas para "assentar" no chão de verdade (raycast) depois que a física começa.
+var _assentar: Array[Node3D] = []
 
 
 func _ready() -> void:
@@ -37,7 +39,9 @@ func _ready() -> void:
 	_caminho()
 	_praia()
 	_alice_no_horizonte()
+	_fundo()
 	super._ready()
+	_assentar_tudo.call_deferred()
 
 
 func _physics_process(delta: float) -> void:
@@ -121,41 +125,21 @@ func _malha(pai: Node3D, mesh: Mesh, pos: Vector3, mat: Material) -> MeshInstanc
 	return m
 
 
-## Ilhota de feltro: lateral de terra fofa, topo de grama, florzinhas.
-func _ilha(pos: Vector3, raio: float, semente: int) -> StaticBody3D:
-	var ilha := StaticBody3D.new()
-	ilha.position = pos
-	add_child(ilha)
-	var lado := CylinderMesh.new()
-	lado.top_radius = raio
-	lado.bottom_radius = raio * 1.2
-	lado.height = 4.0
-	_malha(ilha, lado, Vector3(0, -2.0, 0), M_TERRA)
-	var topo := CylinderMesh.new()
-	topo.top_radius = raio - 0.05
-	topo.bottom_radius = raio + 0.08
-	topo.height = 0.25
-	_malha(ilha, topo, Vector3(0, 0.0, 0), M_GRAMA)
-	var c := CollisionShape3D.new()
-	var s := CylinderShape3D.new()
-	s.radius = raio
-	s.height = 4.2
-	c.shape = s
-	c.position.y = -1.98
-	ilha.add_child(c)
+## Ilhota de feltro esculpida (kit): topo fofo costurado, florzinhas e cogumelinhos, terra de cotelê
+## com raízes de lã — a borda do feltro fica na linha da água.
+func _ilha(pos: Vector3, raio: float, semente: int) -> Node3D:
+	# escala UNIFORME (senão os cogumelinhos do topo viram panquecas); a parte de terra fica submersa.
+	# No modelo normalizado (altura 0,86): borda do feltro ~0,55; topo do domo ~0,74
+	var esc := Vector3.ONE * raio * 2.0
+	var y: float = pos.y - 0.74 * esc.y
+	var ilha := KitCenario.colocar(self, "ilha_feltro", Vector3(pos.x, y, pos.z), esc, semente * 1.3, "estatico", 0.74)
+	# juncos na beirinha
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semente
-	for i in int(raio * 2.5):
+	for i in 3:
 		var ang: float = rng.randf() * TAU
-		var r: float = rng.randf_range(0.6, raio - 0.5)
-		var flor := PropProcedural.new()
-		flor.tipo = PropProcedural.Tipo.FLOR
-		flor.tamanho = rng.randf_range(0.35, 0.6)
-		flor.com_colisao = false
-		flor.cor = [Color(1, 0.6, 0.7), Color(1, 0.9, 0.4), Color(0.75, 0.65, 1.0), Color(1, 1, 1)][i % 4]
-		flor.semente = semente * 10 + i
-		flor.position = Vector3(cos(ang) * r, 0.12, sin(ang) * r)
-		ilha.add_child(flor)
+		KitCenario.enfeite(self, "juncos", Vector3(pos.x + cos(ang) * raio * 1.0, -0.4, pos.z + sin(ang) * raio * 1.0),
+			rng.randf_range(1.6, 2.6), rng.randf() * TAU)
 	return ilha
 
 
@@ -199,99 +183,39 @@ func _caminho() -> void:
 	# ilha do lampião
 	_ilha(Vector3(2.0, 0.7, 52.0), 4.5, 3)
 	_lampiao(Vector3(3.2, 0.82, 53.0))
-	# botões gigantes boiando como vitórias-régias
-	var cores: Array[Color] = [Color(1, 0.8, 0.3), Color(0.95, 0.4, 0.45), Color(0.4, 0.65, 1.0)]
-	for i in 3:
-		var b := _boia(Vector3(-1.0 + i * 1.6, 0.05, 59.0 + i * 4.2), 0.08)
-		var botao := PropProcedural.new()
-		botao.tipo = PropProcedural.Tipo.BOTAO
-		botao.tamanho = 1.5
-		botao.cor = cores[i]
-		botao.com_colisao = false
-		b.add_child(botao)
-		var c := CollisionShape3D.new()
-		var cs := CylinderShape3D.new()
-		cs.radius = 1.45
-		cs.height = 0.3
-		c.shape = cs
-		b.add_child(c)
+	# vitórias-régias de feltro para pular até a praia
+	for i in 4:
+		var v := KitCenario.colocar(self, "vitoria_regia", Vector3(-1.5 + (i % 2) * 3.0, -0.3, 58.5 + i * 3.6),
+			Vector3(3.2, 1.0, 3.2), i * 1.7, "animavel", 0.25)
+		_boiando.append({"no": v, "base": v.position, "fase": i * 1.1, "amplitude": 0.06})
+	# mais vitórias-régias e juncos espalhados pela lagoa (enfeite)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 77
+	for i in 26:
+		var p := Vector3(rng.randf_range(-26, 26), -0.35, rng.randf_range(-8, 74))
+		if absf(p.x) < 6.0:
+			continue
+		if i % 2 == 0:
+			KitCenario.enfeite(self, "vitoria_regia", p, rng.randf_range(1.5, 3.0), rng.randf() * TAU)
+		else:
+			KitCenario.enfeite(self, "juncos", p, rng.randf_range(2.0, 4.0), rng.randf() * TAU)
 
 
 func _luva(pos: Vector3, giro: float) -> void:
-	var b := _boia(pos)
-	b.rotation.y = giro
-	_forma_caixa(b, Vector3(2.0, 0.45, 2.6))
-	var palma := BoxMesh.new()
-	palma.size = Vector3(2.0, 0.4, 2.0)
-	_malha(b, palma, Vector3(0, 0, 0.3), M_LUVA)
-	for k in 4:
-		var dedo := CapsuleMesh.new()
-		dedo.radius = 0.22
-		dedo.height = 1.2
-		var d := _malha(b, dedo, Vector3(-0.72 + k * 0.48, 0, -1.15), M_LUVA)
-		d.rotation.x = PI / 2.0
-	var polegar := CapsuleMesh.new()
-	polegar.radius = 0.24
-	polegar.height = 1.0
-	var p := _malha(b, polegar, Vector3(1.15, 0, 0.2), M_LUVA)
-	p.rotation = Vector3(PI / 2.0, 0.6, 0)
+	# luva de feltro esculpida, deitada (≈2 x 2,6 m)
+	var b := KitCenario.colocar(self, "luva", pos + Vector3(0, -0.25, 0), Vector3(2.6, 1.3, 2.6), giro, "animavel")
+	_boiando.append({"no": b, "base": b.position, "fase": randf() * TAU, "amplitude": 0.12})
 
 
 func _leque(pos: Vector3) -> void:
-	var b := _boia(pos, 0.1)
-	_forma_caixa(b, Vector3(4.6, 0.35, 2.4), Vector3(0, 0, -0.6))
-	for k in 11:
-		var vareta := BoxMesh.new()
-		vareta.size = Vector3(0.5, 0.06, 2.6)
-		var v := _malha(b, vareta, Vector3.ZERO, M_PAPEL if k % 2 == 0 else M_FITA)
-		var ang: float = lerpf(-1.25, 1.25, k / 10.0)
-		v.rotation.y = ang
-		v.position = Vector3(sin(ang), 0.02 * (k % 2), -cos(ang)) * 1.2 + Vector3(0, 0.1, 0.6)
-	var pino := CylinderMesh.new()
-	pino.top_radius = 0.12
-	pino.bottom_radius = 0.12
-	pino.height = 0.3
-	_malha(b, pino, Vector3(0, 0.15, 0.6), M_OURO)
+	var b := KitCenario.colocar(self, "leque", pos + Vector3(0, -0.1, 0), Vector3(4.6, 3.0, 4.6), 0.2, "animavel")
+	_boiando.append({"no": b, "base": b.position, "fase": randf() * TAU, "amplitude": 0.1})
 
 
 func _garrafa(pos: Vector3) -> void:
-	var b := _boia(pos, 0.1)
-	var c := CollisionShape3D.new()
-	var cs := CylinderShape3D.new()
-	cs.radius = 0.75
-	cs.height = 3.4
-	c.shape = cs
-	c.rotation.z = PI / 2.0
-	b.add_child(c)
-	var corpo := CylinderMesh.new()
-	corpo.top_radius = 0.75
-	corpo.bottom_radius = 0.75
-	corpo.height = 3.0
-	var m := _malha(b, corpo, Vector3.ZERO, M_VIDRO)
-	m.rotation.z = PI / 2.0
-	var gargalo := CylinderMesh.new()
-	gargalo.top_radius = 0.28
-	gargalo.bottom_radius = 0.5
-	gargalo.height = 0.8
-	var g := _malha(b, gargalo, Vector3(-1.85, 0, 0), M_VIDRO)
-	g.rotation.z = PI / 2.0
-	var rotulo := CylinderMesh.new()
-	rotulo.top_radius = 0.77
-	rotulo.bottom_radius = 0.77
-	rotulo.height = 1.2
-	var r := _malha(b, rotulo, Vector3(0.2, 0, 0), M_PAPEL)
-	r.rotation.z = PI / 2.0
-	var l := Label3D.new()
-	l.text = "BEBA-ME" if MenuEstanteUI._pt() else "DRINK ME"
-	l.font = FONTE
-	l.font_size = 64
-	l.pixel_size = 0.005
-	l.modulate = Color(0.55, 0.15, 0.2)
-	l.outline_size = 0
-	l.position = Vector3(0.2, 0.0, -0.8)
-	l.rotation.y = PI
-	l.alpha_cut = Label3D.ALPHA_CUT_OPAQUE_PREPASS
-	b.add_child(l)
+	# a garrafa BEBA-ME caída, boiando (vidro com rolha e etiqueta)
+	var b := KitCenario.colocar(self, "garrafa", pos + Vector3(0, -0.85, 0), Vector3.ONE * 2.6, 0.6, "animavel")
+	_boiando.append({"no": b, "base": b.position, "fase": randf() * TAU, "amplitude": 0.1})
 
 
 func _xicara_barco(pos: Vector3) -> void:
@@ -320,6 +244,7 @@ func _lampiao(pos: Vector3) -> void:
 	var n := Node3D.new()
 	n.position = pos
 	add_child(n)
+	_assentar.append(n)
 	_malha(n, poste, Vector3(0, 1.2, 0), M_MADEIRA)
 	var luz := OmniLight3D.new()
 	luz.light_color = Color(1.0, 0.75, 0.45)
@@ -374,43 +299,38 @@ func _rato(pos: Vector3) -> void:
 	p.raio_conversa = 6.0
 	p.position = pos
 	add_child(p)
+	_assentar.append(p)
 
 
 func _praia() -> void:
-	_caixa_solida(Vector3(0, -0.6, 86.0), Vector3(80, 2.4, 26), M_AREIA)
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 9
-	for i in 10:
-		var moita := PropProcedural.new()
-		moita.tipo = PropProcedural.Tipo.MORRINHO
-		moita.tamanho = rng.randf_range(1.0, 2.0)
-		moita.cor = Color(0.4, 0.62, 0.35)
-		moita.semente = i
-		moita.position = Vector3(rng.randf_range(-30, 30), 0.6, rng.randf_range(88, 98))
-		add_child(moita)
+	# a margem: três ilhas grandes de feltro emendadas (no lugar de uma caixa de areia)
+	_ilha(Vector3(0, 0.6, 86.0), 11.0, 7)
+	_ilha(Vector3(-17, 0.9, 92.0), 9.0, 8)
+	_ilha(Vector3(17, 0.9, 92.0), 9.0, 9)
 	var pt: bool = MenuEstanteUI._pt()
 	# os bichos molhados esperando, em roda
 	var bichos: Array = [
-		["Pato" if pt else "Duck", Color(1, 0.95, 0.85), Color(1, 0.65, 0.2), 0.42, Vector3(-3.5, 0.6, 79.0)],
-		["Papagaio" if pt else "Lory", Color(0.9, 0.25, 0.25), Color(1, 0.85, 0.3), 0.36, Vector3(3.0, 0.6, 79.5)],
-		["Aguiazinha" if pt else "Eaglet", Color(0.6, 0.45, 0.3), Color(1, 0.8, 0.3), 0.32, Vector3(-1.5, 0.6, 82.5)],
+		["pato", 1.0, Vector3(-3.5, 0.6, 79.0)],
+		["papagaio", 0.9, Vector3(3.0, 0.6, 79.5)],
+		["pato", 0.75, Vector3(-1.8, 0.6, 82.8)],
 	]
 	for b: Array in bichos:
 		var p := Personagem.new()
-		p.position = b[4]
+		p.position = b[2]
 		p.rotation.y = PI
-		p.altura_balao = float(b[3]) * 3.6
+		p.altura_balao = float(b[1]) + 0.5
 		p.falas = PackedStringArray(["Estou ensopado!" if pt else "I'm soaking wet!"])
 		p.tom_voz = 380.0 + randf() * 200.0
 		p.raio_conversa = 5.0
 		p.intervalo = 9.0
 		add_child(p)
-		BichoFeltro.criar(p, b[1], b[2], b[3], false)
+		_assentar.append(p)
+		BichoFeltro.modelo(p, b[0], b[1])
 	# o Dodô: é a saída
 	var dodo := Personagem.new()
 	dodo.position = Vector3(0.5, 0.6, 81.0)
 	dodo.rotation.y = PI
-	dodo.altura_balao = 2.4
+	dodo.altura_balao = 2.0
 	dodo.falas = PackedStringArray([
 		"A melhor maneira de se secar é uma Corrida em Comitê!" if pt
 			else "The best thing to get us dry would be a Caucus-race!",
@@ -418,7 +338,8 @@ func _praia() -> void:
 	dodo.tom_voz = 220.0
 	dodo.raio_conversa = 8.0
 	add_child(dodo)
-	BichoFeltro.criar(dodo, Color(0.55, 0.55, 0.65), Color(0.95, 0.85, 0.5), 0.65, false)
+	_assentar.append(dodo)
+	BichoFeltro.modelo(dodo, "dodo", 1.5)
 	var saida := MissionItem.new()
 	saida.is_exit = true
 	saida.bob_height = 0.0
@@ -444,6 +365,31 @@ func _alice_no_horizonte() -> void:
 	alice.position = Vector3(14, 9.0, 128)
 	alice.rotation.y = PI  # olhando para a lagoa
 	add_child(alice)
+
+
+## Morros de feltro recortado em camadas em volta da lagoa (a Alice fica na frente deles).
+func _fundo() -> void:
+	var f := CenarioRecortes.new()
+	f.position = Vector3(0, 0, 50)
+	f.raios = PackedFloat32Array([88.0, 112.0, 140.0])
+	f.alturas = PackedFloat32Array([10.0, 18.0, 30.0])
+	f.cores = PackedColorArray([Color(0.45, 0.68, 0.45), Color(0.58, 0.7, 0.72), Color(0.75, 0.74, 0.9)])
+	f.base_y = -6.0
+	add_child(f)
+
+
+func _assentar_tudo() -> void:
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var espaco := get_world_3d().direct_space_state
+	for n: Node3D in _assentar:
+		if not is_instance_valid(n):
+			continue
+		var de: Vector3 = n.global_position + Vector3.UP * 8.0
+		var q := PhysicsRayQueryParameters3D.create(de, de + Vector3.DOWN * 20.0, 1)
+		var hit := espaco.intersect_ray(q)
+		if not hit.is_empty():
+			n.global_position.y = (hit["position"] as Vector3).y + (1.0 if n is MissionItem else 0.0)
 
 
 # ---------------- lágrimas ----------------

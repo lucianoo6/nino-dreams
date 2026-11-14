@@ -3,6 +3,16 @@ extends RefCounted
 ## Bichinhos de bolinhas de feltro (pássaros e ratinhos) para preencher as fases com personagens do livro
 ## sem precisar de um modelo 3D: corpo, cabeça, olhos de botão, bico + asinhas (ou orelhas de rato).
 
+## Bicho esculpido (kit: assets/models/cenario/bicho_<nome>.glb — dodo, pato, papagaio), com `altura` em metros,
+## virado para -Z (a "frente" do Godot). Prefira este; `criar` fica para bichos sem modelo.
+static func modelo(pai: Node3D, nome: String, altura: float) -> Node3D:
+	var m := (load("res://assets/models/cenario/bicho_%s.glb" % nome) as PackedScene).instantiate() as Node3D
+	m.scale = Vector3.ONE * altura
+	m.rotation.y = PI
+	pai.add_child(m)
+	return m
+
+
 ## Monta o bichinho dentro de `pai` (os pés ficam em y = 0).
 static func criar(pai: Node3D, cor: Color, cor_detalhe: Color, tamanho: float, rato: bool = false) -> Node3D:
 	var corpo := Node3D.new()

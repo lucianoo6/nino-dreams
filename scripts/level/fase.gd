@@ -13,6 +13,7 @@ extends Node3D
 
 func _ready() -> void:
 	_tocar_musica()
+	add_child(AparenciaSonho.new())
 	add_child(HudSonho.new())
 	if GameState.livro_atual and GameState.capitulo_atual:
 		titulo = GameState.livro_atual.titulo

@@ -142,11 +142,11 @@ func _pista() -> void:
 func _corrida() -> void:
 	var pt: bool = MenuEstanteUI._pt()
 	var bichos: Array = [
-		[Color(0.55, 0.55, 0.65), Color(0.95, 0.85, 0.5), 0.6, 0.55],   # Dodô
-		[Color(1, 0.95, 0.85), Color(1, 0.65, 0.2), 0.42, 0.8],         # Pato
-		[Color(0.9, 0.25, 0.25), Color(1, 0.85, 0.3), 0.36, 0.7],       # Papagaio
-		[Color(0.6, 0.45, 0.3), Color(1, 0.8, 0.3), 0.32, 0.95],        # Aguiazinha
-		[Color(0.95, 0.45, 0.3), Color(0.3, 0.2, 0.15), 0.34, -0.6],    # Caranguejo (ao contrário!)
+		["dodo", 1.4, 0.55],
+		["pato", 1.0, 0.8],
+		["papagaio", 0.9, 0.7],
+		["pato", 0.7, 0.95],
+		["papagaio", 0.75, -0.6],   # esse corre ao contrário!
 	]
 	for i in bichos.size():
 		var b: Array = bichos[i]
@@ -155,25 +155,25 @@ func _corrida() -> void:
 		pivo.rotation.y = i * TAU / bichos.size()
 		add_child(pivo)
 		var corpo := Node3D.new()
-		var vel: float = b[3]
+		var vel: float = b[2]
 		# "para cima" do bicho = para fora do planeta (+X); frente = sentido em que corre
 		corpo.basis = Basis.looking_at(Vector3.FORWARD if vel > 0.0 else Vector3.BACK, Vector3.RIGHT)
 		corpo.position = Vector3(RAIO, 0, 0)
 		pivo.add_child(corpo)
-		BichoFeltro.criar(corpo, b[0], b[1], b[2], false)
+		BichoFeltro.modelo(corpo, b[0], b[1])
 		_corredores.append({"pivo": pivo, "velocidade": vel, "corpo": corpo})
 	# o Dodô explica as regras na largada (perto do Nino)
 	var dodo := Personagem.new()
 	add_child(dodo)
 	_no_planeta(dodo, Vector3(0.25, 1.0, 0.35), 0.0)
-	dodo.altura_balao = 2.4
+	dodo.altura_balao = 2.0
 	dodo.falas = PackedStringArray([
 		"Uma Corrida Maluca! Corra em volta, como quiser!" if pt else "A Caucus-race! Run round, any way you like!",
 		"Todo mundo ganhou, e todos ganham prêmios!" if pt else "Everybody has won, and all must have prizes!",
 		"Ache os 3 confeitos de prêmio!" if pt else "Find the 3 prize comfits!"])
 	dodo.tom_voz = 220.0
 	dodo.raio_conversa = 6.0
-	BichoFeltro.criar(dodo, Color(0.55, 0.55, 0.65), Color(0.95, 0.85, 0.5), 0.6)
+	BichoFeltro.modelo(dodo, "dodo", 1.5)
 
 
 # ---------------- a história comprida (rabo de rato) ----------------

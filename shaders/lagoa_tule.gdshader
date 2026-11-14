@@ -3,8 +3,8 @@ shader_type spatial;
 // e borda mais clara (fresnel). Pensada para um plano grande subdividido.
 render_mode blend_mix, depth_draw_always, cull_back, specular_schlick_ggx;
 
-uniform vec4 cor_funda : source_color = vec4(0.32, 0.55, 0.85, 0.82);
-uniform vec4 cor_rasa : source_color = vec4(0.62, 0.82, 0.98, 0.7);
+uniform vec4 cor_funda : source_color = vec4(0.12, 0.42, 0.62, 0.88);
+uniform vec4 cor_rasa : source_color = vec4(0.35, 0.68, 0.82, 0.78);
 uniform vec4 cor_trama : source_color = vec4(0.92, 0.96, 1.0, 1.0);
 uniform float escala_trama = 3.0;
 uniform float altura_onda = 0.12;
@@ -47,17 +47,20 @@ void fragment() {
 	float t = TIME * velocidade;
 	vec2 p = pos_mundo.xz + vec2(onda(pos_mundo.xz * 0.5, t) * 0.15);
 	float linha = 1.0 - smoothstep(0.02, 0.06, hexa(p));
-	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 3.0);
+	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 4.0) * 0.6;
+	// a trama do tule some com a distância (perto: tecido; longe: água)
+	float dist = length(VERTEX);
+	linha *= 1.0 - smoothstep(6.0, 22.0, dist);
 	vec4 base = mix(cor_funda, cor_rasa, fres);
-	vec3 cor = mix(base.rgb, cor_trama.rgb, linha * 0.35);
+	vec3 cor = mix(base.rgb, cor_trama.rgb, linha * 0.25);
 	// brilhinhos que piscam
 	vec2 q = pos_mundo.xz * 3.0;
 	vec2 celula = floor(q);
 	float ponto = 1.0 - smoothstep(0.05, 0.12, length(fract(q) - 0.5));
 	float b = step(0.97, ruido(celula)) * ponto * (0.5 + 0.5 * sin(TIME * 3.0 + ruido(celula + 3.0) * 30.0));
 	ALBEDO = cor;
-	EMISSION = vec3(1.0, 0.97, 0.9) * b * 1.5 + cor * 0.08;
+	EMISSION = vec3(1.0, 0.97, 0.9) * b * 1.5;
 	ALPHA = clamp(base.a + linha * 0.15 + fres * 0.2, 0.0, 1.0);
-	ROUGHNESS = 0.25;
-	SPECULAR = 0.6;
+	ROUGHNESS = 0.12;
+	SPECULAR = 0.7;
 }
