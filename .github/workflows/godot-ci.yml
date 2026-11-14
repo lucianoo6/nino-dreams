@@ -38,7 +38,9 @@ jobs:
 
       - name: Falhar se apareceu algum erro
         run: |
-          if grep -nE "SCRIPT ERROR|Parse Error|Compile Error|ERROR:|❌" import.log verificar.log smoke.log; then
+          # "resources still in use at exit" é só um aviso de saída do Godot (não afeta o jogo)
+          if grep -nE "SCRIPT ERROR|Parse Error|Compile Error|ERROR:|❌" import.log verificar.log smoke.log \
+              | grep -v "resources still in use at exit"; then
             echo "::error::O Godot reportou erros (veja acima)."
             exit 1
           fi
