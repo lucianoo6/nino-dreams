@@ -34,7 +34,7 @@ ultima_linha = "Ela olhou para cima, ansiosa, meio esperando que o Camundongo ti
 tipo = 0
 missao = 0
 itens_necessarios = 3
-cena = ""
+cena = "res://scenes/livros/alice/Cap03_CorridaMaluca.tscn"
 
 [sub_resource type="Resource" id="Cap_04"]
 script = ExtResource("2_cap")

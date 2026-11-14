@@ -30,6 +30,7 @@ manhã no quarto (o Nino conta o sonho e ganha um botão costurado na colcha) �
 |---|---|---|
 | 1 — Descendo pela Toca do Coelho | sonho | Cair devagarinho pelo poço de prateleiras, achar a chave dourada e passar pela portinha |
 | 2 — A Lagoa de Lágrimas | sonho | Atravessar a lagoa de tule (nadando!) desviando das lágrimas da Alice gigante, até o Dodô |
+| 3 — Uma Corrida Maluca e uma História Comprida | sonho | Achar 3 confeitos: na pista onde os bichos correm em círculos, no alto da espiral de palavras da história do Rato e numa luazinha |
 | 7 — Um Chá Maluco | sonho | Achar os 3 botões-estrela entre o jardim, o bule-casinha e a trilha de cartas |
 | 8 — O Campo de Croquet da Rainha | **pesadelo** | Acalmar os soldados-carta e a Rainha de Copas com a Luna (e a Estrelinha da Mel) |
 
