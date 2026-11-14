@@ -16,6 +16,7 @@ func _ready() -> void:
 	add_child(sol)
 	var m := (load(OS.get_environment("MODELO")) as PackedScene).instantiate() as Node3D
 	add_child(m)
+	print("voxel_tecido aplicado em ", VoxelTecido.aplicar(m), " superfícies")
 	var caixa := _aabb(m)
 	print("AABB pos=", caixa.position, " tamanho=", caixa.size)
 	var centro: Vector3 = caixa.get_center()

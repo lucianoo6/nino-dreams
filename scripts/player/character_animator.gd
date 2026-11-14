@@ -61,6 +61,7 @@ var _avisadas: Dictionary = {}
 
 
 func _ready() -> void:
+	VoxelTecido.aplicar(self)
 	_player = find_child("AnimationPlayer", true, false) as AnimationPlayer
 	_body = get_parent() as DreamerController
 	if _player == null:

@@ -6,7 +6,8 @@ extends RefCounted
 ## Bicho esculpido (kit: assets/models/cenario/bicho_<nome>.glb — dodo, pato, papagaio), com `altura` em metros,
 ## virado para -Z (a "frente" do Godot). Prefira este; `criar` fica para bichos sem modelo.
 static func modelo(pai: Node3D, nome: String, altura: float) -> Node3D:
-	var m := (load("res://assets/models/cenario/bicho_%s.glb" % nome) as PackedScene).instantiate() as Node3D
+	var m := (load("res://assets/models/cenario_vox/bicho_%s.glb" % nome) as PackedScene).instantiate() as Node3D
+	VoxelTecido.aplicar(m)
 	m.scale = Vector3.ONE * altura
 	m.rotation.y = PI
 	pai.add_child(m)

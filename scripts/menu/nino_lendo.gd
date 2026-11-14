@@ -4,7 +4,7 @@ extends Node3D
 ## É o Nino do quarto; dentro do sonho ele vira o boneco de pano mais caricato.
 ## Fica deitado na cama (relativo ao nó `cama`), respira devagar e balança a cabeça quando lê em voz alta.
 
-@export var modelo: PackedScene = preload("res://assets/models/personagens/nino_lendo.glb")
+@export var modelo: PackedScene = preload("res://assets/models/personagens/nino_lendo_vox.glb")
 @export var cama: NodePath = ^"../Cama"
 ## Posição no espaço da cama (o modelo olha para +Z = pé da cama; a cabeça fica no travesseiro).
 @export var posicao_na_cama: Vector3 = Vector3(0.0, 0.83, -0.3)
@@ -22,6 +22,7 @@ func _ready() -> void:
 	if c:
 		global_transform = c.global_transform * Transform3D(Basis.from_scale(Vector3.ONE * escala), posicao_na_cama)
 	_corpo = modelo.instantiate() as Node3D
+	VoxelTecido.aplicar(_corpo)
 	add_child(_corpo)
 
 

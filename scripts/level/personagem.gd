@@ -34,6 +34,7 @@ func _ready() -> void:
 		_corpo.scale = Vector3.ONE * escala
 		_corpo.rotation.y = PI  # modelos do Hyper3D olham para +Z; o "frente" do Godot é -Z
 		_corpo.position.y = altura_pes
+		VoxelTecido.aplicar(_corpo)
 		add_child(_corpo)
 		_player = _corpo.find_child("AnimationPlayer", true, false) as AnimationPlayer
 		if _player:

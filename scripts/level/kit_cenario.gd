@@ -4,7 +4,7 @@ extends RefCounted
 ## base em y = 0, maior lado = 1) com escala livre e COLISÃO no formato da peça (casco convexo
 ## simplificado, já com a escala aplicada nos pontos — nada de cilindro ou caixa no lugar).
 
-const PASTA := "res://assets/models/cenario/"
+const PASTA := "res://assets/models/cenario_vox/"
 
 static var _cascos: Dictionary = {}  # caminho -> PackedVector3Array (pontos do casco, sem escala)
 
@@ -30,6 +30,7 @@ static func colocar(pai: Node3D, nome: String, pos: Vector3, escala: Vector3, gi
 	raiz.rotation.y = giro_y
 	pai.add_child(raiz)
 	var visual := cena.instantiate() as Node3D
+	VoxelTecido.aplicar(visual)
 	visual.scale = escala
 	raiz.add_child(visual)
 	if tipo_corpo != "":
