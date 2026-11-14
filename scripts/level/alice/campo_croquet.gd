@@ -17,6 +17,7 @@ const M_OURO := preload("res://materials/pbr/linha_dourada.tres")
 const M_OURICO := preload("res://materials/pbr/cotele_marrom.tres")
 const M_PEDRA := preload("res://materials/pbr/la_trico_creme.tres")
 
+const POLCA := preload("res://assets/audio/musica/croquet_polca_feliz.ogg")
 const RAIO: float = 13.0
 const DIR_TRONO := Vector3(0.0, 0.15, 1.0)
 
@@ -42,8 +43,7 @@ func _ready() -> void:
 	super._ready()
 	for filho: Node in get_children():
 		if filho is AudioStreamPlayer:
-			_musica = filho as AudioStreamPlayer
-			_musica.pitch_scale = 0.82  # a música do chá, mais lenta e sombria
+			_musica = filho as AudioStreamPlayer  # valsa assustada de caixinha de música
 	_comecar.call_deferred()
 
 
@@ -371,4 +371,17 @@ func _amanhecer() -> void:
 	if lua:
 		create_tween().tween_property(lua, "light_color", Color(1.0, 0.8, 0.6), 3.0)
 	if _musica:
-		create_tween().tween_property(_musica, "pitch_scale", 1.0, 3.0)
+		# a valsa assustada vira uma polca feliz: todo mundo pode jogar croquet
+		var vol: float = _musica.volume_db
+		var polca := AudioStreamPlayer.new()
+		var faixa: AudioStreamOggVorbis = POLCA
+		faixa.loop = true
+		polca.stream = faixa
+		polca.bus = &"Musica"
+		polca.volume_db = -40.0
+		add_child(polca)
+		polca.play()
+		var tw := create_tween().set_parallel(true)
+		tw.tween_property(_musica, "volume_db", -40.0, 3.0)
+		tw.tween_property(polca, "volume_db", vol, 3.0)
+		tw.chain().tween_callback(_musica.stop)

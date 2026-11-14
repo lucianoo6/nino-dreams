@@ -7,6 +7,8 @@ extends Node3D
 ## ele lê a última linha em balbucio, diz "continua…" ou "e FIM", e as nuvens levam ao sonho.
 
 const PASTA_LIVROS := "res://data/livros/"
+## Canção de ninar do quarto (CC0, "Moonlit Lullaby for the Lost" — ver docs/CREDITOS.md).
+const MUSICA_QUARTO := preload("res://assets/audio/musica/quarto_ninar.ogg")
 
 @export_group("Foco")
 @export var foco_estante_distancia: float = 2.7
@@ -49,6 +51,7 @@ func _ready() -> void:
 	_ui.selecionar.connect(_on_selecionar)
 
 	_foco_na_estante(0.0)
+	_tocar_ninar()
 	_costurar_recompensas()
 	Transicao.descobrir(1.2)
 	var manha: String = GameState.consumir_manha()
@@ -67,6 +70,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		_mover(-1)
 	elif event.is_action_pressed("ui_accept") or event.is_action_pressed("jump"):
 		_escolher(_livros[_indice])
+
+
+func _tocar_ninar() -> void:
+	var faixa: AudioStreamOggVorbis = MUSICA_QUARTO
+	faixa.loop = true
+	var p := AudioStreamPlayer.new()
+	p.name = "Ninar"
+	p.stream = faixa
+	p.bus = &"Musica"
+	p.volume_db = -40.0
+	add_child(p)
+	p.play()
+	create_tween().tween_property(p, "volume_db", -12.0, 3.0)
 
 
 # ---------------- Livros ----------------
@@ -165,6 +181,9 @@ func _escolher(livro: ShelfBook) -> void:
 	# A câmera se aproxima devagar e as nuvens tomam conta.
 	var tw := create_tween()
 	tw.tween_property(_camera, "fov", _camera.fov * 0.7, 1.6).set_trans(Tween.TRANS_SINE)
+	var ninar := get_node_or_null("Ninar") as AudioStreamPlayer
+	if ninar:
+		create_tween().tween_property(ninar, "volume_db", -40.0, 1.6)
 	await Transicao.cobrir(1.6).finished
 	GameState.entrar_no_capitulo(livro.data, capitulo)
 

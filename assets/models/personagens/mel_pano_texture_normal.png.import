@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7jmbt8aclqvg"
-path="res://.godot/imported/mel_texture_diffuse.png-83eade99256ca37aa4960e7dbf796f97.ctex"
+uid="uid://bgp2vpsohu8in"
+path="res://.godot/imported/mel_pano_texture_normal.png-fb9279de88738e3e9cf3247280a3fa4d.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "53afc17c45cd6b8300090539706653ab"
+"md5": "f59bb170fbb0f8e10d8c09f60b159bcd"
 }
 
 [deps]
 
-source_file="res://assets/models/personagens/mel_texture_diffuse.png"
-dest_files=["res://.godot/imported/mel_texture_diffuse.png-83eade99256ca37aa4960e7dbf796f97.ctex"]
+source_file="res://assets/models/personagens/mel_pano_texture_normal.png"
+dest_files=["res://.godot/imported/mel_pano_texture_normal.png-fb9279de88738e3e9cf3247280a3fa4d.ctex"]
 
 [params]
 

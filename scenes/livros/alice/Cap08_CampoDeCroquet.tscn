@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/level/alice/campo_croquet.gd" id="1_fase"]
 [ext_resource type="PackedScene" path="res://scenes/player/Sonhador.tscn" id="2_nino"]
 [ext_resource type="PackedScene" path="res://scenes/player/Mel.tscn" id="3_mel"]
-[ext_resource type="AudioStream" path="res://assets/audio/musica/cha_maluco_b.mp3" id="4_musica"]
+[ext_resource type="AudioStream" path="res://assets/audio/musica/croquet_valsa_assustada.ogg" id="4_musica"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.08, 0.05, 0.2, 1)

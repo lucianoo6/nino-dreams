@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cn4hjxjrepv3c"
-path="res://.godot/imported/mel_ual.glb-f9749667cf60b5d3a04091998749cd58.scn"
+uid="uid://cx6s0ss7c0u46"
+path="res://.godot/imported/mel_pano.glb-d4b8278f955d5d9e4331a2545a173440.scn"
 
 [deps]
 
-source_file="res://assets/animacoes/ual/mel_ual.glb"
-dest_files=["res://.godot/imported/mel_ual.glb-f9749667cf60b5d3a04091998749cd58.scn"]
+source_file="res://assets/models/personagens/mel_pano.glb"
+dest_files=["res://.godot/imported/mel_pano.glb-d4b8278f955d5d9e4331a2545a173440.scn"]
 
 [params]
 

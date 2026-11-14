@@ -59,6 +59,9 @@ func _tocar_musica() -> void:
 	var mp3 := musica as AudioStreamMP3
 	if mp3:
 		mp3.loop = true
+	var ogg := musica as AudioStreamOggVorbis
+	if ogg:
+		ogg.loop = true
 	var player := AudioStreamPlayer.new()
 	player.stream = musica
 	player.bus = &"Musica"
