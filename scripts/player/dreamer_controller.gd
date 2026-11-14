@@ -49,6 +49,9 @@ var is_spinning: bool:
 	get:
 		return _spin_timer > 0.0
 
+## Nadando (dentro de uma ZonaAgua): boia na superfície, anda mais devagar e pode pular para fora.
+var nadando: bool = false
+
 var _camera: DreamCamera
 var _coyote: float = 0.0
 var _jump_buffer_t: float = 0.0
@@ -68,6 +71,9 @@ var _void_timer: float = 0.0
 var _last_safe_position: Vector3
 var _last_safe_up: Vector3 = Vector3.UP
 var _susto_cd: float = 0.0
+var _nivel_agua: float = 0.0
+var _saindo_agua: float = 0.0
+var _tempo_nado: float = 0.0
 
 
 func _ready() -> void:
@@ -128,11 +134,12 @@ func _physics_process(delta: float) -> void:
 	lateral = lateral.move_toward(wish * move_speed, (ground_accel if on_floor else air_accel) * delta)
 
 	# 4) Pulo com coyote time + buffer, e pulo curto ao soltar o botão.
-	if on_floor:
+	if on_floor or nadando:
 		_coyote = coyote_time
 		_spin_available = true
 	else:
 		_coyote -= delta
+	_saindo_agua -= delta
 
 	if _read_jump_pressed():
 		_jump_buffer_t = jump_buffer
@@ -143,7 +150,7 @@ func _physics_process(delta: float) -> void:
 		vertical = jump_velocity
 		_jump_buffer_t = 0.0
 		_coyote = 0.0
-	else:
+	elif not boiando():  # boiando, quem manda na altura é a água (_boiar)
 		var cut_jump: bool = vertical > 0.0 and not _read_jump_held()
 		vertical -= g_len * delta * (low_jump_multiplier if cut_jump else 1.0)
 
@@ -155,6 +162,10 @@ func _physics_process(delta: float) -> void:
 			vertical = maxf(vertical, spin_boost)
 			_spin_available = false
 
+	if nadando:
+		var nado: Vector2 = _boiar(vertical, lateral, delta)
+		vertical = nado.x
+		lateral = lateral.limit_length(nado.y)
 	vertical = maxf(vertical, -queda_maxima)
 	velocity = lateral + up * vertical
 	var estava_no_chao: bool = on_floor
@@ -230,19 +241,57 @@ func respawn() -> void:
 	_void_timer = 0.0
 
 
+## Boia: puxa o peito para a altura da superfície (com um balancinho); pular sai da água.
+## Devolve (velocidade vertical, velocidade lateral máxima).
+func _boiar(vertical: float, _lateral: Vector3, delta: float) -> Vector2:
+	_tempo_nado += delta
+	if vertical >= jump_velocity * 0.99:
+		_saindo_agua = 0.45  # acabou de pular: deixa subir livre
+	if _saindo_agua > 0.0:
+		return Vector2(vertical, move_speed * 0.8)
+	var alvo_y: float = _nivel_agua - 0.62 + sin(_tempo_nado * 2.6) * 0.06
+	var dif: float = alvo_y - global_position.y
+	var v: float = lerpf(vertical, clampf(dif * 5.0, -5.0, 4.0), 1.0 - exp(-7.0 * delta))
+	return Vector2(v, move_speed * 0.55)
+
+
+## Boiando de verdade (nadando e não no meio de um pulo para fora).
+func boiando() -> bool:
+	return nadando and _saindo_agua <= 0.0
+
+
+## Chamado pela ZonaAgua.
+func entrar_agua(nivel: float) -> void:
+	if not nadando and absf(velocity.y) > 2.0:
+		Efeitos.fiapos(get_parent(), Vector3(global_position.x, nivel, global_position.z), Vector3.UP,
+			Color(0.7, 0.85, 1.0))
+	nadando = true
+	_nivel_agua = nivel
+
+
+func sair_agua() -> void:
+	nadando = false
+
+
+## Empurrão (respingo de lágrima, sombra…): pulinho para longe da origem.
+func empurrar(origem: Vector3, forca: float = 9.0) -> void:
+	var up: Vector3 = up_direction
+	var fora: Vector3 = project_on_plane(global_position - origem, up)
+	fora = fora.normalized() if fora.length_squared() > 0.001 else global_basis.z
+	velocity = fora * forca + up * forca * 0.65
+	_saindo_agua = 0.4
+
+
 ## Uma sombra encostou: pulinho para trás (sem "morrer" — é um jogo para crianças) e a Luna perde um pouco do brilho.
 func levar_susto(origem: Vector3) -> void:
 	if _susto_cd > 0.0 or _launching:
 		return
 	_susto_cd = 1.2
-	var up: Vector3 = up_direction
-	var fora: Vector3 = project_on_plane(global_position - origem, up)
-	fora = fora.normalized() if fora.length_squared() > 0.001 else global_basis.z
-	velocity = fora * 9.0 + up * 6.0
+	empurrar(origem, 9.0)
 	var luna := get_node_or_null("Luna") as MoonLamp
 	if luna:
 		luna.glow = maxf(0.0, luna.glow - luna.max_glow * 0.25)
-	Efeitos.fiapos(get_parent(), global_position, up, Color(0.45, 0.35, 0.6))
+	Efeitos.fiapos(get_parent(), global_position, up_direction, Color(0.45, 0.35, 0.6))
 
 
 ## Arremesso em arco (carretel-lançador). Ignora a física durante o voo.

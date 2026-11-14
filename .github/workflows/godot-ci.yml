@@ -30,7 +30,7 @@ jobs:
 
       - name: Rodar as cenas principais por alguns segundos
         run: |
-          for cena in res://scenes/menu/Quarto.tscn res://scenes/livros/alice/Cap01_TocaDoCoelho.tscn res://scenes/livros/alice/Cap07_ChaMaluco.tscn res://scenes/livros/alice/Cap08_CampoDeCroquet.tscn res://scenes/dev/PlanetaTeste.tscn; do
+          for cena in res://scenes/menu/Quarto.tscn res://scenes/livros/alice/Cap01_TocaDoCoelho.tscn res://scenes/livros/alice/Cap02_LagoaDeLagrimas.tscn res://scenes/livros/alice/Cap07_ChaMaluco.tscn res://scenes/livros/alice/Cap08_CampoDeCroquet.tscn res://scenes/dev/PlanetaTeste.tscn; do
             echo "::group::$cena"
             ./godot --headless --path . "$cena" --quit-after 300 2>&1 | tee -a smoke.log
             echo "::endgroup::"

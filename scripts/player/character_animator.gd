@@ -18,6 +18,8 @@ const LIB_EXTRA := &"ual"
 @export var anim_parado_luz: StringName = &"ual/Idle_Torch"
 @export var anim_andar: StringName = &"ual/Walk"
 @export var anim_andar_pesadelo: StringName = &"ual/Crouch_Fwd"
+@export var anim_nadar: StringName = &"ual/Swim_Fwd"
+@export var anim_boiar: StringName = &"ual/Swim_Idle"
 @export var anim_correr: StringName = &"ual/Jog_Fwd"
 @export var anim_disparada: StringName = &"ual/Sprint"
 @export var anim_pulo_inicio: StringName = &"ual/Jump_Start"
@@ -159,6 +161,8 @@ func _process(delta: float) -> void:
 		_tocar(forcada)
 	elif _comemorando:
 		_tocar(anim_comemorar)
+	elif _body.boiando():
+		_tocar(anim_nadar if lateral > 0.6 else anim_boiar, clampf(lateral / 2.5, 0.8, 1.6))
 	elif _body.is_launching() or _body.is_spinning:
 		_tocar(anim_rodopio, 1.4)
 	elif not no_chao:

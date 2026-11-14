@@ -23,7 +23,7 @@ ultima_linha = "Alice foi na frente, e o grupo inteiro nadou até a margem."
 tipo = 0
 missao = 1
 itens_necessarios = 0
-cena = ""
+cena = "res://scenes/livros/alice/Cap02_LagoaDeLagrimas.tscn"
 
 [sub_resource type="Resource" id="Cap_03"]
 script = ExtResource("2_cap")
