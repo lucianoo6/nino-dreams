@@ -17,17 +17,47 @@ Plataformas-alvo: PC/Steam (Steam Deck) e consoles — ver [docs/PLATAFORMAS.md]
 2. Abra o Godot → *Importar* → selecione `project.godot`.
 3. Aperte **Play** (F5).
    A cena inicial é a **estante** (`scenes/menu/Quarto.tscn`): escolha um livro, o Nino lê a última linha, diz "e FIM" e o sonho começa.
-   Os livros ainda sem fase própria abrem a fase de protótipo `scenes/dev/PlanetaTeste.tscn` (planeta + luazinha, 3 botões-estrela,
-   uma sombra, a Mel e uma borboleta de feltro).
+   Hoje dá para jogar a **Demo 1.0 da Alice** (ver abaixo); os outros livros e capítulos aparecem como "em breve".
 
 > Estilo de código: GDScript sempre com tipos declarados. Lint opcional: `pip install "gdtoolkit==4.*"` e `gdlint scripts/` (config em `gdlintrc`).
 
-### Controles do protótipo
+## Demo 1.0 — Alice no País das Maravilhas
+
+Ciclo completo: estante → sumário → leitura da última linha → nuvens → sonho → "Capítulo concluído!" →
+manhã no quarto (o Nino conta o sonho e ganha um botão costurado na colcha) → estante. O progresso fica salvo.
+
+| Capítulo | Tipo | Missão |
+|---|---|---|
+| 1 — Descendo pela Toca do Coelho | sonho | Cair devagarinho pelo poço de prateleiras, achar a chave dourada e passar pela portinha |
+| 7 — Um Chá Maluco | sonho | Achar os 3 botões-estrela entre o jardim, o bule-casinha e a trilha de cartas |
+| 8 — O Campo de Croquet da Rainha | **pesadelo** | Acalmar os soldados-carta e a Rainha de Copas com a Luna (e a Estrelinha da Mel) |
+
+Os capítulos abrem em ordem. **Esc / Start** abre a pausa: continuar, configurações (música, efeitos, tela cheia,
+idioma — salvas em `user://configuracoes.cfg`), voltar para a estante, sair.
+
+### Exportar (Windows, Linux, Steam Deck)
+
+`export_presets.cfg` já vem com os três perfis (o do Steam Deck usa a tag `steamdeck`: tela cheia e efeitos mais leves).
+Instale os *export templates* do 4.7 no editor (*Editor → Gerenciar Modelos de Exportação*) e:
+
+```bash
+godot --headless --path . --export-release "Windows" builds/windows/OnceUponAPillow.exe
+godot --headless --path . --export-release "Linux" builds/linux/OnceUponAPillow.x86_64
+godot --headless --path . --export-release "Steam Deck" builds/steamdeck/OnceUponAPillow.x86_64
+```
+
+### Testes
+
+O CI (`.github/workflows/godot-ci.yml`) importa o projeto, carrega todos os scripts e cenas
+(`tools/ci/Verificar.tscn`) e roda as fases por alguns segundos. Testes com prints em `tools/debug/`
+(TesteToca, TesteCroquet, TesteHud, TestePausa, TesteColisao…).
+
+### Controles
 
 **Estante:** mouse (passar = livro pula, clicar = escolher) ou ←/→ e Enter/Espaço/A. Apertar durante a leitura completa a frase.
 
 **Nino (jogador 1):** WASD mover · Espaço pular · Shift rodopio · Q/E ou mouse girar câmera (clique para capturar) ·
-**F / botão direito: Luna** · C chamar a Mel · Esc solta o mouse. Controle 1 também funciona.
+**F / botão direito: Luna** · C chamar a Mel · Esc pausa. Controle 1 também funciona.
 
 **Mel (jogador 2, entra a qualquer momento):** IJKL mover · O pular · U rodopio · **P: abraço de luz da Estrelinha** · Backspace sai do coop.
 Controle 2 também funciona (Select sai).
@@ -92,6 +122,9 @@ assets/          modelos, texturas, áudio, fontes (via Git LFS)
       barra "Selecionar" + etiqueta ‹ livro › (fonte Fredoka, OFL) — ver docs/referencias/tela_estante.png
 - [x] Fatia vertical do Cap. 7 (Chá Maluco): céu de entardecer, mar de nuvens, bule-casinha de porcelana pintada,
       relógio de bolso, costuras/flores/botões no planeta, música (ElevenLabs), passos e pouso com fiapos
+- [x] HUD de botões de costura, faixa "Capítulo concluído!", manhã no quarto com recompensas na colcha, pausa e configurações
+- [x] Alice cap. 1 (poço com queda lenta, chave dourada, portinha) e cap. 8 (pesadelo com a Rainha de Copas em 2 fases)
+- [x] CI funcionando + perfis de exportação Windows/Linux/Steam Deck
 - [ ] Linhas de gravidade, zíperes
-- [ ] Capítulos da Alice + chefe do Quebra-Nozes
+- [ ] Outros capítulos da Alice + chefe do Quebra-Nozes
 - [ ] Texturas de tecido escaneadas, costuras, animação "em dois"

@@ -36,7 +36,18 @@ gdscript/warnings/unsafe_cast=1
 
 3d/default_gravity=0.0
 
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/size/mode.steamdeck=3
+
 [rendering]
 
 anti_aliasing/quality/msaa_3d=2
+anti_aliasing/quality/msaa_3d.steamdeck=1
+environment/volumetric_fog/volume_size.steamdeck=48
+environment/volumetric_fog/volume_depth.steamdeck=32
+environment/ssao/quality.steamdeck=1
+environment/ssil/quality.steamdeck=0
 environment/defaults/default_clear_color=Color(0.12, 0.1, 0.22, 1)
