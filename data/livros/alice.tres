@@ -89,7 +89,7 @@ ultima_linha = "A cabeça do Gato foi sumindo devagarinho, e o Rei e o guarda co
 tipo = 1
 missao = 2
 itens_necessarios = 0
-cena = ""
+cena = "res://scenes/livros/alice/Cap08_CampoDeCroquet.tscn"
 
 [sub_resource type="Resource" id="Cap_09"]
 script = ExtResource("2_cap")

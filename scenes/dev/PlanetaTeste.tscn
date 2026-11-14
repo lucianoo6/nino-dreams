@@ -54,10 +54,10 @@ rings = 24
 [sub_resource type="SphereShape3D" id="Shape_grav_lua"]
 radius = 6.5
 
-[node name="PlanetaTeste" type="Node3D"]
-
 [sub_resource type="PrismMesh" id="Mesh_borboleta"]
 size = Vector3(0.5, 0.3, 0.05)
+
+[node name="PlanetaTeste" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_sonho")

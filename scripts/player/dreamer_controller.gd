@@ -67,6 +67,7 @@ var _launch_c: Vector3
 var _void_timer: float = 0.0
 var _last_safe_position: Vector3
 var _last_safe_up: Vector3 = Vector3.UP
+var _susto_cd: float = 0.0
 
 
 func _ready() -> void:
@@ -91,6 +92,7 @@ func get_dream_camera() -> DreamCamera:
 
 
 func _physics_process(delta: float) -> void:
+	_susto_cd -= delta
 	if _launching:
 		return
 	var gravity: Vector3 = get_gravity()
@@ -226,6 +228,21 @@ func respawn() -> void:
 	up_direction = _last_safe_up
 	velocity = Vector3.ZERO
 	_void_timer = 0.0
+
+
+## Uma sombra encostou: pulinho para trás (sem "morrer" — é um jogo para crianças) e a Luna perde um pouco do brilho.
+func levar_susto(origem: Vector3) -> void:
+	if _susto_cd > 0.0 or _launching:
+		return
+	_susto_cd = 1.2
+	var up: Vector3 = up_direction
+	var fora: Vector3 = project_on_plane(global_position - origem, up)
+	fora = fora.normalized() if fora.length_squared() > 0.001 else global_basis.z
+	velocity = fora * 9.0 + up * 6.0
+	var luna := get_node_or_null("Luna") as MoonLamp
+	if luna:
+		luna.glow = maxf(0.0, luna.glow - luna.max_glow * 0.25)
+	Efeitos.fiapos(get_parent(), global_position, up, Color(0.45, 0.35, 0.6))
 
 
 ## Arremesso em arco (carretel-lançador). Ignora a física durante o voo.

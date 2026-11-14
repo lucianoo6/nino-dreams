@@ -13,9 +13,12 @@ const CREME := Color(1.0, 0.95, 0.82)
 var _botoes: BotoesMissao
 var _lua: LuaFase
 var _faixa: Control
+var _chefe_caixa: VBoxContainer
+var _chefe_barra: ProgressBar
 
 
 func _ready() -> void:
+	add_to_group("hud_sonho")
 	layer = 40
 	var raiz := Control.new()
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -98,6 +101,51 @@ func _comemorar() -> void:
 			Efeitos.estrelinhas(get_tree().current_scene, nino.global_position + nino.global_basis.y * (1.0 + k * 0.5))
 
 
+## Barra do chefe (ex.: Rainha de Copas): um coração de feltro que esvazia conforme a Luna a acalma.
+func mostrar_chefe(chefe: ShadowCreature) -> void:
+	if _chefe_caixa == null:
+		_chefe_caixa = VBoxContainer.new()
+		_chefe_caixa.anchor_left = 0.5
+		_chefe_caixa.anchor_right = 0.5
+		_chefe_caixa.anchor_top = 1.0
+		_chefe_caixa.anchor_bottom = 1.0
+		_chefe_caixa.offset_left = -260
+		_chefe_caixa.offset_right = 260
+		_chefe_caixa.offset_top = -96
+		_chefe_caixa.offset_bottom = -30
+		_chefe_caixa.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_chefe_caixa)
+		_chefe_caixa.add_child(MenuEstanteUI._rotulo("", FONTE_B, 28, CREME, Color(0.3, 0.05, 0.12), 8))
+		_chefe_barra = ProgressBar.new()
+		_chefe_barra.show_percentage = false
+		_chefe_barra.custom_minimum_size = Vector2(520, 22)
+		_chefe_barra.max_value = 1.0
+		var fundo := StyleBoxFlat.new()
+		fundo.bg_color = Color(0.12, 0.08, 0.2, 0.85)
+		fundo.set_corner_radius_all(11)
+		fundo.set_border_width_all(2)
+		fundo.border_color = CREME
+		var cheio := StyleBoxFlat.new()
+		cheio.bg_color = Color(0.85, 0.15, 0.3)
+		cheio.set_corner_radius_all(11)
+		_chefe_barra.add_theme_stylebox_override("background", fundo)
+		_chefe_barra.add_theme_stylebox_override("fill", cheio)
+		_chefe_caixa.add_child(_chefe_barra)
+	(_chefe_caixa.get_child(0) as Label).text = "♥ " + chefe.nome_chefe + " ♥"
+	_chefe_barra.value = chefe.fracao()
+	_chefe_caixa.visible = true
+	_chefe_caixa.modulate.a = 0.0
+	create_tween().tween_property(_chefe_caixa, "modulate:a", 1.0, 0.6)
+	chefe.escuridao_mudou.connect(func(f: float) -> void: _chefe_barra.value = f)
+	chefe.dissipated.connect(func() -> void: _chefe_caixa.visible = false)
+
+
+## Escudo do chefe ligado: a barra fica acinzentada.
+func chefe_protegido(sim: bool) -> void:
+	if _chefe_barra:
+		_chefe_barra.modulate = Color(0.6, 0.6, 0.7) if sim else Color.WHITE
+
+
 ## Fileira de botões de costura desenhados (vazios = contorno, pegos = amarelos com furinhos).
 class BotoesMissao:
 	extends Control
@@ -152,9 +200,23 @@ class LuaFase:
 
 	func _draw() -> void:
 		var c := Vector2(40, 40)
+		var r: float = 30.0
 		draw_circle(c, 36, Color(0.12, 0.12, 0.25, 0.75))
-		draw_circle(c, 30, Color(1.0, 0.95, 0.75))
-		# sombra que avança da esquerda para a direita conforme o brilho cai
-		var desloc: float = lerpf(0.0, 60.0, brilho)
-		draw_circle(c + Vector2(-desloc, 0), 31, Color(0.12, 0.12, 0.25, 0.95))
-		draw_arc(c, 31, 0, TAU, 48, Color(0.75, 0.8, 1.0, 0.6), 2.0)
+		draw_circle(c, r, Color(0.25, 0.25, 0.4))  # parte apagada
+		# parte acesa = lua menos o disco de sombra que avança da esquerda (polígono do crescente)
+		var sc: Vector2 = c + Vector2(-lerpf(0.0, 2.2 * r, brilho), 0)
+		var rs: float = r + 1.0
+		var pontos := PackedVector2Array()
+		for i in 64:
+			var a: float = PI + i * TAU / 64.0
+			var p: Vector2 = c + Vector2(cos(a), sin(a)) * r
+			if p.distance_to(sc) >= rs:
+				pontos.append(p)
+		for i in 33:
+			var a: float = PI / 2.0 - i * PI / 32.0
+			var q: Vector2 = sc + Vector2(cos(a), sin(a)) * rs
+			if q.distance_to(c) <= r:
+				pontos.append(q)
+		if pontos.size() >= 3:
+			draw_colored_polygon(pontos, Color(1.0, 0.95, 0.75))
+		draw_arc(c, r + 1.0, 0, TAU, 48, Color(0.75, 0.8, 1.0, 0.6), 2.0)

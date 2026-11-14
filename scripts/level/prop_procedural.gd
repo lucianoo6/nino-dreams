@@ -300,7 +300,13 @@ func _morrinho() -> void:
 	if com_colisao:
 		var corpo := StaticBody3D.new()
 		var forma := CollisionShape3D.new()
-		forma.shape = esf.create_convex_shape()
+		# casco convexo de uma esfera de baixa resolução: barato para a física (a malha visual tem milhares de pontos)
+		var baixa := SphereMesh.new()
+		baixa.radius = esf.radius
+		baixa.height = esf.height
+		baixa.radial_segments = 12
+		baixa.rings = 6
+		forma.shape = baixa.create_convex_shape()
 		corpo.add_child(forma)
 		_raiz.add_child(corpo)
 
@@ -388,7 +394,7 @@ func _malha(m: Mesh, mat: Material, colisao: bool) -> MeshInstance3D:
 		corpo.collision_mask = 0
 		var forma := CollisionShape3D.new()
 		# Convexa, não malha exata: dobras e "pratinhos" côncavos prendem o CharacterBody.
-		forma.shape = m.create_convex_shape(true, false)
+		forma.shape = m.create_convex_shape(true, true)
 		corpo.add_child(forma)
 		_raiz.add_child(corpo)
 	return mi
