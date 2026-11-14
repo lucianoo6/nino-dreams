@@ -56,7 +56,7 @@ ultima_linha = "Então ela voltou a mordiscar o pedacinho da direita e só se ap
 tipo = 0
 missao = 0
 itens_necessarios = 3
-cena = ""
+cena = "res://scenes/livros/alice/Cap05_ConselhosLagarta.tscn"
 
 [sub_resource type="Resource" id="Cap_06"]
 script = ExtResource("2_cap")

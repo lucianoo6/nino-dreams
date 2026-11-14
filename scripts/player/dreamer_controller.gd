@@ -51,6 +51,8 @@ var is_spinning: bool:
 
 ## Nadando (dentro de uma ZonaAgua): boia na superfície, anda mais devagar e pode pular para fora.
 var nadando: bool = false
+## Tamanho (pedacinhos do cogumelo da Lagarta): 1 = normal, >1 gigante, <1 pequenininho.
+var tamanho: float = 1.0
 
 var _camera: DreamCamera
 var _coyote: float = 0.0
@@ -74,6 +76,7 @@ var _susto_cd: float = 0.0
 var _nivel_agua: float = 0.0
 var _saindo_agua: float = 0.0
 var _tempo_nado: float = 0.0
+var _base: Dictionary = {}  # valores no tamanho normal (guardados na primeira mudança)
 
 
 func _ready() -> void:
@@ -239,6 +242,57 @@ func respawn() -> void:
 	up_direction = _last_safe_up
 	velocity = Vector3.ZERO
 	_void_timer = 0.0
+
+
+## Cresce ou encolhe com um "boing" elástico. Escala o visual, a cápsula de colisão, a Luna, a câmera,
+## o pulo (√tamanho: gigante pula alto) e a velocidade.
+func mudar_tamanho(alvo: float, duracao: float = 0.9) -> void:
+	if is_equal_approx(alvo, tamanho):
+		return
+	if _base.is_empty():
+		var col := get_node_or_null("Colisao") as CollisionShape3D
+		if col and col.shape is CapsuleShape3D:
+			col.shape = col.shape.duplicate()  # não mexer na forma compartilhada
+		var braco := get_node_or_null("CameraRig/SpringArm3D") as SpringArm3D
+		var luna := get_node_or_null("Luna") as SpotLight3D
+		_base = {
+			"pulo": jump_velocity, "vel": move_speed, "degrau": degrau,
+			"raio": (col.shape as CapsuleShape3D).radius if col else 0.35,
+			"altura": (col.shape as CapsuleShape3D).height if col else 1.2,
+			"col_y": col.position.y if col else 0.6,
+			"braco": braco.spring_length if braco else 6.5,
+			"braco_y": braco.position.y if braco else 1.2,
+			"luna": luna.position if luna else Vector3.ZERO,
+			"luna_alcance": luna.spot_range if luna else 10.0,
+		}
+	var de: float = tamanho
+	tamanho = alvo
+	var tw := create_tween()
+	tw.tween_method(_aplicar_tamanho, de, alvo, duracao).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+
+
+func _aplicar_tamanho(s: float) -> void:
+	s = maxf(s, 0.05)
+	var visual := get_node_or_null("Visual") as Node3D
+	if visual:
+		visual.scale = Vector3.ONE * s
+	var col := get_node_or_null("Colisao") as CollisionShape3D
+	if col and col.shape is CapsuleShape3D:
+		var cap := col.shape as CapsuleShape3D
+		cap.radius = float(_base["raio"]) * s
+		cap.height = float(_base["altura"]) * s
+		col.position.y = float(_base["col_y"]) * s
+	var luna := get_node_or_null("Luna") as SpotLight3D
+	if luna:
+		luna.position = (_base["luna"] as Vector3) * s
+		luna.spot_range = float(_base["luna_alcance"]) * maxf(s, 1.0)
+	var braco := get_node_or_null("CameraRig/SpringArm3D") as SpringArm3D
+	if braco:
+		braco.spring_length = float(_base["braco"]) * pow(s, 0.75)
+		braco.position.y = float(_base["braco_y"]) * s
+	jump_velocity = float(_base["pulo"]) * sqrt(s)
+	move_speed = float(_base["vel"]) * sqrt(s)
+	degrau = float(_base["degrau"]) * s
 
 
 ## Boia: puxa o peito para a altura da superfície (com um balancinho); pular sai da água.
