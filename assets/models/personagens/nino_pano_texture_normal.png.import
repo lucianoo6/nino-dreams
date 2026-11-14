@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4g8emknoq8ux"
-path="res://.godot/imported/nino_texture_diffuse.png-858b4000a3da14349ad4c11beb8e1574.ctex"
+uid="uid://bya1srrwocbdm"
+path="res://.godot/imported/nino_pano_texture_normal.png-5b02c3e91b4608f52a55da5afedc8027.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "a0ac326be0e512a97c92f6d6cd47b951"
+"md5": "de7c539a569669a6cfb1f8383afd34d3"
 }
 
 [deps]
 
-source_file="res://assets/models/personagens/nino_texture_diffuse.png"
-dest_files=["res://.godot/imported/nino_texture_diffuse.png-858b4000a3da14349ad4c11beb8e1574.ctex"]
+source_file="res://assets/models/personagens/nino_pano_texture_normal.png"
+dest_files=["res://.godot/imported/nino_pano_texture_normal.png-5b02c3e91b4608f52a55da5afedc8027.ctex"]
 
 [params]
 

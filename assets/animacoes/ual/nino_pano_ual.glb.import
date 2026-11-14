@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b52wtlqswjr1v"
-path="res://.godot/imported/nino.glb-de63769648f4ec081fa88b37025ab7d7.scn"
+uid="uid://bkekm7s6uof3j"
+path="res://.godot/imported/nino_pano_ual.glb-e5e12aef3575497f64da812860143601.scn"
 
 [deps]
 
-source_file="res://assets/models/personagens/nino.glb"
-dest_files=["res://.godot/imported/nino.glb-de63769648f4ec081fa88b37025ab7d7.scn"]
+source_file="res://assets/animacoes/ual/nino_pano_ual.glb"
+dest_files=["res://.godot/imported/nino_pano_ual.glb-e5e12aef3575497f64da812860143601.scn"]
 
 [params]
 

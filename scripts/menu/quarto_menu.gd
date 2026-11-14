@@ -36,8 +36,8 @@ func _ready() -> void:
 		_attrs = CameraAttributesPractical.new()
 		_camera.attributes = _attrs
 	_camera.look_at($AlvoCamera.global_position)
-	# Nino olha para o livro no colo, virado de 3/4 para a estante
-	_nino.look_at(_nino.global_position + Vector3(0.9, 0.0, 1.0), Vector3.UP)
+	# o desfoque do "rack focus" acompanha onde o Nino está de fato (deitado na cama)
+	foco_nino_distancia = _camera.global_position.distance_to(_nino.global_position)
 
 	_estante.construir(_carregar_livros())
 	_livros = _estante.livros
@@ -133,7 +133,11 @@ func _escolher(livro: ShelfBook) -> void:
 
 	_foco_no_nino(duracao_rack_focus)
 	await livro.voar_para(_maos.global_position, 1.0)
-	_nino.get_node("LivroNoColo").visible = false  # o livro escolhido toma o lugar do que estava no colo
+	# o livro escolhido "entra" no livro que ele já está lendo
+	var some := create_tween().set_parallel(true)
+	some.tween_property(livro, "scale", Vector3.ONE * 0.05, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	await some.finished
+	livro.visible = false
 
 	# Sumário com o marcador de página (livros de um capítulo só pulam esta etapa).
 	var numero: int = 1
@@ -141,7 +145,7 @@ func _escolher(livro: ShelfBook) -> void:
 		numero = await _sumario.escolher(livro.data)
 		if numero < 0:
 			_foco_na_estante(duracao_rack_focus)
-			_nino.get_node("LivroNoColo").visible = true
+			livro.visible = true
 			await livro.voltar()
 			_ui.mostrar()
 			GameState.cutscene = false
@@ -150,12 +154,9 @@ func _escolher(livro: ShelfBook) -> void:
 	var capitulo: ChapterData = livro.data.lista_capitulos()[numero - 1]
 
 	var linha: String = capitulo.ultima_linha if not capitulo.ultima_linha.is_empty() else capitulo.rotulo() + "…"
-	var animador := _nino as CharacterAnimator
-	if animador:
-		animador.modo_fixo = &"ual/Sitting_Talking"  # lendo em voz alta
+	_ler_alto(true)
 	await _dialogo.falar(linha, _voz)
-	if animador:
-		animador.modo_fixo = &"ual/Sitting_Idle"
+	_ler_alto(false)
 	if livro.data.e_ultimo(capitulo):
 		await _dialogo.dizer_fim(_voz)
 	else:
@@ -202,13 +203,10 @@ func _amanhecer(texto: String) -> void:
 	tw.tween_property(luar, "light_color", Color(1.0, 0.85, 0.6), 1.5)
 	tw.tween_property(luar, "light_energy", 1.4, 1.5)
 	await tw.finished
-	var animador := _nino as CharacterAnimator
-	if animador:
-		animador.modo_fixo = &"ual/Sitting_Talking"
+	_ler_alto(true)
 	var bom_dia: String = "Bom dia! Que sonho! " if MenuEstanteUI._pt() else "Good morning! What a dream! "
 	await _dialogo.falar(bom_dia + texto, _voz)
-	if animador:
-		animador.modo_fixo = &"ual/Sitting_Idle"
+	_ler_alto(false)
 	var volta := create_tween().set_parallel(true)
 	volta.tween_property(env, "ambient_light_color", noite["cor"], 2.0)
 	volta.tween_property(env, "ambient_light_energy", noite["energia"], 2.0)
@@ -217,6 +215,13 @@ func _amanhecer(texto: String) -> void:
 	await volta.finished
 	_ui.mostrar()
 	_ocupado = false
+
+
+## Nino lendo / falando em voz alta (balança a cabeça).
+func _ler_alto(sim: bool) -> void:
+	var n := _nino as NinoLendo
+	if n:
+		n.lendo_alto = sim
 
 
 # ---------------- Rack focus (desfoque) ----------------

@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chqrsep741hjm"
-path="res://.godot/imported/nino_texture_normal.png-18fbf315431ec649f3077e5826b41f89.ctex"
+uid="uid://dxsgdl4ivp5q2"
+path="res://.godot/imported/nino_lendo_texture_diffuse.png-b00e1f99ff549702cf80f5ee7e4b08ed.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "f43a7dd9f511a419767a4f99f3993359"
+"md5": "839d9f7e206247230a0d573d029f8ed0"
 }
 
 [deps]
 
-source_file="res://assets/models/personagens/nino_texture_normal.png"
-dest_files=["res://.godot/imported/nino_texture_normal.png-18fbf315431ec649f3077e5826b41f89.ctex"]
+source_file="res://assets/models/personagens/nino_lendo_texture_diffuse.png"
+dest_files=["res://.godot/imported/nino_lendo_texture_diffuse.png-b00e1f99ff549702cf80f5ee7e4b08ed.ctex"]
 
 [params]
 
